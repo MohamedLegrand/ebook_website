@@ -26,8 +26,8 @@ function Header() {
       <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs sm:text-sm py-2 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-center text-center">
           <span className="font-medium">
-            <span className="hidden sm:inline">Plus de 10 000 eBooks & Livres Audio • Téléchargement instantané • </span>
-            Lecture sur tous vos appareils
+            <span className="hidden sm:inline">Plus de 10 000 livres à votre disposition • Téléchargement instantané • </span>
+            Lecture sur tous vos appareils connectés
           </span>
         </div>
       </div>
@@ -73,9 +73,6 @@ function Header() {
               { label: "Accueil", href: "/" },
               { label: "Catégories", href: "/categories" },
               { label: "Livres Audio", href: "/livres-audio" },
-              { label: "À propos", href: "/a-propos" },
-              { label: "FAQ", href: "/faq" },
-              { label: "Contact", href: "/contact" },
             ].map((item) => (
               <li key={item.label} className="relative group">
                 <a
