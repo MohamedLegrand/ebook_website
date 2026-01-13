@@ -66,7 +66,7 @@ function Hero() {
       shortDescription: "Outils pratiques pour transformation personnelle",
       color: "from-emerald-500 to-teal-600",
       bgColor: "bg-gradient-to-r from-emerald-500 to-teal-600",
-      image: "/src/assets/images/livres/developpement.jpg",
+      image: "/src/assets/images/livres/Développement.jpg",
       icon: "🚀",
       books: 1980,
       rating: 4.9,
