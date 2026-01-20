@@ -75,6 +75,16 @@ function Register() {
     }, 1500);
   };
 
+  const handleSocialSignup = (provider) => {
+    setIsLoading(true);
+    console.log(`Inscription avec ${provider}`);
+    
+    setTimeout(() => {
+      setIsLoading(false);
+      alert(`Redirection vers ${provider}... (simulation)`);
+    }, 1000);
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50/90 via-white to-indigo-50/90 p-4 overflow-hidden">
       {/* Animated background elements */}
@@ -372,11 +382,47 @@ function Register() {
             </button>
           </form>
 
-          {/* Divider */}
+          {/* Divider - AJOUTÉ LA SECTION "CONTINUER AVEC" */}
           <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-blue-100"></div>
             </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="px-2 bg-white text-gray-400">Ou continuer avec</span>
+            </div>
+          </div>
+
+          {/* Social buttons */}
+          <div className="grid grid-cols-2 gap-2 mb-4">
+            <button
+              onClick={() => handleSocialSignup("Google")}
+              disabled={isLoading}
+              onMouseEnter={() => setHoverElement('google')}
+              onMouseLeave={() => setHoverElement(null)}
+              className="w-full flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 hover:scale-[1.02] focus:outline-none focus:ring-1 focus:ring-gray-200 disabled:opacity-70 group"
+            >
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                className="w-4 h-4 transition-transform duration-200 group-hover:scale-110"
+              />
+              <span className="text-xs font-medium text-gray-700">Google</span>
+            </button>
+
+            <button
+              onClick={() => handleSocialSignup("Facebook")}
+              disabled={isLoading}
+              onMouseEnter={() => setHoverElement('facebook')}
+              onMouseLeave={() => setHoverElement(null)}
+              className="w-full flex items-center justify-center gap-2 bg-[#1877F2] hover:bg-[#166FE5] text-white py-2 rounded-lg transition-all duration-200 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:opacity-70 group"
+            >
+              <div className="w-4 h-4 flex items-center justify-center bg-white rounded-full transition-transform duration-200 group-hover:scale-110">
+                <svg className="w-3 h-3 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </div>
+              <span className="text-xs font-medium">Facebook</span>
+            </button>
           </div>
 
           {/* Login link */}

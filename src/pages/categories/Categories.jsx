@@ -26,7 +26,7 @@ function Categories() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const categories = [
-    {
+    { 
       id: 1,
       name: "Informatique & Technologie",
       icon: <Code className="w-5 h-5" />,
