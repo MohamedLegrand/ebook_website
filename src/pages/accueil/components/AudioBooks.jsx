@@ -1,6 +1,6 @@
 import React from "react";
 
-function AudioBooks() {
+function Audio() {
   return (
     <section className="py-16 bg-gray-50">
       <h2 className="text-2xl font-bold text-center mb-6">
@@ -13,4 +13,4 @@ function AudioBooks() {
   );
 }
 
-export default AudioBooks;
+export default Audio;

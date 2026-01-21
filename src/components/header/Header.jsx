@@ -121,7 +121,7 @@ function Header() {
             {[
               { label: "Accueil", href: "/" },
               { label: "Catégories", href: "/categories" },
-              { label: "Livres Audio", href: "/livres-audio" },
+              { label: "Livres Audio", href: "/audio" },
             ].map((item) => (
               <li key={item.label}>
                 <a
