@@ -24,10 +24,10 @@ import {
   Euro,
   Coins,
   ChevronDown,
-  AlertCircle,
   Star,
   Users,
-  Award
+  Award,
+  Check
 } from "lucide-react";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
@@ -38,8 +38,7 @@ function Audio() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currency, setCurrency] = useState("FCFA"); // "FCFA", "USD", "EUR"
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
-  const [addedToCart, setAddedToCart] = useState({}); // Stocke les livres audio ajoutés au panier
-  const [showAuthMessage, setShowAuthMessage] = useState({}); // Stocke les messages d'auth par livre
+  const [cart, setCart] = useState({}); // Stocke les livres audio dans le panier {audioId: true/false}
 
   // Taux de conversion (exemples)
   const exchangeRates = {
@@ -78,35 +77,12 @@ function Audio() {
     }
   };
 
-  // Fonction pour ajouter au panier
-  const handleAddToCart = (audioId) => {
-    // Simuler l'effet d'ajout au panier
-    setAddedToCart(prev => ({
+  // Fonction pour ajouter/retirer du panier
+  const handleCartToggle = (audioId) => {
+    setCart(prev => ({
       ...prev,
-      [audioId]: true
+      [audioId]: !prev[audioId]
     }));
-
-    // Montrer le message d'authentification
-    setShowAuthMessage(prev => ({
-      ...prev,
-      [audioId]: true
-    }));
-
-    // Supprimer l'animation après 1.5 secondes
-    setTimeout(() => {
-      setAddedToCart(prev => ({
-        ...prev,
-        [audioId]: false
-      }));
-    }, 1500);
-
-    // Supprimer le message après 3 secondes
-    setTimeout(() => {
-      setShowAuthMessage(prev => ({
-        ...prev,
-        [audioId]: false
-      }));
-    }, 3000);
   };
 
   const categories = [
@@ -801,16 +777,18 @@ function Audio() {
                     key={audioBook.id}
                     className={`
                       relative rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300 border flex flex-col h-full
-                      ${addedToCart[audioBook.id] 
-                        ? 'border-red-400 bg-red-50' 
+                      ${cart[audioBook.id] 
+                        ? 'border-green-400 bg-green-50' 
                         : 'border-gray-100 bg-white'
                       }
                     `}
                   >
-                    {/* Animation de vibration - SANS affecter le layout */}
-                    {addedToCart[audioBook.id] && (
-                      <div className="absolute inset-0 animate-vibrate-on-place pointer-events-none">
-                        <div className="absolute inset-0 border-2 border-red-400 rounded-xl"></div>
+                    {/* Animation de confirmation */}
+                    {cart[audioBook.id] && (
+                      <div className="absolute top-3 right-3 animate-fadeIn">
+                        <div className="bg-green-500 text-white p-1.5 rounded-full shadow-lg">
+                          <Check className="w-4 h-4" />
+                        </div>
                       </div>
                     )}
 
@@ -873,16 +851,6 @@ function Audio() {
 
                     {/* Footer: Add to Cart */}
                     <div className="mt-4 pt-4 border-t border-gray-100">
-                      {/* Message d'authentification */}
-                      {showAuthMessage[audioBook.id] && (
-                        <div className="mb-3 animate-fadeIn">
-                          <div className="flex items-center gap-1 text-xs text-red-600 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
-                            <AlertCircle className="w-3 h-3" />
-                            <span>Vous devez vous authentifier pour ajouter au panier</span>
-                          </div>
-                        </div>
-                      )}
-
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-1 text-sm text-gray-600">
@@ -890,19 +858,28 @@ function Audio() {
                             <span>Prix en {currency}</span>
                           </div>
                         </div>
-                        {/* Bouton Ajouter au panier */}
+                        {/* Bouton Ajouter/Retirer du panier */}
                         <button
-                          onClick={() => handleAddToCart(audioBook.id)}
+                          onClick={() => handleCartToggle(audioBook.id)}
                           className={`
                             flex items-center gap-1 text-sm px-3 py-2 rounded-lg font-medium transition-all duration-300
-                            ${addedToCart[audioBook.id]
-                              ? 'bg-red-100 text-red-700 border border-red-300'
+                            ${cart[audioBook.id]
+                              ? 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200'
                               : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 hover:scale-105'
                             }
                           `}
                         >
-                          <ShoppingCart className={`w-4 h-4 ${addedToCart[audioBook.id] ? 'animate-pulse' : ''}`} />
-                          {addedToCart[audioBook.id] ? 'Ajouté...' : 'Acheter'}
+                          {cart[audioBook.id] ? (
+                            <>
+                              <Check className="w-4 h-4" />
+                              Ajouté
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingCart className="w-4 h-4" />
+                              Acheter
+                            </>
+                          )}
                         </button>
                       </div>
                     </div>
@@ -925,41 +902,13 @@ function Audio() {
 
       {/* Styles d'animation */}
       <style jsx>{`
-        @keyframes vibrate-on-place {
-          0% { transform: translate(0, 0) rotate(0); }
-          10% { transform: translate(-1px, -1px) rotate(-0.5deg); }
-          20% { transform: translate(1px, 1px) rotate(0.5deg); }
-          30% { transform: translate(-1px, 1px) rotate(-0.5deg); }
-          40% { transform: translate(1px, -1px) rotate(0.5deg); }
-          50% { transform: translate(-1px, -1px) rotate(-0.5deg); }
-          60% { transform: translate(1px, 1px) rotate(0.5deg); }
-          70% { transform: translate(-1px, 1px) rotate(-0.5deg); }
-          80% { transform: translate(1px, -1px) rotate(0.5deg); }
-          90% { transform: translate(-1px, -1px) rotate(-0.5deg); }
-          100% { transform: translate(0, 0) rotate(0); }
-        }
-        
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(-5px); }
           to { opacity: 1; transform: translateY(0); }
         }
         
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.2); }
-        }
-        
-        .animate-vibrate-on-place {
-          animation: vibrate-on-place 0.3s ease-in-out;
-          z-index: 10;
-        }
-        
         .animate-fadeIn {
           animation: fadeIn 0.3s ease-out;
-        }
-        
-        .animate-pulse {
-          animation: pulse 0.5s ease-in-out infinite;
         }
       `}</style>
     </div>

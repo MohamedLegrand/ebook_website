@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { User, Menu, X } from "lucide-react";
+import { User, Menu, X, ShoppingCart } from "lucide-react";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [cartItems, setCartItems] = useState(3); // Exemple: 3 articles dans le panier
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,8 +16,12 @@ function Header() {
 
   // Fonction pour gérer la redirection
   const handleAudioClick = () => {
-    // Redirection vers la page audio
     window.location.href = "/audio";
+  };
+
+  // Fonction pour gérer le clic sur le panier
+  const handleCartClick = () => {
+    window.location.href = "/cart";
   };
 
   return (
@@ -142,6 +147,22 @@ function Header() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
+            {/* Bouton Panier */}
+            <button
+              onClick={handleCartClick}
+              className="relative p-2 sm:p-2.5 hover:bg-blue-50 rounded-lg transition-all hover:scale-105 active:scale-95 text-blue-800 border border-transparent hover:border-blue-200"
+              aria-label="Panier"
+              title="Panier"
+            >
+              <ShoppingCart size={20} className="sm:w-6 sm:h-6" />
+              {cartItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
+                  {cartItems}
+                </span>
+              )}
+            </button>
+
+            {/* Bouton Livres Audio (mobile only) */}
             <button
               onClick={handleAudioClick}
               className="flex lg:hidden items-center justify-center p-2 sm:p-2.5 border-2 border-blue-300 hover:bg-blue-50 rounded-lg font-medium transition-all hover:scale-105 active:scale-95 text-blue-800"
@@ -151,6 +172,7 @@ function Header() {
               <span className="text-lg sm:text-xl">🎧</span>
             </button>
 
+            {/* Bouton Connexion */}
             <a
               href="/login"
               className="hidden sm:flex items-center gap-2 px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2 lg:py-2.5 border-2 border-blue-300 hover:bg-blue-50 rounded-lg font-medium transition-all hover:scale-105 active:scale-95 text-blue-800 text-sm lg:text-base whitespace-nowrap"
@@ -159,6 +181,7 @@ function Header() {
               <span className="hidden md:inline">Connexion</span>
             </a>
 
+            {/* Bouton Inscription */}
             <a
               href="/register"
               className="flex items-center gap-2 px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2 lg:py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 rounded-lg font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg hover:shadow-blue-900/30 text-white text-sm lg:text-base whitespace-nowrap"
@@ -177,16 +200,29 @@ function Header() {
                 { label: "Accueil", icon: "🏠", href: "/" },
                 { label: "Catégories", icon: "📚", href: "/categories" },
                 { label: "Livres Audio", icon: "🎧", href: "/audio" },
+                { 
+                  label: "Panier", 
+                  icon: "🛒", 
+                  href: "/cart",
+                  badge: cartItems > 0 ? `(${cartItems})` : ""
+                },
               ].map((item, index) => (
                 <a
                   key={item.label}
                   href={item.href}
-                  className="flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3.5 text-sm sm:text-base rounded-xl hover:bg-blue-50 transition-all hover:translate-x-2 opacity-0 animate-fadeInSlide text-blue-900 font-medium"
+                  className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3.5 text-sm sm:text-base rounded-xl hover:bg-blue-50 transition-all hover:translate-x-2 opacity-0 animate-fadeInSlide text-blue-900 font-medium"
                   style={{ animationDelay: `${index * 50}ms`, animationFillMode: "forwards" }}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <span className="text-lg sm:text-xl">{item.icon}</span>
-                  {item.label}
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg sm:text-xl">{item.icon}</span>
+                    {item.label}
+                  </div>
+                  {item.badge && (
+                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                      {item.badge}
+                    </span>
+                  )}
                 </a>
               ))}
             </div>

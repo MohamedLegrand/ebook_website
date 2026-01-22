@@ -7,7 +7,7 @@ function Footer() {
     <footer className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 border-t-4 border-blue-500 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
@@ -17,7 +17,7 @@ function Footer() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-white font-bold text-xl">eBook Platform</h3>
+                <h3 className="text-white font-bold text-xl">eBook<span className="text-cyan-400">Pro</span></h3>
                 <p className="text-blue-200 text-sm">Votre bibliothèque numérique</p>
               </div>
             </div>
@@ -47,43 +47,6 @@ function Footer() {
                 </svg>
               </a>
             </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-white font-bold text-lg mb-4 pb-2 border-b border-blue-700">Explorer</h4>
-            <ul className="space-y-3">
-              <li>
-                <a href="/catalogue" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full inline-block mr-2"></span>
-                  Catalogue Complet
-                </a>
-              </li>
-              <li>
-                <a href="/nouveautes" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full inline-block mr-2"></span>
-                  Nouveautés
-                </a>
-              </li>
-              <li>
-                <a href="/categories" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full inline-block mr-2"></span>
-                  Catégories
-                </a>
-              </li>
-              <li>
-                <a href="/best-sellers" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full inline-block mr-2"></span>
-                  Best-Sellers
-                </a>
-              </li>
-              <li>
-                <a href="/promotions" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full inline-block mr-2"></span>
-                  Promotions
-                </a>
-              </li>
-            </ul>
           </div>
 
           {/* Support & Legal */}
@@ -120,41 +83,47 @@ function Footer() {
                   Politique de Confidentialité
                 </a>
               </li>
-            </ul>
-          </div>
-
-          {/* About & Policies */}
-          <div>
-            <h4 className="text-white font-bold text-lg mb-4 pb-2 border-b border-blue-700">À Propos</h4>
-            <ul className="space-y-3">
               <li>
-                <a href="/a-propos" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
+                <a href="/about" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
                   <span className="w-2 h-2 bg-blue-500 rounded-full inline-block mr-2"></span>
                   À Propos de Nous
                 </a>
               </li>
+            </ul>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-white font-bold text-lg mb-4 pb-2 border-b border-blue-700">Liens Rapides</h4>
+            <ul className="space-y-3">
               <li>
-                <a href="/equipe" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
+                <a href="/catalogue" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
                   <span className="w-2 h-2 bg-blue-500 rounded-full inline-block mr-2"></span>
-                  Notre Équipe
+                  Catalogue Complet
                 </a>
               </li>
               <li>
-                <a href="/carrieres" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
+                <a href="/categories" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
                   <span className="w-2 h-2 bg-blue-500 rounded-full inline-block mr-2"></span>
-                  Carrières
+                  Catégories
                 </a>
               </li>
               <li>
-                <a href="/blog" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
+                <a href="/audio" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
                   <span className="w-2 h-2 bg-blue-500 rounded-full inline-block mr-2"></span>
-                  Blog
+                  Livres Audio
                 </a>
               </li>
               <li>
-                <a href="/mentions-legales" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
+                <a href="/register" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
                   <span className="w-2 h-2 bg-blue-500 rounded-full inline-block mr-2"></span>
-                  Mentions Légales
+                  S'inscrire
+                </a>
+              </li>
+              <li>
+                <a href="/login" className="text-blue-200 hover:text-white text-sm transition-all duration-200 hover:translate-x-2 inline-block">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full inline-block mr-2"></span>
+                  Connexion
                 </a>
               </li>
             </ul>
@@ -202,9 +171,9 @@ function Footer() {
             <div>
               <h5 className="text-blue-300 font-semibold text-sm mb-3">Contact Rapide</h5>
               <div className="space-y-2 text-blue-100 text-sm">
-                <p>📧 support@ebookplatform.com</p>
-                <p>📞 +225 07 00 00 00 00</p>
-                <p>📍 Abidjan, Côte d'Ivoire</p>
+                <p>📧 support@ebookpro.fr</p>
+                <p>📞 +33 1 23 45 67 89</p>
+                <p>📍 123 Avenue du Livre, 75001 Paris</p>
               </div>
             </div>
           </div>
@@ -215,7 +184,7 @@ function Footer() {
               {/* Copyright */}
               <div className="text-center md:text-left">
                 <p className="text-blue-200 text-sm">
-                  © {currentYear} <span className="font-bold text-white">eBook Platform</span> — Tous droits réservés.
+                  © {currentYear} <span className="font-bold text-white">eBookPro</span> — Tous droits réservés.
                 </p>
                 <p className="text-blue-300 text-xs mt-1">
                   Le savoir à portée de clic
@@ -224,12 +193,12 @@ function Footer() {
 
               {/* Links */}
               <div className="flex flex-wrap gap-4 justify-center">
-                <a href="/cgu" className="text-blue-300 hover:text-white text-xs transition-colors">
-                  CGU
+                <a href="/conditions" className="text-blue-300 hover:text-white text-xs transition-colors">
+                  Conditions
                 </a>
                 <span className="text-blue-500">•</span>
-                <a href="/cgv" className="text-blue-300 hover:text-white text-xs transition-colors">
-                  CGV
+                <a href="/confidentialite" className="text-blue-300 hover:text-white text-xs transition-colors">
+                  Confidentialité
                 </a>
                 <span className="text-blue-500">•</span>
                 <a href="/cookies" className="text-blue-300 hover:text-white text-xs transition-colors">
@@ -238,10 +207,6 @@ function Footer() {
                 <span className="text-blue-500">•</span>
                 <a href="/accessibilite" className="text-blue-300 hover:text-white text-xs transition-colors">
                   Accessibilité
-                </a>
-                <span className="text-blue-500">•</span>
-                <a href="/sitemap" className="text-blue-300 hover:text-white text-xs transition-colors">
-                  Plan du site
                 </a>
               </div>
 
