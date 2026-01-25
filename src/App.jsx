@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CartProvider } from "./context/CartContext"; // Import du CartProvider
 
 import Accueil from "./pages/accueil/Accueil";
 import Categories from "./pages/categories/Categories";
@@ -17,20 +18,22 @@ import Cart from "./pages/cart/Cart";
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Accueil />} />
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} /> 
-        <Route path="/audio" element={<Audio />} /> 
-        <Route path="/faq" element={<FAQ />} /> 
-        <Route path="/contact" element={<Contact />} />  
-        <Route path="/aide" element={<Aide />} /> 
-        <Route path="/conditions" element={<Conditions />} />
-        <Route path="/confidentialite" element={<Confidentialite />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/cart" element={<Cart />} />
-      </Routes>
+      <CartProvider> {/* Enveloppez toutes les routes avec CartProvider */}
+        <Routes>
+          <Route path="/" element={<Accueil />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} /> 
+          <Route path="/audio" element={<Audio />} /> 
+          <Route path="/faq" element={<FAQ />} /> 
+          <Route path="/contact" element={<Contact />} />  
+          <Route path="/aide" element={<Aide />} /> 
+          <Route path="/conditions" element={<Conditions />} />
+          <Route path="/confidentialite" element={<Confidentialite />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/cart" element={<Cart />} />
+        </Routes>
+      </CartProvider>
     </BrowserRouter> 
   );
 }
