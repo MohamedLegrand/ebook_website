@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Star, Shield, Truck, Clock, BookOpen, Users, ShoppingCart, Check } from 'lucide-react';
+import { useCart } from '../../../context/CartContext';
 
 const whyChooseUsBooks = [
   {
@@ -140,16 +141,39 @@ const whyChooseUsBooks = [
 ];
 
 const WhyChooseUs = () => {
-  const [cart, setCart] = useState([]);
+  const { addToCart, cart: globalCart } = useCart();
   const [addedBooks, setAddedBooks] = useState({});
 
-  const addToCart = (book) => {
-    setCart([...cart, book]);
-    setAddedBooks({ ...addedBooks, [book.id]: true });
+  const handleAddToCart = (book) => {
+    // Ajouter au panier global via le contexte
+    addToCart({
+      id: book.id,
+      type: 'book', // Important: "book" pour les livres normaux
+      title: book.title,
+      author: book.author,
+      price: book.priceFCFA,
+      cover: book.cover,
+      category: book.category,
+      rating: book.rating
+    });
+    
+    // Animation de confirmation
+    setAddedBooks(prev => ({
+      ...prev,
+      [book.id]: true
+    }));
     
     setTimeout(() => {
-      setAddedBooks({ ...addedBooks, [book.id]: false });
+      setAddedBooks(prev => ({
+        ...prev,
+        [book.id]: false
+      }));
     }, 2000);
+  };
+
+  // Vérifier si un livre est dans le panier global
+  const isInCart = (bookId) => {
+    return globalCart.some(item => item.id === bookId && item.type === 'book');
   };
 
   const features = [
@@ -188,14 +212,6 @@ const WhyChooseUs = () => {
   return (
     <section className="py-8 sm:py-12 md:py-16 bg-gradient-to-b from-sky-50 to-white">
       <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-        {/* Cart Indicator */}
-        {cart.length > 0 && (
-          <div className="fixed top-2 right-2 sm:top-4 sm:right-4 bg-sky-500 text-white px-3 py-2 sm:px-6 sm:py-3 rounded-full shadow-lg z-50 flex items-center gap-2 animate-bounce text-xs sm:text-base">
-            <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="font-semibold">{cart.length} article(s)</span>
-          </div>
-        )}
-
         {/* Header */}
         <div className="text-center mb-8 sm:mb-10 md:mb-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 px-4">
@@ -247,8 +263,19 @@ const WhyChooseUs = () => {
             {whyChooseUsBooks.map((book) => (
               <div 
                 key={book.id}
-                className="bg-white rounded-lg sm:rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-sky-100 flex flex-col"
+                className={`bg-white rounded-lg sm:rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border flex flex-col relative ${
+                  isInCart(book.id) ? 'border-green-400 bg-green-50' : 'border-sky-100'
+                }`}
               >
+                {/* Animation de confirmation */}
+                {addedBooks[book.id] && (
+                  <div className="absolute top-1 right-1 sm:top-2 sm:right-2 animate-fadeIn z-10">
+                    <div className="bg-green-500 text-white p-1 sm:p-1.5 rounded-full shadow-lg">
+                      <Check className="w-3 h-3 sm:w-4 sm:h-4" />
+                    </div>
+                  </div>
+                )}
+
                 {/* Book Cover */}
                 <div className="relative h-32 sm:h-40 md:h-48 overflow-hidden bg-gradient-to-br from-sky-100 to-sky-50 flex-shrink-0">
                   <img 
@@ -304,14 +331,14 @@ const WhyChooseUs = () => {
                       <span className="text-[10px] sm:text-xs text-gray-500">FCFA</span>
                     </div>
                     <button 
-                      onClick={() => addToCart(book)}
-                      className={`w-full sm:w-auto px-2 py-1 sm:px-3 sm:py-1.5 text-white text-[10px] sm:text-xs rounded transition-all duration-300 flex items-center justify-center gap-1 ${
-                        addedBooks[book.id] 
+                      onClick={() => handleAddToCart(book)}
+                      className={`w-full sm:w-auto px-2 py-1 sm:px-3 sm:py-1.5 text-white text-[10px] sm:text-xs rounded transition-all duration-300 flex items-center justify-center gap-1 font-medium ${
+                        isInCart(book.id)
                           ? 'bg-green-500 hover:bg-green-600' 
                           : 'bg-sky-500 hover:bg-sky-600'
                       }`}
                     >
-                      {addedBooks[book.id] ? (
+                      {isInCart(book.id) ? (
                         <>
                           <Check className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span className="hidden sm:inline">Ajouté</span>
@@ -354,6 +381,18 @@ const WhyChooseUs = () => {
           </div>
         </div>
       </div>
+
+      {/* Styles d'animation */}
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-5px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </section>
   );
 };

@@ -1,27 +1,43 @@
 import React, { useState } from "react";
 import { Star, PlayCircle, Headphones, Download, Volume2, CheckCircle, ShoppingCart, Check } from "lucide-react";
+import { useCart } from '../../../context/CartContext';
 
 function AudioBooks() {
-  const [cart, setCart] = useState({});
+  const { addToCart, cart: globalCart } = useCart();
   const [addedBooks, setAddedBooks] = useState({});
 
-  const handleCartToggle = (bookId) => {
-    setCart(prev => ({
-      ...prev,
-      [bookId]: !prev[bookId]
-    }));
+  const handleAddToCart = (book) => {
+    // Ajouter au panier global via le contexte
+    addToCart({
+      id: book.id,
+      type: 'audiobook', // Important: "audiobook" pour différencier des livres normaux
+      title: book.title,
+      author: book.author,
+      narrator: book.narrator,
+      price: book.priceFCFA,
+      cover: book.cover,
+      category: book.category,
+      duration: book.duration,
+      rating: book.rating
+    });
     
+    // Animation de confirmation
     setAddedBooks(prev => ({
       ...prev,
-      [bookId]: true
+      [book.id]: true
     }));
     
     setTimeout(() => {
       setAddedBooks(prev => ({
         ...prev,
-        [bookId]: false
+        [book.id]: false
       }));
     }, 2000);
+  };
+
+  // Vérifier si un livre est dans le panier global
+  const isInCart = (bookId) => {
+    return globalCart.some(item => item.id === bookId && item.type === 'audiobook');
   };
 
   const audioBooks = [
@@ -230,18 +246,8 @@ function AudioBooks() {
     }
   ];
 
-  const cartCount = Object.values(cart).filter(Boolean).length;
-
   return (
     <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
-      {/* Cart Indicator */}
-      {cartCount > 0 && (
-        <div className="fixed top-2 right-2 sm:top-4 sm:right-4 bg-blue-600 text-white px-3 py-2 sm:px-6 sm:py-3 rounded-full shadow-lg z-50 flex items-center gap-2 animate-bounce text-xs sm:text-base">
-          <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span className="font-semibold">{cartCount} article(s)</span>
-        </div>
-      )}
-
       {/* Background elements */}
       <div className="absolute top-0 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
       <div className="absolute bottom-0 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
@@ -299,13 +305,13 @@ function AudioBooks() {
             {audioBooks.map((book) => (
               <div 
                 key={book.id} 
-                className={`bg-white rounded-lg sm:rounded-xl p-2 sm:p-3 shadow-md hover:shadow-xl transition-all duration-300 border group ${
-                  cart[book.id] ? 'border-green-400 bg-green-50' : 'border-gray-100'
+                className={`bg-white rounded-lg sm:rounded-xl p-2 sm:p-3 shadow-md hover:shadow-xl transition-all duration-300 border group relative ${
+                  isInCart(book.id) ? 'border-green-400 bg-green-50' : 'border-gray-100'
                 }`}
               >
                 {/* Animation de confirmation */}
                 {addedBooks[book.id] && (
-                  <div className="absolute top-1 right-1 sm:top-2 sm:right-2 animate-fadeIn">
+                  <div className="absolute top-1 right-1 sm:top-2 sm:right-2 animate-fadeIn z-10">
                     <div className="bg-green-500 text-white p-1 sm:p-1.5 rounded-full shadow-lg">
                       <Check className="w-3 h-3 sm:w-4 sm:h-4" />
                     </div>
@@ -353,14 +359,14 @@ function AudioBooks() {
                   
                   {/* Bouton Ajouter au panier */}
                   <button
-                    onClick={() => handleCartToggle(book.id)}
+                    onClick={() => handleAddToCart(book)}
                     className={`w-full mt-2 px-2 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded transition-all duration-300 flex items-center justify-center gap-1 font-medium ${
-                      cart[book.id]
+                      isInCart(book.id)
                         ? 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200'
                         : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700'
                     }`}
                   >
-                    {cart[book.id] ? (
+                    {isInCart(book.id) ? (
                       <>
                         <Check className="w-3 h-3 sm:w-4 sm:h-4" />
                         <span className="hidden sm:inline">Ajouté</span>
@@ -462,7 +468,7 @@ function AudioBooks() {
       </div>
 
       {/* Styles d'animation */}
-      <style jsx>{`
+      <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(-5px); }
           to { opacity: 1; transform: translateY(0); }
