@@ -31,20 +31,24 @@ import {
 } from "lucide-react";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
+import { useCart } from "../../context/CartContext"; // IMPORT CORRECT
 
 function Audio() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [currency, setCurrency] = useState("FCFA"); // "FCFA", "USD", "EUR"
+  const [currency, setCurrency] = useState("FCFA");
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
-  const [cart, setCart] = useState({}); // Stocke les livres audio dans le panier {audioId: true/false}
+  const [addedBooks, setAddedBooks] = useState({}); // Pour l'animation de confirmation
+
+  // Utiliser le contexte global du panier
+  const { addToCart, cart: globalCart } = useCart();
 
   // Taux de conversion (exemples)
   const exchangeRates = {
     "FCFA": 1,
-    "USD": 0.00165, // 1 FCFA = 0.00165 USD
-    "EUR": 0.00152  // 1 FCFA = 0.00152 EUR
+    "USD": 0.00165,
+    "EUR": 0.00152
   };
 
   // Icônes des devises
@@ -77,12 +81,39 @@ function Audio() {
     }
   };
 
-  // Fonction pour ajouter/retirer du panier
-  const handleCartToggle = (audioId) => {
-    setCart(prev => ({
+  // Fonction pour ajouter au panier global
+  const handleAddToCart = (audioBook) => {
+    // Ajouter au panier global via le contexte
+    addToCart({
+      id: audioBook.id,
+      type: 'audiobook', // Type "audiobook" pour les livres audio
+      title: audioBook.title,
+      author: audioBook.author,
+      narrator: audioBook.narrator,
+      price: audioBook.priceFCFA,
+      cover: audioBook.cover,
+      duration: audioBook.duration,
+      rating: audioBook.rating,
+      listeners: audioBook.listeners
+    });
+    
+    // Animation de confirmation
+    setAddedBooks(prev => ({
       ...prev,
-      [audioId]: !prev[audioId]
+      [audioBook.id]: true
     }));
+    
+    setTimeout(() => {
+      setAddedBooks(prev => ({
+        ...prev,
+        [audioBook.id]: false
+      }));
+    }, 2000);
+  };
+
+  // Vérifier si un livre audio est dans le panier global
+  const isInCart = (audioBookId) => {
+    return globalCart.some(item => item.id === audioBookId && item.type === 'audiobook');
   };
 
   const categories = [
@@ -777,15 +808,15 @@ function Audio() {
                     key={audioBook.id}
                     className={`
                       relative rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300 border flex flex-col h-full
-                      ${cart[audioBook.id] 
+                      ${isInCart(audioBook.id) 
                         ? 'border-green-400 bg-green-50' 
                         : 'border-gray-100 bg-white'
                       }
                     `}
                   >
                     {/* Animation de confirmation */}
-                    {cart[audioBook.id] && (
-                      <div className="absolute top-3 right-3 animate-fadeIn">
+                    {addedBooks[audioBook.id] && (
+                      <div className="absolute top-3 right-3 animate-fadeIn z-10">
                         <div className="bg-green-500 text-white p-1.5 rounded-full shadow-lg">
                           <Check className="w-4 h-4" />
                         </div>
@@ -858,18 +889,18 @@ function Audio() {
                             <span>Prix en {currency}</span>
                           </div>
                         </div>
-                        {/* Bouton Ajouter/Retirer du panier */}
+                        {/* Bouton Ajouter au panier */}
                         <button
-                          onClick={() => handleCartToggle(audioBook.id)}
+                          onClick={() => handleAddToCart(audioBook)}
                           className={`
                             flex items-center gap-1 text-sm px-3 py-2 rounded-lg font-medium transition-all duration-300
-                            ${cart[audioBook.id]
+                            ${isInCart(audioBook.id)
                               ? 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200'
                               : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 hover:scale-105'
                             }
                           `}
                         >
-                          {cart[audioBook.id] ? (
+                          {isInCart(audioBook.id) ? (
                             <>
                               <Check className="w-4 h-4" />
                               Ajouté
