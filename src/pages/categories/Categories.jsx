@@ -24,20 +24,24 @@ import {
 } from "lucide-react";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
+import { useCart } from "../../context/CartContext"; // IMPORT CORRECT
 
 function Categories() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [currency, setCurrency] = useState("FCFA"); // "FCFA", "USD", "EUR"
+  const [currency, setCurrency] = useState("FCFA");
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
-  const [cart, setCart] = useState({}); // Stocke les livres dans le panier {bookId: true/false}
+  const [addedBooks, setAddedBooks] = useState({}); // Pour l'animation de confirmation
+
+  // Utiliser le contexte global du panier
+  const { addToCart, cart: globalCart } = useCart();
 
   // Taux de conversion (exemples)
   const exchangeRates = {
     "FCFA": 1,
-    "USD": 0.00165, // 1 FCFA = 0.00165 USD
-    "EUR": 0.00152  // 1 FCFA = 0.00152 EUR
+    "USD": 0.00165,
+    "EUR": 0.00152
   };
 
   // Icônes des devises
@@ -70,12 +74,36 @@ function Categories() {
     }
   };
 
-  // Fonction pour ajouter/retirer du panier
-  const handleCartToggle = (bookId) => {
-    setCart(prev => ({
+  // Fonction pour ajouter au panier global
+  const handleAddToCart = (book) => {
+    // Ajouter au panier global via le contexte
+    addToCart({
+      id: book.id,
+      type: 'book', // Type "book" pour les livres normaux
+      title: book.title,
+      author: book.author,
+      price: book.priceFCFA,
+      cover: book.cover,
+      category: book.category || "Général" // Ajout d'une catégorie par défaut
+    });
+    
+    // Animation de confirmation
+    setAddedBooks(prev => ({
       ...prev,
-      [bookId]: !prev[bookId]
+      [book.id]: true
     }));
+    
+    setTimeout(() => {
+      setAddedBooks(prev => ({
+        ...prev,
+        [book.id]: false
+      }));
+    }, 2000);
+  };
+
+  // Vérifier si un livre est dans le panier global
+  const isInCart = (bookId) => {
+    return globalCart.some(item => item.id === bookId && item.type === 'book');
   };
 
   const categories = [
@@ -86,14 +114,14 @@ function Categories() {
       count: 1247,
       description: "Programmation, IA, cybersécurité, développement web et mobile",
       books: [
-        { id: 101, title: "Clean Code", author: "Robert C. Martin", priceFCFA: 20000, cover: "/src/assets/images/informatique/clean-code.jpg" },
-        { id: 102, title: "The Pragmatic Programmer", author: "Hunt & Thomas", priceFCFA: 23000, cover: "/src/assets/images/informatique/pragmatic-programmer.jpg" },
-        { id: 103, title: "Design Patterns", author: "Gang of Four", priceFCFA: 20000, cover: "/src/assets/images/informatique/design-patterns.jpg" },
-        { id: 104, title: "You Don't Know JS", author: "Kyle Simpson", priceFCFA: 20000, cover: "/src/assets/images/informatique/you-dont-know-js.jpg" },
-        { id: 105, title: "Refactoring", author: "Martin Fowler", priceFCFA: 20000, cover: "/src/assets/images/informatique/refactoring.jpg" },
-        { id: 106, title: "Introduction to Algorithms", author: "CLRS", priceFCFA: 20000, cover: "/src/assets/images/informatique/intro-algorithms.jpg" },
-        { id: 107, title: "Code Complete", author: "Steve McConnell", priceFCFA: 20000, cover: "/src/assets/images/informatique/code-complete.jpg" },
-        { id: 108, title: "The Art of Computer Programming", author: "Donald Knuth", priceFCFA: 20000, cover: "/src/assets/images/informatique/art-programming.jpg" },
+        { id: 101, title: "Clean Code", author: "Robert C. Martin", priceFCFA: 20000, cover: "/src/assets/images/informatique/clean-code.jpg", category: "Informatique" },
+        { id: 102, title: "The Pragmatic Programmer", author: "Hunt & Thomas", priceFCFA: 23000, cover: "/src/assets/images/informatique/pragmatic-programmer.jpg", category: "Informatique" },
+        { id: 103, title: "Design Patterns", author: "Gang of Four", priceFCFA: 20000, cover: "/src/assets/images/informatique/design-patterns.jpg", category: "Informatique" },
+        { id: 104, title: "You Don't Know JS", author: "Kyle Simpson", priceFCFA: 20000, cover: "/src/assets/images/informatique/you-dont-know-js.jpg", category: "Informatique" },
+        { id: 105, title: "Refactoring", author: "Martin Fowler", priceFCFA: 20000, cover: "/src/assets/images/informatique/refactoring.jpg", category: "Informatique" },
+        { id: 106, title: "Introduction to Algorithms", author: "CLRS", priceFCFA: 20000, cover: "/src/assets/images/informatique/intro-algorithms.jpg", category: "Informatique" },
+        { id: 107, title: "Code Complete", author: "Steve McConnell", priceFCFA: 20000, cover: "/src/assets/images/informatique/code-complete.jpg", category: "Informatique" },
+        { id: 108, title: "The Art of Computer Programming", author: "Donald Knuth", priceFCFA: 20000, cover: "/src/assets/images/informatique/art-programming.jpg", category: "Informatique" },
       ]
     },
     {
@@ -103,14 +131,14 @@ function Categories() {
       count: 892,
       description: "Entrepreneuriat, investissement, comptabilité, gestion d'entreprise",
       books: [
-        { id: 201, title: "The Lean Startup", author: "Eric Ries", priceFCFA: 20000, cover: "/src/assets/images/business/lean-startup.jpg" },
-        { id: 202, title: "Zero to One", author: "Peter Thiel", priceFCFA: 20000, cover: "/src/assets/images/business/zero-to-one.jpg" },
-        { id: 203, title: "Rich Dad Poor Dad", author: "Robert Kiyosaki", priceFCFA: 20000, cover: "/src/assets/images/business/rich-dad-poor-dad.jpg" },
-        { id: 204, title: "Good to Great", author: "Jim Collins", priceFCFA: 20000, cover: "/src/assets/images/business/good-to-great.jpg" },
-        { id: 205, title: "The Intelligent Investor", author: "Benjamin Graham", priceFCFA: 20000, cover: "/src/assets/images/business/intelligent-investor.jpg" },
-        { id: 206, title: "Thinking, Fast and Slow", author: "Daniel Kahneman", priceFCFA: 20000, cover: "/src/assets/images/business/thinking-fast-slow.jpg" },
-        { id: 207, title: "The 4-Hour Workweek", author: "Tim Ferriss", priceFCFA: 20000, cover: "/src/assets/images/business/4-hour-workweek.jpg" },
-        { id: 208, title: "Principles", author: "Ray Dalio", priceFCFA: 20000, cover: "/src/assets/images/business/principles.jpg" },
+        { id: 201, title: "The Lean Startup", author: "Eric Ries", priceFCFA: 20000, cover: "/src/assets/images/business/lean-startup.jpg", category: "Business" },
+        { id: 202, title: "Zero to One", author: "Peter Thiel", priceFCFA: 20000, cover: "/src/assets/images/business/zero-to-one.jpg", category: "Business" },
+        { id: 203, title: "Rich Dad Poor Dad", author: "Robert Kiyosaki", priceFCFA: 20000, cover: "/src/assets/images/business/rich-dad-poor-dad.jpg", category: "Business" },
+        { id: 204, title: "Good to Great", author: "Jim Collins", priceFCFA: 20000, cover: "/src/assets/images/business/good-to-great.jpg", category: "Business" },
+        { id: 205, title: "The Intelligent Investor", author: "Benjamin Graham", priceFCFA: 20000, cover: "/src/assets/images/business/intelligent-investor.jpg", category: "Business" },
+        { id: 206, title: "Thinking, Fast and Slow", author: "Daniel Kahneman", priceFCFA: 20000, cover: "/src/assets/images/business/thinking-fast-slow.jpg", category: "Business" },
+        { id: 207, title: "The 4-Hour Workweek", author: "Tim Ferriss", priceFCFA: 20000, cover: "/src/assets/images/business/4-hour-workweek.jpg", category: "Business" },
+        { id: 208, title: "Principles", author: "Ray Dalio", priceFCFA: 20000, cover: "/src/assets/images/business/principles.jpg", category: "Business" },
       ]
     },
     {
@@ -120,14 +148,14 @@ function Categories() {
       count: 1543,
       description: "Motivation, habitudes, productivité, réussite personnelle",
       books: [
-        { id: 301, title: "Atomic Habits", author: "James Clear", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/atomic-habits.jpg" },
-        { id: 302, title: "The Power of Now", author: "Eckhart Tolle", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/power-of-now.jpg" },
-        { id: 303, title: "Mindset", author: "Carol Dweck", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/mindset.jpg" },
-        { id: 304, title: "Deep Work", author: "Cal Newport", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/deep-work.jpg" },
-        { id: 305, title: "The 7 Habits", author: "Stephen Covey", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/7-habits.jpg" },
-        { id: 306, title: "Can't Hurt Me", author: "David Goggins", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/cant-hurt-me.jpg" },
-        { id: 307, title: "The Subtle Art", author: "Mark Manson", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/subtle-art.jpg" },
-        { id: 308, title: "Grit", author: "Angela Duckworth", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/grit.jpg" },
+        { id: 301, title: "Atomic Habits", author: "James Clear", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/atomic-habits.jpg", category: "Développement Personnel" },
+        { id: 302, title: "The Power of Now", author: "Eckhart Tolle", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/power-of-now.jpg", category: "Développement Personnel" },
+        { id: 303, title: "Mindset", author: "Carol Dweck", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/mindset.jpg", category: "Développement Personnel" },
+        { id: 304, title: "Deep Work", author: "Cal Newport", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/deep-work.jpg", category: "Développement Personnel" },
+        { id: 305, title: "The 7 Habits", author: "Stephen Covey", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/7-habits.jpg", category: "Développement Personnel" },
+        { id: 306, title: "Can't Hurt Me", author: "David Goggins", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/cant-hurt-me.jpg", category: "Développement Personnel" },
+        { id: 307, title: "The Subtle Art", author: "Mark Manson", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/subtle-art.jpg", category: "Développement Personnel" },
+        { id: 308, title: "Grit", author: "Angela Duckworth", priceFCFA: 20000, cover: "/src/assets/images/developpement-personnel/grit.jpg", category: "Développement Personnel" },
       ]
     },
     {
@@ -137,14 +165,14 @@ function Categories() {
       count: 2156,
       description: "Romans classiques, contemporains, science-fiction, fantasy",
       books: [
-        { id: 401, title: "1984", author: "George Orwell", priceFCFA: 12000, cover: "/src/assets/images/romans-fiction/984.jpg" },
-        { id: 402, title: "To Kill a Mockingbird", author: "Harper Lee", priceFCFA: 13000, cover: "/src/assets/images/romans-fiction/mockingbird.jpg" },
-        { id: 403, title: "The Great Gatsby", author: "F. Scott Fitzgerald", priceFCFA: 11500, cover: "/src/assets/images/romans-fiction/great-gatsby.jpg" },
-        { id: 404, title: "Pride and Prejudice", author: "Jane Austen", priceFCFA: 11000, cover: "/src/assets/images/romans-fiction/pride-prejudice.jpg" },
-        { id: 405, title: "The Catcher in the Rye", author: "J.D. Salinger", priceFCFA: 12000, cover: "/src/assets/images/romans-fiction/catcher-rye.jpg" },
-        { id: 406, title: "Lord of the Flies", author: "William Golding", priceFCFA: 11500, cover: "/src/assets/images/romans-fiction/lord-flies.jpg" },
-        { id: 407, title: "Animal Farm", author: "George Orwell", priceFCFA: 10500, cover: "/src/assets/images/romans-fiction/animal-farm.jpg" },
-        { id: 408, title: "Brave New World", author: "Aldous Huxley", priceFCFA: 13000, cover: "/src/assets/images/romans-fiction/brave-new-world.jpg" },
+        { id: 401, title: "1984", author: "George Orwell", priceFCFA: 12000, cover: "/src/assets/images/romans-fiction/984.jpg", category: "Fiction" },
+        { id: 402, title: "To Kill a Mockingbird", author: "Harper Lee", priceFCFA: 13000, cover: "/src/assets/images/romans-fiction/mockingbird.jpg", category: "Fiction" },
+        { id: 403, title: "The Great Gatsby", author: "F. Scott Fitzgerald", priceFCFA: 11500, cover: "/src/assets/images/romans-fiction/great-gatsby.jpg", category: "Fiction" },
+        { id: 404, title: "Pride and Prejudice", author: "Jane Austen", priceFCFA: 11000, cover: "/src/assets/images/romans-fiction/pride-prejudice.jpg", category: "Fiction" },
+        { id: 405, title: "The Catcher in the Rye", author: "J.D. Salinger", priceFCFA: 12000, cover: "/src/assets/images/romans-fiction/catcher-rye.jpg", category: "Fiction" },
+        { id: 406, title: "Lord of the Flies", author: "William Golding", priceFCFA: 11500, cover: "/src/assets/images/romans-fiction/lord-flies.jpg", category: "Fiction" },
+        { id: 407, title: "Animal Farm", author: "George Orwell", priceFCFA: 10500, cover: "/src/assets/images/romans-fiction/animal-farm.jpg", category: "Fiction" },
+        { id: 408, title: "Brave New World", author: "Aldous Huxley", priceFCFA: 13000, cover: "/src/assets/images/romans-fiction/brave-new-world.jpg", category: "Fiction" },
       ]
     },
     {
@@ -154,10 +182,10 @@ function Categories() {
       count: 678,
       description: "Peinture, dessin, design graphique, arts visuels",
       books: [
-        { id: 501, title: "Steal Like an Artist", author: "Austin Kleon", priceFCFA: 14000, cover: "/src/assets/images/arts-creativite/steal-like-artist.jpg" },
-        { id: 502, title: "The Artist's Way", author: "Julia Cameron", priceFCFA: 15500, cover: "/src/assets/images/arts-creativite/artists-way.jpg" },
-        { id: 503, title: "Creative Confidence", author: "Tom & David Kelley", priceFCFA: 17000, cover: "/src/assets/images/arts-creativite/creative-confidence.jpg" },
-        { id: 504, title: "Drawing on the Right Side", author: "Betty Edwards", priceFCFA: 18500, cover: "/src/assets/images/arts-creativite/drawing-right-side.jpg" },
+        { id: 501, title: "Steal Like an Artist", author: "Austin Kleon", priceFCFA: 14000, cover: "/src/assets/images/arts-creativite/steal-like-artist.jpg", category: "Arts" },
+        { id: 502, title: "The Artist's Way", author: "Julia Cameron", priceFCFA: 15500, cover: "/src/assets/images/arts-creativite/artists-way.jpg", category: "Arts" },
+        { id: 503, title: "Creative Confidence", author: "Tom & David Kelley", priceFCFA: 17000, cover: "/src/assets/images/arts-creativite/creative-confidence.jpg", category: "Arts" },
+        { id: 504, title: "Drawing on the Right Side", author: "Betty Edwards", priceFCFA: 18500, cover: "/src/assets/images/arts-creativite/drawing-right-side.jpg", category: "Arts" },
       ]
     },
     {
@@ -167,10 +195,10 @@ function Categories() {
       count: 934,
       description: "Biologie, physique, astronomie, environnement",
       books: [
-        { id: 601, title: "Sapiens", author: "Yuval Noah Harari", priceFCFA: 18000, cover: "/src/assets/images/sciences-nature/sapiens.jpg" },
-        { id: 602, title: "A Brief History of Time", author: "Stephen Hawking", priceFCFA: 16500, cover: "/src/assets/images/sciences-nature/brief-history-time.jpg" },
-        { id: 603, title: "The Selfish Gene", author: "Richard Dawkins", priceFCFA: 16000, cover: "/src/assets/images/sciences-nature/selfish-gene.jpg" },
-        { id: 604, title: "Cosmos", author: "Carl Sagan", priceFCFA: 19000, cover: "/src/assets/images/sciences-nature/cosmos.jpg" },
+        { id: 601, title: "Sapiens", author: "Yuval Noah Harari", priceFCFA: 18000, cover: "/src/assets/images/sciences-nature/sapiens.jpg", category: "Sciences" },
+        { id: 602, title: "A Brief History of Time", author: "Stephen Hawking", priceFCFA: 16500, cover: "/src/assets/images/sciences-nature/brief-history-time.jpg", category: "Sciences" },
+        { id: 603, title: "The Selfish Gene", author: "Richard Dawkins", priceFCFA: 16000, cover: "/src/assets/images/sciences-nature/selfish-gene.jpg", category: "Sciences" },
+        { id: 604, title: "Cosmos", author: "Carl Sagan", priceFCFA: 19000, cover: "/src/assets/images/sciences-nature/cosmos.jpg", category: "Sciences" },
       ]
     },
     {
@@ -180,10 +208,10 @@ function Categories() {
       count: 1089,
       description: "Histoire mondiale, civilisations, géopolitique, voyages",
       books: [
-        { id: 701, title: "Guns, Germs, and Steel", author: "Jared Diamond", priceFCFA: 19500, cover: "/src/assets/images/histoire-geographie/guns-germs-steel.jpg" },
-        { id: 702, title: "The Silk Roads", author: "Peter Frankopan", priceFCFA: 20000, cover: "/src/assets/images/histoire-geographie/silk-roads.jpg" },
-        { id: 703, title: "SPQR", author: "Mary Beard", priceFCFA: 18500, cover: "/src/assets/images/histoire-geographie/spqr.jpg" },
-        { id: 704, title: "1491", author: "Charles C. Mann", priceFCFA: 18000, cover: "/src/assets/images/histoire-geographie/1491.jpg" },
+        { id: 701, title: "Guns, Germs, and Steel", author: "Jared Diamond", priceFCFA: 19500, cover: "/src/assets/images/histoire-geographie/guns-germs-steel.jpg", category: "Histoire" },
+        { id: 702, title: "The Silk Roads", author: "Peter Frankopan", priceFCFA: 20000, cover: "/src/assets/images/histoire-geographie/silk-roads.jpg", category: "Histoire" },
+        { id: 703, title: "SPQR", author: "Mary Beard", priceFCFA: 18500, cover: "/src/assets/images/histoire-geographie/spqr.jpg", category: "Histoire" },
+        { id: 704, title: "1491", author: "Charles C. Mann", priceFCFA: 18000, cover: "/src/assets/images/histoire-geographie/1491.jpg", category: "Histoire" },
       ]
     },
     {
@@ -193,10 +221,10 @@ function Categories() {
       count: 445,
       description: "Recettes, techniques culinaires, pâtisserie, cuisine du monde",
       books: [
-        { id: 801, title: "Salt, Fat, Acid, Heat", author: "Samin Nosrat", priceFCFA: 22000, cover: "/src/assets/images/cuisine-gastronomie/salt-fat-acid-heat.jpg" },
-        { id: 802, title: "The Joy of Cooking", author: "Irma Rombauer", priceFCFA: 24000, cover: "/src/assets/images/cuisine-gastronomie/joy-cooking.jpg" },
-        { id: 803, title: "Mastering the Art", author: "Julia Child", priceFCFA: 26000, cover: "/src/assets/images/cuisine-gastronomie/mastering-art.jpg" },
-        { id: 804, title: "Ottolenghi Simple", author: "Yotam Ottolenghi", priceFCFA: 23000, cover: "/src/assets/images/cuisine-gastronomie/ottolenghi-simple.jpg" },
+        { id: 801, title: "Salt, Fat, Acid, Heat", author: "Samin Nosrat", priceFCFA: 22000, cover: "/src/assets/images/cuisine-gastronomie/salt-fat-acid-heat.jpg", category: "Cuisine" },
+        { id: 802, title: "The Joy of Cooking", author: "Irma Rombauer", priceFCFA: 24000, cover: "/src/assets/images/cuisine-gastronomie/joy-cooking.jpg", category: "Cuisine" },
+        { id: 803, title: "Mastering the Art", author: "Julia Child", priceFCFA: 26000, cover: "/src/assets/images/cuisine-gastronomie/mastering-art.jpg", category: "Cuisine" },
+        { id: 804, title: "Ottolenghi Simple", author: "Yotam Ottolenghi", priceFCFA: 23000, cover: "/src/assets/images/cuisine-gastronomie/ottolenghi-simple.jpg", category: "Cuisine" },
       ]
     },
     {
@@ -206,10 +234,10 @@ function Categories() {
       count: 721,
       description: "Nutrition, fitness, méditation, santé mentale",
       books: [
-        { id: 901, title: "How Not to Die", author: "Michael Greger", priceFCFA: 18000, cover: "/src/assets/images/sante-bien-etre/how-not-to-die.jpg" },
-        { id: 902, title: "Why We Sleep", author: "Matthew Walker", priceFCFA: 16500, cover: "/src/assets/images/sante-bien-etre/why-we-sleep.jpg" },
-        { id: 903, title: "The Body Keeps Score", author: "Bessel van der Kolk", priceFCFA: 19000, cover: "/src/assets/images/sante-bien-etre/body-keeps-score.jpg" },
-        { id: 904, title: "Breath", author: "James Nestor", priceFCFA: 15000, cover: "/src/assets/images/sante-bien-etre/breath.jpg" },
+        { id: 901, title: "How Not to Die", author: "Michael Greger", priceFCFA: 18000, cover: "/src/assets/images/sante-bien-etre/how-not-to-die.jpg", category: "Santé" },
+        { id: 902, title: "Why We Sleep", author: "Matthew Walker", priceFCFA: 16500, cover: "/src/assets/images/sante-bien-etre/why-we-sleep.jpg", category: "Santé" },
+        { id: 903, title: "The Body Keeps Score", author: "Bessel van der Kolk", priceFCFA: 19000, cover: "/src/assets/images/sante-bien-etre/body-keeps-score.jpg", category: "Santé" },
+        { id: 904, title: "Breath", author: "James Nestor", priceFCFA: 15000, cover: "/src/assets/images/sante-bien-etre/breath.jpg", category: "Santé" },
       ]
     },
     {
@@ -219,10 +247,10 @@ function Categories() {
       count: 356,
       description: "Entraînement, musculation, running, sports collectifs",
       books: [
-        { id: 1001, title: "Starting Strength", author: "Mark Rippetoe", priceFCFA: 23000, cover: "/src/assets/images/sport-fitness/starting-strength.jpg" },
-        { id: 1002, title: "Born to Run", author: "Christopher McDougall", priceFCFA: 16000, cover: "/src/assets/images/sport-fitness/born-to-run.jpg" },
-        { id: 1003, title: "The Sports Gene", author: "David Epstein", priceFCFA: 17000, cover: "/src/assets/images/sport-fitness/sports-gene.jpg" },
-        { id: 1004, title: "Eat & Run", author: "Scott Jurek", priceFCFA: 15000, cover: "/src/assets/images/sport-fitness/eat-run.jpg" },
+        { id: 1001, title: "Starting Strength", author: "Mark Rippetoe", priceFCFA: 23000, cover: "/src/assets/images/sport-fitness/starting-strength.jpg", category: "Sport" },
+        { id: 1002, title: "Born to Run", author: "Christopher McDougall", priceFCFA: 16000, cover: "/src/assets/images/sport-fitness/born-to-run.jpg", category: "Sport" },
+        { id: 1003, title: "The Sports Gene", author: "David Epstein", priceFCFA: 17000, cover: "/src/assets/images/sport-fitness/sports-gene.jpg", category: "Sport" },
+        { id: 1004, title: "Eat & Run", author: "Scott Jurek", priceFCFA: 15000, cover: "/src/assets/images/sport-fitness/eat-run.jpg", category: "Sport" },
       ]
     },
     {
@@ -232,10 +260,10 @@ function Categories() {
       count: 512,
       description: "Théorie musicale, histoire de la musique, biographies d'artistes",
       books: [
-        { id: 1101, title: "This Is Your Brain on Music", author: "Daniel Levitin", priceFCFA: 16500, cover: "/src/assets/images/musique-audio/brain-on-music.jpg" },
-        { id: 1102, title: "How Music Works", author: "David Byrne", priceFCFA: 18500, cover: "/src/assets/images/musique-audio/how-music-works.jpg" },
-        { id: 1103, title: "The Rest Is Noise", author: "Alex Ross", priceFCFA: 19500, cover: "/src/assets/images/musique-audio/rest-is-noise.jpg" },
-        { id: 1104, title: "Music Theory", author: "Tom Kolb", priceFCFA: 21000, cover: "/src/assets/images/musique-audio/music-theory.jpg" },
+        { id: 1101, title: "This Is Your Brain on Music", author: "Daniel Levitin", priceFCFA: 16500, cover: "/src/assets/images/musique-audio/brain-on-music.jpg", category: "Musique" },
+        { id: 1102, title: "How Music Works", author: "David Byrne", priceFCFA: 18500, cover: "/src/assets/images/musique-audio/how-music-works.jpg", category: "Musique" },
+        { id: 1103, title: "The Rest Is Noise", author: "Alex Ross", priceFCFA: 19500, cover: "/src/assets/images/musique-audio/rest-is-noise.jpg", category: "Musique" },
+        { id: 1104, title: "Music Theory", author: "Tom Kolb", priceFCFA: 21000, cover: "/src/assets/images/musique-audio/music-theory.jpg", category: "Musique" },
       ]
     },
     {
@@ -245,10 +273,10 @@ function Categories() {
       count: 289,
       description: "Techniques photo, composition, post-production, équipement",
       books: [
-        { id: 1201, title: "Understanding Exposure", author: "Bryan Peterson", priceFCFA: 19500, cover: "/src/assets/images/photographie/understanding-exposure.jpg" },
-        { id: 1202, title: "The Photographer's Eye", author: "Michael Freeman", priceFCFA: 21500, cover: "/src/assets/images/photographie/photographers-eye.jpg" },
-        { id: 1203, title: "Magnum Contact Sheets", author: "Kristen Lubben", priceFCFA: 29000, cover: "/src/assets/images/photographie/magnum-contact-sheets.jpg" },
-        { id: 1204, title: "National Geographic", author: "Annie Griffiths", priceFCFA: 25000, cover: "/src/assets/images/photographie/national-geographic.jpg" },
+        { id: 1201, title: "Understanding Exposure", author: "Bryan Peterson", priceFCFA: 19500, cover: "/src/assets/images/photographie/understanding-exposure.jpg", category: "Photographie" },
+        { id: 1202, title: "The Photographer's Eye", author: "Michael Freeman", priceFCFA: 21500, cover: "/src/assets/images/photographie/photographers-eye.jpg", category: "Photographie" },
+        { id: 1203, title: "Magnum Contact Sheets", author: "Kristen Lubben", priceFCFA: 29000, cover: "/src/assets/images/photographie/magnum-contact-sheets.jpg", category: "Photographie" },
+        { id: 1204, title: "National Geographic", author: "Annie Griffiths", priceFCFA: 25000, cover: "/src/assets/images/photographie/national-geographic.jpg", category: "Photographie" },
       ]
     },
   ];
@@ -462,15 +490,15 @@ function Categories() {
                     key={book.id}
                     className={`
                       relative rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300 border flex flex-col h-full
-                      ${cart[book.id] 
+                      ${isInCart(book.id) 
                         ? 'border-green-400 bg-green-50' 
                         : 'border-gray-100 bg-white'
                       }
                     `}
                   >
                     {/* Animation de confirmation */}
-                    {cart[book.id] && (
-                      <div className="absolute top-3 right-3 animate-fadeIn">
+                    {addedBooks[book.id] && (
+                      <div className="absolute top-3 right-3 animate-fadeIn z-10">
                         <div className="bg-green-500 text-white p-1.5 rounded-full shadow-lg">
                           <Check className="w-4 h-4" />
                         </div>
@@ -522,18 +550,18 @@ function Categories() {
                             <span>Prix en {currency}</span>
                           </div>
                         </div>
-                        {/* Bouton Ajouter/Retirer du panier */}
+                        {/* Bouton Ajouter au panier */}
                         <button
-                          onClick={() => handleCartToggle(book.id)}
+                          onClick={() => handleAddToCart(book)}
                           className={`
                             flex items-center gap-1 text-sm px-3 py-2 rounded-lg font-medium transition-all duration-300
-                            ${cart[book.id]
+                            ${isInCart(book.id)
                               ? 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200'
                               : 'bg-blue-100 text-blue-700 hover:bg-blue-200 hover:scale-105'
                             }
                           `}
                         >
-                          {cart[book.id] ? (
+                          {isInCart(book.id) ? (
                             <>
                               <Check className="w-4 h-4" />
                               Ajouté
