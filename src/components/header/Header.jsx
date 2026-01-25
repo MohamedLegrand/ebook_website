@@ -110,9 +110,18 @@ function Header() {
             <a href="/" className="flex items-center gap-2 sm:gap-3 group">
               <div className="bg-blue-100 p-1.5 sm:p-2 md:p-2.5 rounded-lg sm:rounded-xl shadow-md group-hover:shadow-blue-300/70 group-hover:scale-105 transition-all duration-300 border-2 border-blue-200">
                 <img
-                  src="/src/assets/images/logo.jpeg"
+                  src="/images/logo.jpeg" // CORRECTION ICI : chemin standardisé
                   alt="Logo eBookPro"
                   className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-contain rounded-lg"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    // Fallback si l'image n'existe pas
+                    e.target.parentElement.innerHTML = `
+                      <div class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm sm:text-lg">E</span>
+                      </div>
+                    `;
+                  }}
                 />
               </div>
 
@@ -161,8 +170,6 @@ function Header() {
                 </span>
               )}
             </button>
-
-         
 
             {/* Bouton Connexion */}
             <a
