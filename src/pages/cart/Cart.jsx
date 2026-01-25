@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft, CreditCard, Shield, Truck, RotateCcw } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft, CreditCard, Shield, Truck, RotateCcw, LogIn } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import Header from "../../components/header/Header";
 
 function Cart() {
   const { cart, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
+  const navigate = useNavigate(); // Hook pour la navigation
   
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
@@ -61,7 +62,7 @@ function Cart() {
   // Obtenir l'image par défaut selon le type
   const getDefaultImage = (type) => {
     if (type === "audiobook") {
-      return "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=200&h=300&fit=crop";
+      return "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w-200&h=300&fit=crop";
     }
     return "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&h=300&fit=crop";
   };
@@ -70,6 +71,17 @@ function Cart() {
   const getCategory = (type) => {
     if (type === "audiobook") return "Livre Audio";
     return "Livre numérique";
+  };
+
+  // Fonction pour gérer le paiement
+  const handleCheckout = () => {
+    // Rediriger vers la page de login avec un message
+    navigate('/login', { 
+      state: { 
+        from: 'cart',
+        message: 'Vous devez être connecté pour effectuer un paiement.' 
+      } 
+    });
   };
 
   // Si le panier est vide
@@ -345,19 +357,24 @@ function Cart() {
                   </p>
                 </div>
 
-                {/* Bouton de paiement */}
+                {/* Bouton de paiement avec redirection vers login */}
                 <button
-                  onClick={() => alert(`Paiement de ${formatPrice(total)} effectué !`)}
+                  onClick={handleCheckout}
                   className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg hover:shadow-blue-900/30 mb-4"
                 >
-                  <CreditCard className="w-5 h-5" />
-                  Procéder au paiement
+                  <LogIn className="w-5 h-5" />
+                  Se connecter pour payer
                 </button>
 
                 {/* Informations supplémentaires */}
                 <div className="text-center">
+                  <p className="text-sm text-gray-600 mb-2">
+                    <span className="font-medium text-amber-600">⚠️ Attention :</span> 
+                    <br />
+                    Vous devez être connecté pour effectuer un paiement
+                  </p>
                   <p className="text-xs text-gray-500">
-                    ✓ Aucun renseignement bancaire n'est stocké sur nos serveurs
+                    Aucun renseignement bancaire n'est stocké sur nos serveurs
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
                     <Shield className="inline w-3 h-3 mr-1" />
@@ -368,15 +385,20 @@ function Cart() {
 
               {/* Suggestions */}
               <div className="mt-6 bg-white rounded-2xl shadow-lg p-6">
-                <h3 className="font-bold text-gray-900 mb-4">Offre spéciale</h3>
+                <h3 className="font-bold text-gray-900 mb-4">Pas encore de compte ?</h3>
                 <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
                   <div className="p-2 bg-blue-100 rounded-lg">
-                    <span className="text-lg">🎁</span>
+                    <LogIn className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">Abonnement Premium</p>
-                    <p className="text-sm text-gray-600">Accès illimité à tous les eBooks</p>
-                    <p className="text-sm font-bold text-blue-600 mt-1">14,99€/mois</p>
+                    <p className="font-medium text-gray-900">Créez un compte gratuit</p>
+                    <p className="text-sm text-gray-600">Profitez de nombreux avantages</p>
+                    <Link
+                      to="/register"
+                      className="inline-block mt-2 text-sm font-medium text-blue-600 hover:text-blue-700"
+                    >
+                      S'inscrire maintenant →
+                    </Link>
                   </div>
                 </div>
               </div>
