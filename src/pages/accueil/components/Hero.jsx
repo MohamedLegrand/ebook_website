@@ -8,7 +8,7 @@ function Hero() {
     {
       title: "Des milliers d'eBooks à télécharger",
       description: "Accédez à une bibliothèque numérique complète. Téléchargez vos livres instantanément en format EPUB, PDF ou MOBI.",
-      image: "/src/assets/images/livres/roman.jpg",
+      image: "/images/livres/roman.jpg", // CORRIGÉ
       bgColor: "from-blue-500 to-purple-600",
       icon: <BookOpen className="w-8 h-8 text-white" />,
       cta: "Explorer les eBooks"
@@ -16,7 +16,7 @@ function Hero() {
     {
       title: "Livres audio de qualité studio",
       description: "Écoutez vos livres préférés partout. Formats compatibles avec toutes les applications audio.",
-      image: "/src/assets/images/livres/science.jpg",
+      image: "/images/livres/science.jpg", // CORRIGÉ
       bgColor: "from-cyan-500 to-blue-600",
       icon: <Headphones className="w-8 h-8 text-white" />,
       cta: "Découvrir l'audio"
@@ -24,7 +24,7 @@ function Hero() {
     {
       title: "Téléchargement instantané",
       description: "Vos livres disponibles immédiatement après paiement. Lecture hors ligne sur tous vos appareils.",
-      image: "/src/assets/images/livres/Développement.jpg",
+      image: "/images/livres/Développement.jpg", // CORRIGÉ
       bgColor: "from-emerald-500 to-teal-600",
       icon: <Download className="w-8 h-8 text-white" />,
       cta: "Commencer maintenant"
@@ -113,6 +113,16 @@ function Hero() {
                         src={slide.image}
                         alt={slide.title}
                         className="w-full h-full object-cover object-center"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          // Afficher un placeholder si l'image ne charge pas
+                          e.target.parentElement.innerHTML = `
+                            <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-r ${slide.bgColor}">
+                              <div class="text-6xl mb-4">📚</div>
+                              <div class="text-white text-lg font-bold">${slide.title}</div>
+                            </div>
+                          `;
+                        }}
                       />
                       {/* Overlay Gradient */}
                       <div className={`absolute inset-0 bg-gradient-to-r ${slide.bgColor} opacity-20`} />

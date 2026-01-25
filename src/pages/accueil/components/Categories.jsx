@@ -8,7 +8,7 @@ const whyChooseUsBooks = [
     title: "Clean Code",
     author: "Robert C. Martin",
     priceFCFA: 20000,
-    cover: "/src/assets/images/informatique/clean-code.jpg",
+    cover: "/images/informatique/clean-code.jpg", // CORRIGÉ
     category: "Informatique",
     rating: 4.9
   },
@@ -17,7 +17,7 @@ const whyChooseUsBooks = [
     title: "The Lean Startup",
     author: "Eric Ries",
     priceFCFA: 20000,
-    cover: "/src/assets/images/business/lean-startup.jpg",
+    cover: "/images/business/lean-startup.jpg", // CORRIGÉ
     category: "Business",
     rating: 4.7
   },
@@ -26,7 +26,7 @@ const whyChooseUsBooks = [
     title: "Atomic Habits",
     author: "James Clear",
     priceFCFA: 20000,
-    cover: "/src/assets/images/developpement-personnel/atomic-habits.jpg",
+    cover: "/images/developpement-personnel/atomic-habits.jpg", // CORRIGÉ
     category: "Développement Personnel",
     rating: 4.8
   },
@@ -35,7 +35,7 @@ const whyChooseUsBooks = [
     title: "1984",
     author: "George Orwell",
     priceFCFA: 12000,
-    cover: "/src/assets/images/romans-fiction/984.jpg",
+    cover: "/images/romans-fiction/1984.jpg", // CORRIGÉ (et corrigé le nom de fichier)
     category: "Fiction",
     rating: 4.9
   },
@@ -44,7 +44,7 @@ const whyChooseUsBooks = [
     title: "Sapiens",
     author: "Yuval Noah Harari",
     priceFCFA: 18000,
-    cover: "/src/assets/images/sciences-nature/sapiens.jpg",
+    cover: "/images/sciences-nature/sapiens.jpg", // CORRIGÉ
     category: "Sciences",
     rating: 4.8
   },
@@ -53,7 +53,7 @@ const whyChooseUsBooks = [
     title: "Zero to One",
     author: "Peter Thiel",
     priceFCFA: 20000,
-    cover: "/src/assets/images/business/zero-to-one.jpg",
+    cover: "/images/business/zero-to-one.jpg", // CORRIGÉ
     category: "Business",
     rating: 4.6
   },
@@ -62,7 +62,7 @@ const whyChooseUsBooks = [
     title: "The Power of Now",
     author: "Eckhart Tolle",
     priceFCFA: 20000,
-    cover: "/src/assets/images/developpement-personnel/power-of-now.jpg",
+    cover: "/images/developpement-personnel/power-of-now.jpg", // CORRIGÉ
     category: "Développement Personnel",
     rating: 4.7
   },
@@ -71,7 +71,7 @@ const whyChooseUsBooks = [
     title: "The Pragmatic Programmer",
     author: "Hunt & Thomas",
     priceFCFA: 23000,
-    cover: "/src/assets/images/informatique/pragmatic-programmer.jpg",
+    cover: "/images/informatique/pragmatic-programmer.jpg", // CORRIGÉ
     category: "Informatique",
     rating: 4.8
   },
@@ -80,7 +80,7 @@ const whyChooseUsBooks = [
     title: "Guns, Germs, and Steel",
     author: "Jared Diamond",
     priceFCFA: 19500,
-    cover: "/src/assets/images/histoire-geographie/guns-germs-steel.jpg",
+    cover: "/images/histoire-geographie/guns-germs-steel.jpg", // CORRIGÉ
     category: "Histoire",
     rating: 4.7
   },
@@ -89,7 +89,7 @@ const whyChooseUsBooks = [
     title: "Steal Like an Artist",
     author: "Austin Kleon",
     priceFCFA: 14000,
-    cover: "/src/assets/images/arts-creativite/steal-like-artist.jpg",
+    cover: "/images/arts-creativite/steal-like-artist.jpg", // CORRIGÉ
     category: "Arts",
     rating: 4.5
   },
@@ -98,7 +98,7 @@ const whyChooseUsBooks = [
     title: "Salt, Fat, Acid, Heat",
     author: "Samin Nosrat",
     priceFCFA: 22000,
-    cover: "/src/assets/images/cuisine-gastronomie/salt-fat-acid-heat.jpg",
+    cover: "/images/cuisine-gastronomie/salt-fat-acid-heat.jpg", // CORRIGÉ
     category: "Cuisine",
     rating: 4.8
   },
@@ -107,7 +107,7 @@ const whyChooseUsBooks = [
     title: "How Not to Die",
     author: "Michael Greger",
     priceFCFA: 18000,
-    cover: "/src/assets/images/sante-bien-etre/how-not-to-die.jpg",
+    cover: "/images/sante-bien-etre/how-not-to-die.jpg", // CORRIGÉ
     category: "Santé",
     rating: 4.6
   },
@@ -116,7 +116,7 @@ const whyChooseUsBooks = [
     title: "Starting Strength",
     author: "Mark Rippetoe",
     priceFCFA: 23000,
-    cover: "/src/assets/images/sport-fitness/starting-strength.jpg",
+    cover: "/images/sport-fitness/starting-strength.jpg", // CORRIGÉ
     category: "Sport",
     rating: 4.7
   },
@@ -125,7 +125,7 @@ const whyChooseUsBooks = [
     title: "This Is Your Brain on Music",
     author: "Daniel Levitin",
     priceFCFA: 16500,
-    cover: "/src/assets/images/musique-audio/brain-on-music.jpg",
+    cover: "/images/musique-audio/brain-on-music.jpg", // CORRIGÉ
     category: "Musique",
     rating: 4.5
   },
@@ -134,7 +134,7 @@ const whyChooseUsBooks = [
     title: "Understanding Exposure",
     author: "Bryan Peterson",
     priceFCFA: 19500,
-    cover: "/src/assets/images/photographie/understanding-exposure.jpg",
+    cover: "/images/photographie/understanding-exposure.jpg", // CORRIGÉ
     category: "Photographie",
     rating: 4.7
   }

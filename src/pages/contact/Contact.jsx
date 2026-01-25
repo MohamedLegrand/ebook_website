@@ -186,7 +186,7 @@ function Contact() {
                     {/* Image principale */}
                     <div className="relative overflow-hidden rounded-2xl shadow-2xl border-4 border-white/20 transform lg:rotate-1 group-hover:rotate-0 transition-transform duration-500">
                       <img
-                        src="/src/assets/images/contact.jpg"
+                        src="/images/contact.jpg" // CORRIGÉ : /src/assets/images/contact.jpg → /images/contact.jpg
                         alt="Support client eBookPro - Équipe à votre écoute"
                         className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
                         onError={(e) => {

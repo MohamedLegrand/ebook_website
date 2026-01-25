@@ -214,7 +214,7 @@ function FAQ() {
                     {/* Image principale */}
                     <div className="relative overflow-hidden rounded-2xl shadow-2xl border-4 border-white/20 transform lg:-rotate-1 group-hover:rotate-0 transition-transform duration-500">
                       <img
-                        src="/src/assets/images/faq.jpg"
+                        src="/images/faq.jpg" // CORRIGÉ : /src/assets/images/faq.jpg → /images/faq.jpg
                         alt="Support client eBookPro - Centre d'aide professionnel"
                         className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
                         onError={(e) => {

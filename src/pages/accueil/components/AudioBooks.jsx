@@ -50,7 +50,7 @@ function AudioBooks() {
       duration: "5h 42m",
       rating: 4.8,
       listeners: 12500,
-      cover: "/src/assets/images/audio/developpement-personnel/atomic-habits.jpg",
+      cover: "/images/audio/developpement-personnel/atomic-habits.jpg", // CORRIGÉ
       category: "Développement Personnel"
     },
     { 
@@ -62,7 +62,7 @@ function AudioBooks() {
       duration: "6h 20m",
       rating: 4.7,
       listeners: 14300,
-      cover: "/src/assets/images/audio/business/lean-startup.jpg",
+      cover: "/images/audio/business/lean-startup.jpg", // CORRIGÉ
       category: "Business"
     },
     { 
@@ -74,7 +74,7 @@ function AudioBooks() {
       duration: "15h 25m",
       rating: 4.9,
       listeners: 28700,
-      cover: "/src/assets/images/audio/histoire-culture/sapiens.jpg",
+      cover: "/images/audio/histoire-culture/sapiens.jpg", // CORRIGÉ
       category: "Histoire"
     },
     { 
@@ -86,7 +86,7 @@ function AudioBooks() {
       duration: "11h 30m",
       rating: 4.9,
       listeners: 23400,
-      cover: "/src/assets/images/audio/romans-fiction/1984.jpg",
+      cover: "/images/audio/romans-fiction/1984.jpg", // CORRIGÉ
       category: "Fiction"
     },
     { 
@@ -98,7 +98,7 @@ function AudioBooks() {
       duration: "8h 15m",
       rating: 4.9,
       listeners: 12500,
-      cover: "/src/assets/images/audio/sante-bien-etre/how-not-to-die.jpg",
+      cover: "/images/audio/sante-bien-etre/how-not-to-die.jpg", // CORRIGÉ
       category: "Santé"
     },
     { 
@@ -110,7 +110,7 @@ function AudioBooks() {
       duration: "6h 15m",
       rating: 4.7,
       listeners: 9800,
-      cover: "/src/assets/images/audio/developpement-personnel/power-of-now.jpg",
+      cover: "/images/audio/developpement-personnel/power-of-now.jpg", // CORRIGÉ
       category: "Développement Personnel"
     },
     { 
@@ -122,7 +122,7 @@ function AudioBooks() {
       duration: "5h 45m",
       rating: 4.6,
       listeners: 11800,
-      cover: "/src/assets/images/audio/business/zero-to-one.jpg",
+      cover: "/images/audio/business/zero-to-one.jpg", // CORRIGÉ
       category: "Business"
     },
     { 
@@ -134,7 +134,7 @@ function AudioBooks() {
       duration: "9h 20m",
       rating: 4.7,
       listeners: 12500,
-      cover: "/src/assets/images/audio/musique-arts/brain-on-music.jpg",
+      cover: "/images/audio/musique-arts/brain-on-music.jpg", // CORRIGÉ
       category: "Musique"
     },
     { 
@@ -146,7 +146,7 @@ function AudioBooks() {
       duration: "5h 20m",
       rating: 4.5,
       listeners: 8700,
-      cover: "/src/assets/images/audio/developpement-personnel/deep-work.jpg",
+      cover: "/images/audio/developpement-personnel/deep-work.jpg", // CORRIGÉ
       category: "Développement Personnel"
     },
     { 
@@ -158,7 +158,7 @@ function AudioBooks() {
       duration: "7h 20m",
       rating: 4.8,
       listeners: 12500,
-      cover: "/src/assets/images/audio/cuisine-lifestyle/salt-fat-acid-heat.jpg",
+      cover: "/images/audio/cuisine-lifestyle/salt-fat-acid-heat.jpg", // CORRIGÉ
       category: "Cuisine"
     },
     { 
@@ -170,7 +170,7 @@ function AudioBooks() {
       duration: "7h 10m",
       rating: 4.9,
       listeners: 15600,
-      cover: "/src/assets/images/audio/developpement-personnel/7-habits.jpg",
+      cover: "/images/audio/developpement-personnel/7-habits.jpg", // CORRIGÉ
       category: "Développement Personnel"
     },
     { 
@@ -182,7 +182,7 @@ function AudioBooks() {
       duration: "5h 10m",
       rating: 4.8,
       listeners: 16700,
-      cover: "/src/assets/images/audio/business/rich-dad-poor-dad.jpg",
+      cover: "/images/audio/business/rich-dad-poor-dad.jpg", // CORRIGÉ
       category: "Business"
     },
     { 
@@ -194,7 +194,7 @@ function AudioBooks() {
       duration: "7h 30m",
       rating: 4.8,
       listeners: 10800,
-      cover: "/src/assets/images/audio/sante-bien-etre/why-we-sleep.jpg",
+      cover: "/images/audio/sante-bien-etre/why-we-sleep.jpg", // CORRIGÉ
       category: "Santé"
     },
     { 
@@ -206,7 +206,7 @@ function AudioBooks() {
       duration: "15h 20m",
       rating: 4.9,
       listeners: 19800,
-      cover: "/src/assets/images/audio/romans-fiction/pride-prejudice.jpg",
+      cover: "/images/audio/romans-fiction/pride-prejudice.jpg", // CORRIGÉ
       category: "Fiction"
     },
     { 
@@ -218,7 +218,7 @@ function AudioBooks() {
       duration: "7h 50m",
       rating: 4.7,
       listeners: 14200,
-      cover: "/src/assets/images/audio/histoire-culture/brief-history-time.jpg",
+      cover: "/images/audio/histoire-culture/brief-history-time.jpg", // CORRIGÉ
       category: "Histoire"
     }
   ];

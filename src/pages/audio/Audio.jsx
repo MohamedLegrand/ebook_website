@@ -133,7 +133,7 @@ function Audio() {
           duration: "5h 42m",
           rating: 4.8,
           listeners: 12500,
-          cover: "/src/assets/images/audio/developpement-personnel/atomic-habits.jpg" 
+          cover: "/images/audio/developpement-personnel/atomic-habits.jpg" // CORRIGÉ
         },
         { 
           id: 102, 
@@ -144,7 +144,7 @@ function Audio() {
           duration: "6h 15m",
           rating: 4.7,
           listeners: 9800,
-          cover: "/src/assets/images/audio/developpement-personnel/power-of-now.jpg" 
+          cover: "/images/audio/developpement-personnel/power-of-now.jpg" // CORRIGÉ
         },
         { 
           id: 103, 
@@ -155,7 +155,7 @@ function Audio() {
           duration: "4h 50m",
           rating: 4.6,
           listeners: 11200,
-          cover: "/src/assets/images/audio/developpement-personnel/mindset.jpg" 
+          cover: "/images/audio/developpement-personnel/mindset.jpg" // CORRIGÉ
         },
         { 
           id: 104, 
@@ -166,7 +166,7 @@ function Audio() {
           duration: "5h 20m",
           rating: 4.5,
           listeners: 8700,
-          cover: "/src/assets/images/audio/developpement-personnel/deep-work.jpg" 
+          cover: "/images/audio/developpement-personnel/deep-work.jpg" // CORRIGÉ
         },
         { 
           id: 105, 
@@ -177,7 +177,7 @@ function Audio() {
           duration: "7h 10m",
           rating: 4.9,
           listeners: 15600,
-          cover: "/src/assets/images/audio/developpement-personnel/7-habits.jpg" 
+          cover: "/images/audio/developpement-personnel/7-habits.jpg" // CORRIGÉ
         },
         { 
           id: 106, 
@@ -188,7 +188,7 @@ function Audio() {
           duration: "6h 45m",
           rating: 4.8,
           listeners: 13200,
-          cover: "/src/assets/images/audio/developpement-personnel/cant-hurt-me.jpg" 
+          cover: "/images/audio/developpement-personnel/cant-hurt-me.jpg" // CORRIGÉ
         },
         { 
           id: 107, 
@@ -199,7 +199,7 @@ function Audio() {
           duration: "4h 55m",
           rating: 4.4,
           listeners: 10500,
-          cover: "/src/assets/images/audio/developpement-personnel/subtle-art.jpg" 
+          cover: "/images/audio/developpement-personnel/subtle-art.jpg" // CORRIGÉ
         },
         { 
           id: 108, 
@@ -210,7 +210,7 @@ function Audio() {
           duration: "5h 30m",
           rating: 4.6,
           listeners: 9200,
-          cover: "/src/assets/images/audio/developpement-personnel/grit.jpg" 
+          cover: "/images/audio/developpement-personnel/grit.jpg" // CORRIGÉ
         },
       ]
     },
@@ -230,7 +230,7 @@ function Audio() {
           duration: "6h 20m",
           rating: 4.7,
           listeners: 14300,
-          cover: "/src/assets/images/audio/business/lean-startup.jpg" 
+          cover: "/images/audio/business/lean-startup.jpg" // CORRIGÉ
         },
         { 
           id: 202, 
@@ -241,7 +241,7 @@ function Audio() {
           duration: "5h 45m",
           rating: 4.6,
           listeners: 11800,
-          cover: "/src/assets/images/audio/business/zero-to-one.jpg" 
+          cover: "/images/audio/business/zero-to-one.jpg" // CORRIGÉ
         },
         { 
           id: 203, 
@@ -252,7 +252,7 @@ function Audio() {
           duration: "5h 10m",
           rating: 4.8,
           listeners: 16700,
-          cover: "/src/assets/images/audio/business/rich-dad-poor-dad.jpg" 
+          cover: "/images/audio/business/rich-dad-poor-dad.jpg" // CORRIGÉ
         },
         { 
           id: 204, 
@@ -263,7 +263,7 @@ function Audio() {
           duration: "6h 50m",
           rating: 4.5,
           listeners: 9900,
-          cover: "/src/assets/images/audio/business/good-to-great.jpg" 
+          cover: "/images/audio/business/good-to-great.jpg" // CORRIGÉ
         },
       ]
     },
@@ -283,7 +283,7 @@ function Audio() {
           duration: "8h 15m",
           rating: 4.9,
           listeners: 12500,
-          cover: "/src/assets/images/audio/sante-bien-etre/how-not-to-die.jpg" 
+          cover: "/images/audio/sante-bien-etre/how-not-to-die.jpg" // CORRIGÉ
         },
         { 
           id: 302, 
@@ -294,7 +294,7 @@ function Audio() {
           duration: "7h 30m",
           rating: 4.8,
           listeners: 10800,
-          cover: "/src/assets/images/audio/sante-bien-etre/why-we-sleep.jpg" 
+          cover: "/images/audio/sante-bien-etre/why-we-sleep.jpg" // CORRIGÉ
         },
         { 
           id: 303, 
@@ -305,7 +305,7 @@ function Audio() {
           duration: "8h 45m",
           rating: 4.7,
           listeners: 9600,
-          cover: "/src/assets/images/audio/sante-bien-etre/body-keeps-score.jpg" 
+          cover: "/images/audio/sante-bien-etre/body-keeps-score.jpg" // CORRIGÉ
         },
         { 
           id: 304, 
@@ -316,7 +316,7 @@ function Audio() {
           duration: "6h 20m",
           rating: 4.6,
           listeners: 8200,
-          cover: "/src/assets/images/audio/sante-bien-etre/breath.jpg" 
+          cover: "/images/audio/sante-bien-etre/breath.jpg" // CORRIGÉ
         },
       ]
     },
@@ -336,7 +336,7 @@ function Audio() {
           duration: "11h 30m",
           rating: 4.9,
           listeners: 23400,
-          cover: "/src/assets/images/audio/romans-fiction/1984.jpg" 
+          cover: "/images/audio/romans-fiction/1984.jpg" // CORRIGÉ
         },
         { 
           id: 402, 
@@ -347,7 +347,7 @@ function Audio() {
           duration: "12h 15m",
           rating: 4.8,
           listeners: 18700,
-          cover: "/src/assets/images/audio/romans-fiction/mockingbird.jpg" 
+          cover: "/images/audio/romans-fiction/mockingbird.jpg" // CORRIGÉ
         },
         { 
           id: 403, 
@@ -358,7 +358,7 @@ function Audio() {
           duration: "5h 45m",
           rating: 4.7,
           listeners: 15600,
-          cover: "/src/assets/images/audio/romans-fiction/great-gatsby.jpg" 
+          cover: "/images/audio/romans-fiction/great-gatsby.jpg" // CORRIGÉ
         },
         { 
           id: 404, 
@@ -369,7 +369,7 @@ function Audio() {
           duration: "15h 20m",
           rating: 4.9,
           listeners: 19800,
-          cover: "/src/assets/images/audio/romans-fiction/pride-prejudice.jpg" 
+          cover: "/images/audio/romans-fiction/pride-prejudice.jpg" // CORRIGÉ
         },
       ]
     },
@@ -389,7 +389,7 @@ function Audio() {
           duration: "15h 25m",
           rating: 4.9,
           listeners: 28700,
-          cover: "/src/assets/images/audio/histoire-culture/sapiens.jpg" 
+          cover: "/images/audio/histoire-culture/sapiens.jpg" // CORRIGÉ
         },
         { 
           id: 502, 
@@ -400,7 +400,7 @@ function Audio() {
           duration: "7h 50m",
           rating: 4.7,
           listeners: 14200,
-          cover: "/src/assets/images/audio/histoire-culture/brief-history-time.jpg" 
+          cover: "/images/audio/histoire-culture/brief-history-time.jpg" // CORRIGÉ
         },
         { 
           id: 503, 
@@ -411,7 +411,7 @@ function Audio() {
           duration: "18h 30m",
           rating: 4.8,
           listeners: 16700,
-          cover: "/src/assets/images/audio/histoire-culture/guns-germs-steel.jpg" 
+          cover: "/images/audio/histoire-culture/guns-germs-steel.jpg" // CORRIGÉ
         },
         { 
           id: 504, 
@@ -422,7 +422,7 @@ function Audio() {
           duration: "20h 15m",
           rating: 4.6,
           listeners: 11300,
-          cover: "/src/assets/images/audio/histoire-culture/silk-roads.jpg" 
+          cover: "/images/audio/histoire-culture/silk-roads.jpg" // CORRIGÉ
         },
       ]
     },
@@ -442,7 +442,7 @@ function Audio() {
           duration: "Collection 50h",
           rating: 4.9,
           listeners: 45600,
-          cover: "/src/assets/images/audio/podcasts/tim-ferriss.jpg" 
+          cover: "/images/audio/podcasts/tim-ferriss.jpg" // CORRIGÉ
         },
         { 
           id: 602, 
@@ -453,7 +453,7 @@ function Audio() {
           duration: "Collection 100h",
           rating: 4.8,
           listeners: 67800,
-          cover: "/src/assets/images/audio/podcasts/joe-rogan.jpg" 
+          cover: "/images/audio/podcasts/joe-rogan.jpg" // CORRIGÉ
         },
         { 
           id: 603, 
@@ -464,7 +464,7 @@ function Audio() {
           duration: "Collection 75h",
           rating: 4.7,
           listeners: 89200,
-          cover: "/src/assets/images/audio/podcasts/ted-talks.jpg" 
+          cover: "/images/audio/podcasts/ted-talks.jpg" // CORRIGÉ
         },
         { 
           id: 604, 
@@ -475,7 +475,7 @@ function Audio() {
           duration: "Collection 60h",
           rating: 4.6,
           listeners: 56700,
-          cover: "/src/assets/images/audio/podcasts/the-daily.jpg" 
+          cover: "/images/audio/podcasts/the-daily.jpg" // CORRIGÉ
         },
       ]
     },
@@ -495,7 +495,7 @@ function Audio() {
           duration: "9h 20m",
           rating: 4.7,
           listeners: 12500,
-          cover: "/src/assets/images/audio/musique-arts/brain-on-music.jpg" 
+          cover: "/images/audio/musique-arts/brain-on-music.jpg" // CORRIGÉ
         },
         { 
           id: 702, 
@@ -506,7 +506,7 @@ function Audio() {
           duration: "8h 45m",
           rating: 4.6,
           listeners: 9800,
-          cover: "/src/assets/images/audio/musique-arts/how-music-works.jpg" 
+          cover: "/images/audio/musique-arts/how-music-works.jpg" // CORRIGÉ
         },
         { 
           id: 703, 
@@ -517,7 +517,7 @@ function Audio() {
           duration: "12h 30m",
           rating: 4.8,
           listeners: 7600,
-          cover: "/src/assets/images/audio/musique-arts/rest-is-noise.jpg" 
+          cover: "/images/audio/musique-arts/rest-is-noise.jpg" // CORRIGÉ
         },
         { 
           id: 704, 
@@ -528,7 +528,7 @@ function Audio() {
           duration: "3h 45m",
           rating: 4.5,
           listeners: 14300,
-          cover: "/src/assets/images/audio/musique-arts/steal-like-artist.jpg" 
+          cover: "/images/audio/musique-arts/steal-like-artist.jpg" // CORRIGÉ
         },
       ]
     },
@@ -548,7 +548,7 @@ function Audio() {
           duration: "7h 20m",
           rating: 4.8,
           listeners: 12500,
-          cover: "/src/assets/images/audio/cuisine-lifestyle/salt-fat-acid-heat.jpg" 
+          cover: "/images/audio/cuisine-lifestyle/salt-fat-acid-heat.jpg" // CORRIGÉ
         },
         { 
           id: 802, 
@@ -559,7 +559,7 @@ function Audio() {
           duration: "10h 15m",
           rating: 4.9,
           listeners: 9800,
-          cover: "/src/assets/images/audio/cuisine-lifestyle/joy-cooking.jpg" 
+          cover: "/images/audio/cuisine-lifestyle/joy-cooking.jpg" // CORRIGÉ
         },
         { 
           id: 803, 
@@ -570,7 +570,7 @@ function Audio() {
           duration: "12h 30m",
           rating: 4.7,
           listeners: 7600,
-          cover: "/src/assets/images/audio/cuisine-lifestyle/mastering-art.jpg" 
+          cover: "/images/audio/cuisine-lifestyle/mastering-art.jpg" // CORRIGÉ
         },
         { 
           id: 804, 
@@ -581,7 +581,7 @@ function Audio() {
           duration: "6h 45m",
           rating: 4.6,
           listeners: 8200,
-          cover: "/src/assets/images/audio/cuisine-lifestyle/ottolenghi-simple.jpg" 
+          cover: "/images/audio/cuisine-lifestyle/ottolenghi-simple.jpg" // CORRIGÉ
         },
       ]
     },
