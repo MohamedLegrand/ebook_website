@@ -162,15 +162,7 @@ function Header() {
               )}
             </button>
 
-            {/* Bouton Livres Audio (mobile only) */}
-            <button
-              onClick={handleAudioClick}
-              className="flex lg:hidden items-center justify-center p-2 sm:p-2.5 border-2 border-blue-300 hover:bg-blue-50 rounded-lg font-medium transition-all hover:scale-105 active:scale-95 text-blue-800"
-              aria-label="Livres Audio"
-              title="Livres Audio"
-            >
-              <span className="text-lg sm:text-xl">🎧</span>
-            </button>
+         
 
             {/* Bouton Connexion */}
             <a

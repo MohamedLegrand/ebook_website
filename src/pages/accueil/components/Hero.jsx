@@ -127,10 +127,7 @@ function Hero() {
                               className: "w-4 h-4 sm:w-5 sm:h-5 text-white"
                             })}
                           </div>
-                          <div>
-                            <div className="text-xs text-gray-500">Disponible en</div>
-                            <div className="font-bold text-gray-900 text-sm sm:text-base">Format numérique</div>
-                          </div>
+                         
                         </div>
                       </div>
                     </div>

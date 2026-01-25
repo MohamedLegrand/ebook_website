@@ -172,8 +172,8 @@ function Footer() {
               <h5 className="text-blue-300 font-semibold text-sm mb-3">Contact Rapide</h5>
               <div className="space-y-2 text-blue-100 text-sm">
                 <p>📧 support@ebookpro.fr</p>
-                <p>📞 +33 1 23 45 67 89</p>
-                <p>📍 123 Avenue du Livre, 75001 Paris</p>
+                <p>📞 +237 6 77 24 69 00</p>
+                
               </div>
             </div>
           </div>
@@ -215,7 +215,7 @@ function Footer() {
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                 <span>100% Sécurisé</span>
                 <span className="text-blue-500 mx-2">|</span>
-                <span>🌍 Disponible dans 15 pays</span>
+                <span>🌍 Disponible dans les pays</span>
               </div>
             </div>
           </div>
@@ -225,7 +225,7 @@ function Footer() {
       {/* Watermark */}
       <div className="bg-blue-950 py-3 text-center">
         <p className="text-blue-400 text-xs">
-          Made with ❤️ for readers around the world | Version 2.0.1
+          Made with ❤️ for readers around the world 
         </p>
       </div>
     </footer>

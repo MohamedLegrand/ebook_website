@@ -360,26 +360,7 @@ const WhyChooseUs = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="bg-gradient-to-r from-sky-400 to-sky-600 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 text-white">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-            <div className="text-center">
-              <div className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">50,000+</div>
-              <div className="text-xs sm:text-sm md:text-base text-sky-100">Clients Satisfaits</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">100,000+</div>
-              <div className="text-xs sm:text-sm md:text-base text-sky-100">Livres Disponibles</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">24h</div>
-              <div className="text-xs sm:text-sm md:text-base text-sky-100">Livraison Express</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">98%</div>
-              <div className="text-xs sm:text-sm md:text-base text-sky-100">Taux de Satisfaction</div>
-            </div>
-          </div>
-        </div>
+        
       </div>
 
       {/* Styles d'animation */}
