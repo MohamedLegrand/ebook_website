@@ -1,314 +1,854 @@
-import React, { useState, useEffect } from "react";
-import { User, Menu, X, ShoppingCart } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { 
+  User, Menu, X, Phone, Globe, ChevronDown, Search, 
+  ShoppingCart, Package, Trash2, CreditCard, ArrowRight 
+} from "lucide-react";
+import { useCart } from "../../context/CartContext";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [cartItems, setCartItems] = useState(3); // Exemple: 3 articles dans le panier
+  const [language, setLanguage] = useState('fr');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const menuRef = useRef(null);
+  const cartRef = useRef(null);
+
+  const { cart, removeFromCart, clearCart, getCartTotal } = useCart();
+
+  // Fermer le menu en cliquant à l'extérieur
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+      if (cartRef.current && !cartRef.current.contains(event.target)) {
+        setIsCartOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 10);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fonction pour gérer la redirection
-  const handleAudioClick = () => {
-    window.location.href = "/audio";
+  // Traductions
+  const t = {
+    fr: {
+      tagline: "Médecine Traditionnelle des Handicapés Spirituels",
+      menu: {
+        home: "Accueil",
+        about: "Qu'est-ce que la MTHS ?",
+        handicap: "Handicap Spirituel",
+        approach: "Approche Thérapeutique",
+        pathologies: "Pathologies",
+        journey: "Parcours",
+        ritual: "Rite SO'O",
+        testimonies: "Témoignages",
+        shop: "Boutique",
+        news: "Actualités",
+        contact: "Contact",
+        cart: "Panier",
+        checkout: "Paiement",
+        continueShopping: "Continuer les achats"
+      },
+      cta: {
+        login: "Connexion",
+        register: "S'inscrire",
+        emergency: "Urgence Spirituelle",
+        search: "Rechercher"
+      },
+      announcement: {
+        msg1: "Guérir l'Invisible, Restaurer l'Homme",
+        msg2: "Centre Marie Reine de la Miséricorde",
+        msg3: "Corps, Âme et Esprit : Une Seule Guérison",
+        msg4: "Médecine Holistique Traditionnelle"
+      },
+      cartItems: {
+        empty: "Votre panier est vide",
+        total: "Total",
+        remove: "Supprimer",
+        viewCart: "Voir le panier",
+        checkout: "Procéder au paiement",
+        items: "article(s)",
+        item: "article"
+      }
+    },
+    en: {
+      tagline: "Traditional Medicine for the Spiritually Handicapped",
+      menu: {
+        home: "Home",
+        about: "What is TMSH?",
+        handicap: "Spiritual Handicap",
+        approach: "Therapeutic Approach",
+        pathologies: "Pathologies",
+        journey: "Journey",
+        ritual: "SO'O Ritual",
+        testimonies: "Testimonies",
+        shop: "Shop",
+        news: "News",
+        contact: "Contact",
+        cart: "Cart",
+        checkout: "Checkout",
+        continueShopping: "Continue Shopping"
+      },
+      cta: {
+        login: "Login",
+        register: "Register",
+        emergency: "Spiritual Emergency",
+        search: "Search"
+      },
+      announcement: {
+        msg1: "Healing the Invisible, Restoring Humanity",
+        msg2: "Mary Queen of Mercy Center",
+        msg3: "Body, Soul and Spirit: One Healing",
+        msg4: "Traditional Holistic Medicine"
+      },
+      cartItems: {
+        empty: "Your cart is empty",
+        total: "Total",
+        remove: "Remove",
+        viewCart: "View Cart",
+        checkout: "Proceed to Checkout",
+        items: "item(s)",
+        item: "item"
+      }
+    }
   };
 
-  // Fonction pour gérer le clic sur le panier
-  const handleCartClick = () => {
-    window.location.href = "/cart";
+  const currentLang = t[language];
+
+  // Seulement 3 éléments dans le menu principal
+  const mainMenuItems = [
+    { label: currentLang.menu.home, href: "/" },
+    { label: currentLang.menu.about, href: "/mths" },
+    { label: currentLang.menu.handicap, href: "/handicap" }
+  ];
+
+  // Tous les autres éléments vont dans "Plus"
+  const secondaryMenuItems = [
+    { label: currentLang.menu.approach, href: "/approche" },
+    { label: currentLang.menu.pathologies, href: "/pathologies" },
+    { label: currentLang.menu.journey, href: "/parcours" },
+    { label: currentLang.menu.ritual, href: "/rites" },
+    { label: currentLang.menu.testimonies, href: "/temoignages" },
+    { label: currentLang.menu.shop, href: "/boutique" },
+    { label: currentLang.menu.news, href: "/actualites" },
+  ];
+
+  // Formatage du prix
+  const formatPrice = (price) => {
+    return price.toLocaleString('fr-FR') + ' FCFA';
   };
+
+  // Calculer le total du panier
+  const cartTotal = getCartTotal();
 
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white shadow-lg shadow-blue-900/20 border-b border-blue-200"
-          : "bg-gradient-to-r from-blue-50 to-sky-50 shadow-md shadow-blue-800/10"
+          ? "bg-gradient-to-b from-blue-900/95 to-blue-800/95 backdrop-blur-md shadow-xl border-b border-blue-700"
+          : "bg-gradient-to-b from-blue-50/98 to-white/98 backdrop-blur-sm"
       }`}
+      ref={menuRef}
     >
-      {/* Top Announcement Bar - Infinite scrolling */}
-      <div className="relative bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-xs sm:text-sm py-2 overflow-hidden whitespace-nowrap">
-        <div className="animate-marquee flex">
-          {/* Premier set */}
-          <div className="flex items-center gap-2 sm:gap-3 md:gap-4 px-2 sm:px-3 md:px-4 flex-shrink-0">
-            <span className="flex items-center gap-1">
-              <span className="text-sm sm:text-base">📚</span>
-              <span className="whitespace-nowrap">Plus de 10 000 livres</span>
-            </span>
-            <span className="w-1 h-1 bg-white/50 rounded-full"></span>
-            <span className="flex items-center gap-1">
-              <span className="text-sm sm:text-base">⚡</span>
-              <span className="whitespace-nowrap">Téléchargement instantané</span>
-            </span>
-            <span className="w-1 h-1 bg-white/50 rounded-full"></span>
-            <span className="flex items-center gap-1">
-              <span className="text-sm sm:text-base">📱</span>
-              <span className="whitespace-nowrap">Lecture multi-appareils</span>
-            </span>
-          </div>
-          
-          {/* Deuxième set */}
-          <div className="flex items-center gap-2 sm:gap-3 md:gap-4 px-2 sm:px-3 md:px-4 flex-shrink-0">
-            <span className="flex items-center gap-1">
-              <span className="text-sm sm:text-base">📚</span>
-              <span className="whitespace-nowrap">Plus de 10 000 livres</span>
-            </span>
-            <span className="w-1 h-1 bg-white/50 rounded-full"></span>
-            <span className="flex items-center gap-1">
-              <span className="text-sm sm:text-base">⚡</span>
-              <span className="whitespace-nowrap">Téléchargement instantané</span>
-            </span>
-            <span className="w-1 h-1 bg-white/50 rounded-full"></span>
-            <span className="flex items-center gap-1">
-              <span className="text-sm sm:text-base">📱</span>
-              <span className="whitespace-nowrap">Lecture multi-appareils</span>
-            </span>
-          </div>
-          
-          {/* Troisième set */}
-          <div className="flex items-center gap-2 sm:gap-3 md:gap-4 px-2 sm:px-3 md:px-4 flex-shrink-0">
-            <span className="flex items-center gap-1">
-              <span className="text-sm sm:text-base">📚</span>
-              <span className="whitespace-nowrap">Plus de 10 000 livres</span>
-            </span>
-            <span className="w-1 h-1 bg-white/50 rounded-full"></span>
-            <span className="flex items-center gap-1">
-              <span className="text-sm sm:text-base">⚡</span>
-              <span className="whitespace-nowrap">Téléchargement instantané</span>
-            </span>
-            <span className="w-1 h-1 bg-white/50 rounded-full"></span>
-            <span className="flex items-center gap-1">
-              <span className="text-sm sm:text-base">📱</span>
-              <span className="whitespace-nowrap">Lecture multi-appareils</span>
-            </span>
+      {/* Bandeau Urgence */}
+      <div className={`transition-all duration-300 ${
+        scrolled 
+          ? "bg-gradient-to-r from-blue-800 to-blue-900 border-b border-blue-700" 
+          : "bg-gradient-to-r from-blue-600 to-blue-700"
+      } text-white`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="py-2 flex items-center justify-between text-sm">
+            <div className="flex items-center gap-4">
+              <a 
+                href="/urgence" 
+                className="flex items-center gap-2 hover:text-blue-100 transition-colors font-medium"
+              >
+                <Phone size={14} />
+                <span className="hidden sm:inline">{currentLang.cta.emergency} :</span>
+                <span className="font-bold">+237 693 21 54 31</span>
+              </a>
+              <div className="hidden md:flex items-center gap-4">
+                <span className="w-1 h-1 bg-blue-300 rounded-full"></span>
+                <span className={`transition-colors ${scrolled ? "text-blue-200" : "text-blue-100"}`}>
+                  Centre d'Abili, Yaoundé
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="hover:text-blue-100 transition-colors"
+                aria-label="Rechercher"
+              >
+                <Search size={16} />
+              </button>
+              {/* Sélecteur de langue dans le bandeau supérieur (desktop) */}
+              <div className="hidden sm:flex items-center gap-2">
+                <Globe size={14} className={scrolled ? "text-blue-300" : "text-blue-200"} />
+                <button
+                  onClick={() => setLanguage('fr')}
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all ${
+                    language === 'fr' 
+                      ? 'bg-white/20 text-white' 
+                      : scrolled ? 'text-blue-300 hover:text-white' : 'text-blue-100 hover:text-white'
+                  }`}
+                >
+                  FR
+                </button>
+                <span className={scrolled ? "text-blue-300" : "text-blue-200"}>|</span>
+                <button
+                  onClick={() => setLanguage('en')}
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all ${
+                    language === 'en' 
+                      ? 'bg-white/20 text-white' 
+                      : scrolled ? 'text-blue-300 hover:text-white' : 'text-blue-100 hover:text-white'
+                  }`}
+                >
+                  EN
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <nav className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3">
-        <div className="flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
-          {/* Logo + Menu mobile */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              className="lg:hidden p-1.5 sm:p-2 hover:bg-blue-100 rounded-lg transition-all active:scale-95"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Menu"
-            >
-              {isMenuOpen ? (
-                <X size={20} className="sm:w-6 sm:h-6 text-blue-800" />
-              ) : (
-                <Menu size={20} className="sm:w-6 sm:h-6 text-blue-800" />
-              )}
-            </button>
+      {/* Barre de recherche */}
+      {isSearchOpen && (
+        <div className={`py-4 animate-fadeIn ${scrolled ? "bg-blue-800 border-b border-blue-700" : "bg-white border-b border-blue-100"}`}>
+          <div className="max-w-3xl mx-auto px-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder={`${currentLang.cta.search}...`}
+                className={`w-full px-4 py-3 pl-12 rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+                  scrolled 
+                    ? "bg-blue-700/50 border border-blue-600 text-white placeholder-blue-300 focus:ring-blue-400 focus:border-transparent" 
+                    : "bg-blue-50 border border-blue-200 text-blue-900 placeholder-blue-400 focus:ring-blue-500 focus:border-transparent"
+                }`}
+                autoFocus
+              />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2" size={20} 
+                color={scrolled ? "#93c5fd" : "#60a5fa"}
+              />
+              <button 
+                onClick={() => setIsSearchOpen(false)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2"
+              >
+                <X size={20} color={scrolled ? "#93c5fd" : "#60a5fa"} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-            <a href="/" className="flex items-center gap-2 sm:gap-3 group">
-              <div className="bg-blue-100 p-1.5 sm:p-2 md:p-2.5 rounded-lg sm:rounded-xl shadow-md group-hover:shadow-blue-300/70 group-hover:scale-105 transition-all duration-300 border-2 border-blue-200">
-                <img
-                  src="/images/logo.jpeg" // CORRECTION ICI : chemin standardisé
-                  alt="Logo eBookPro"
-                  className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-contain rounded-lg"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    // Fallback si l'image n'existe pas
-                    e.target.parentElement.innerHTML = `
-                      <div class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center">
-                        <span class="text-white font-bold text-sm sm:text-lg">E</span>
-                      </div>
-                    `;
-                  }}
-                />
-              </div>
+      {/* Bandeau Annonces - Caché au scroll pour plus de lisibilité */}
+      <div className={`bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200 transition-all duration-300 ${
+        scrolled ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100 h-auto'
+      }`}>
+        <div className="max-w-7xl mx-auto">
+          <div className="py-2 overflow-hidden">
+            <div className="animate-marquee flex whitespace-nowrap">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="flex items-center gap-6 px-4 flex-shrink-0">
+                  <span className="flex items-center gap-2 text-blue-800 text-sm font-medium">
+                    <span className="text-blue-500">•</span>
+                    {currentLang.announcement.msg1}
+                  </span>
+                  <span className="flex items-center gap-2 text-blue-800 text-sm font-medium">
+                    <span className="text-blue-500">•</span>
+                    {currentLang.announcement.msg2}
+                  </span>
+                  <span className="flex items-center gap-2 text-blue-800 text-sm font-medium">
+                    <span className="text-blue-500">•</span>
+                    {currentLang.announcement.msg3}
+                  </span>
+                  <span className="flex items-center gap-2 text-blue-800 text-sm font-medium">
+                    <span className="text-blue-500">•</span>
+                    {currentLang.announcement.msg4}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
-              <div className="flex flex-col">
-                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold tracking-tight text-blue-900 leading-tight">
-                  eBook<span className="text-cyan-600">Pro</span>
-                </h1>
-                <p className="text-xs text-blue-600 hidden sm:block leading-tight mt-0.5">
-                  Votre bibliothèque numérique
-                </p>
+      {/* Navigation principale */}
+      <nav className="max-w-7xl mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
+          {/* Logo - Version améliorée */}
+          <a href="/" className="flex items-center gap-3 group">
+            <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20">
+              {/* Carte/Encadré du logo */}
+              <div className={`absolute inset-0 rounded-xl p-2 shadow-xl transition-all duration-300 transform group-hover:scale-[1.02] ${
+                scrolled 
+                  ? "bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 shadow-blue-900/30 group-hover:shadow-blue-800/40"
+                  : "bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 shadow-blue-500/30 group-hover:shadow-blue-600/40"
+              }`}>
+                {/* Cadre blanc interne */}
+                <div className="w-full h-full bg-white rounded-lg overflow-hidden flex items-center justify-center p-1.5 border-2 border-white">
+                  {/* Conteneur de l'image */}
+                  <div className="relative w-full h-full rounded-md overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+                    <img 
+                      src="/images/logo.jpeg" 
+                      alt="Logo MTHS" 
+                      className="w-full h-full object-contain p-1"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232963cc'/%3E%3Cstop offset='100%25' stop-color='%231e429f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23grad)'/%3E%3Ctext x='50' y='55' font-family='Arial, sans-serif' font-size='28' font-weight='bold' fill='white' text-anchor='middle' letter-spacing='1px'%3EMTHS%3C/text%3E%3Ctext x='50' y='75' font-family='Arial, sans-serif' font-size='14' fill='%23bfdbfe' text-anchor='middle'%3E/TMSH%3C/text%3E%3C/svg%3E";
+                      }}
+                    />
+                    {/* Effet de brillance */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent pointer-events-none"></div>
+                  </div>
+                </div>
+                
+                {/* Effet de halo subtil */}
+                <div className={`absolute -inset-1 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 ${
+                  scrolled 
+                    ? "bg-gradient-to-r from-blue-600/20 to-blue-800/20" 
+                    : "bg-gradient-to-r from-blue-400/20 to-blue-600/20"
+                }`}></div>
               </div>
-            </a>
+            </div>
+            
+            {/* Texte à côté du logo */}
+            <div className="flex flex-col">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
+                <span className={`transition-colors ${
+                  scrolled 
+                    ? "text-white" 
+                    : "bg-gradient-to-r from-blue-800 via-blue-700 to-blue-600 bg-clip-text text-transparent"
+                }`}>
+                  MTHS
+                </span>
+                <span className={`ml-1 text-lg sm:text-xl md:text-2xl transition-colors ${
+                  scrolled ? "text-blue-300" : "text-blue-500"
+                }`}>
+                  / TMSH
+                </span>
+              </h1>
+              <p className={`text-xs sm:text-sm leading-tight mt-1 font-medium max-w-[180px] sm:max-w-[240px] md:max-w-[300px] transition-colors ${
+                scrolled ? "text-blue-200" : "text-blue-600"
+              }`}>
+                {currentLang.tagline}
+              </p>
+            </div>
+          </a>
+
+          {/* Menu Desktop - 3 éléments seulement */}
+          <div className="hidden lg:flex items-center gap-1">
+            {mainMenuItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 whitespace-nowrap border ${
+                  scrolled
+                    ? "text-white hover:text-blue-200 hover:bg-blue-700/50 border-transparent hover:border-blue-600"
+                    : "text-blue-800 hover:text-blue-600 hover:bg-blue-50 border-transparent hover:border-blue-200"
+                }`}
+              >
+                {item.label}
+              </a>
+            ))}
+            
+            {/* Menu déroulant "Plus" avec tous les autres éléments */}
+            <div className="relative group">
+              <button className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 border ${
+                scrolled
+                  ? "text-white hover:text-blue-200 hover:bg-blue-700/50 border-transparent hover:border-blue-600"
+                  : "text-blue-800 hover:text-blue-600 hover:bg-blue-50 border-transparent hover:border-blue-200"
+              }`}>
+                Plus <ChevronDown size={16} className="ml-1 group-hover:rotate-180 transition-transform" />
+              </button>
+              <div className="absolute right-0 mt-2 w-56 bg-white shadow-2xl rounded-xl border border-blue-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
+                <div className="p-2">
+                  {secondaryMenuItems.map((item) => (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      className="flex items-center px-4 py-3 text-sm text-blue-800 hover:bg-blue-50 rounded-lg transition-colors mb-1 last:mb-0"
+                    >
+                      <span className="flex-1">{item.label}</span>
+                      <ChevronDown size={14} className="transform -rotate-90 text-blue-400" />
+                    </a>
+                  ))}
+                </div>
+                
+                {/* Section Urgence dans le dropdown */}
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-t border-blue-200 p-3">
+                  <a 
+                    href="/urgence" 
+                    className="flex items-center gap-2 text-blue-700 hover:text-blue-800 font-medium text-sm"
+                  >
+                    <Phone size={14} />
+                    <span>Urgence : +237 693 21 54 31</span>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Navigation desktop */}
-          <ul className="hidden lg:flex items-center gap-1 xl:gap-2">
-            {[
-              { label: "Accueil", href: "/" },
-              { label: "Catégories", href: "/categories" },
-              { label: "Livres Audio", href: "/audio" },
-            ].map((item) => (
-              <li key={item.label}>
-                <a
-                  href={item.href}
-                  className="flex items-center px-3 xl:px-4 py-2 sm:py-2.5 rounded-xl transition-all duration-200 text-blue-800 hover:bg-blue-100 hover:-translate-y-0.5 text-sm xl:text-base font-medium whitespace-nowrap"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+          {/* Actions */}
+          <div className="flex items-center gap-2 sm:gap-3" ref={cartRef}>
+            {/* Panier d'achat */}
+            <div className="relative">
+              <button
+                onClick={() => setIsCartOpen(!isCartOpen)}
+                className={`p-2 rounded-lg transition-colors border relative ${
+                  scrolled
+                    ? "text-white hover:text-blue-200 border-transparent hover:border-blue-600 hover:bg-blue-700/50"
+                    : "text-blue-700 hover:text-blue-800 border-transparent hover:border-blue-200 hover:bg-blue-50"
+                }`}
+                aria-label="Panier"
+              >
+                <ShoppingCart size={22} />
+                {cart.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+                    {cart.length}
+                  </span>
+                )}
+              </button>
 
-          {/* Right Actions */}
-          <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
-            {/* Bouton Panier */}
-            <button
-              onClick={handleCartClick}
-              className="relative p-2 sm:p-2.5 hover:bg-blue-50 rounded-lg transition-all hover:scale-105 active:scale-95 text-blue-800 border border-transparent hover:border-blue-200"
-              aria-label="Panier"
-              title="Panier"
-            >
-              <ShoppingCart size={20} className="sm:w-6 sm:h-6" />
-              {cartItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
-                  {cartItems}
-                </span>
+              {/* Panier déroulant */}
+              {isCartOpen && (
+                <div className="absolute right-0 mt-2 w-96 bg-white shadow-2xl rounded-xl border border-blue-100 z-50 animate-fadeIn">
+                  <div className="p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-lg text-blue-900 flex items-center gap-2">
+                        <ShoppingCart size={20} className="text-blue-600" />
+                        {currentLang.menu.cart} ({cart.length})
+                      </h3>
+                      {cart.length > 0 && (
+                        <button
+                          onClick={clearCart}
+                          className="text-xs text-red-500 hover:text-red-700 flex items-center gap-1"
+                        >
+                          <Trash2 size={14} />
+                          Vider
+                        </button>
+                      )}
+                    </div>
+
+                    {cart.length === 0 ? (
+                      <div className="text-center py-8">
+                        <Package size={48} className="text-blue-200 mx-auto mb-4" />
+                        <p className="text-gray-500 mb-4">{currentLang.cartItems.empty}</p>
+                        <a
+                          href="/boutique"
+                          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium"
+                          onClick={() => setIsCartOpen(false)}
+                        >
+                          {currentLang.cartItems.continueShopping}
+                          <ArrowRight size={16} />
+                        </a>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="max-h-64 overflow-y-auto mb-4">
+                          {cart.map((item, index) => (
+                            <div key={`${item.id}-${index}`} className="flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg mb-2 last:mb-0">
+                              <div className="w-12 h-12 bg-blue-100 rounded-lg overflow-hidden flex-shrink-0">
+                                <img 
+                                  src={item.cover} 
+                                  alt={item.title}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = "https://via.placeholder.com/100x100?text=Produit";
+                                  }}
+                                />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-medium text-sm text-blue-900 truncate">{item.title}</h4>
+                                <p className="text-xs text-gray-500 truncate">{item.author}</p>
+                                <div className="flex items-center justify-between mt-1">
+                                  <span className="text-blue-700 font-bold text-sm">
+                                    {formatPrice(item.price)}
+                                  </span>
+                                  <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                                    {item.format || "Physique"}
+                                  </span>
+                                </div>
+                              </div>
+                              <button
+                                onClick={() => removeFromCart(item.id)}
+                                className="text-red-400 hover:text-red-600 p-1"
+                                aria-label="Supprimer"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="border-t border-blue-100 pt-4">
+                          <div className="flex items-center justify-between mb-4">
+                            <span className="font-bold text-blue-900">{currentLang.cartItems.total}</span>
+                            <span className="text-xl font-bold text-blue-700">{formatPrice(cartTotal)}</span>
+                          </div>
+                          <div className="flex gap-2">
+                            <a
+                              href="/panier"
+                              className="flex-1 py-3 text-center border-2 border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-50 rounded-lg font-medium transition-colors"
+                              onClick={() => setIsCartOpen(false)}
+                            >
+                              {currentLang.cartItems.viewCart}
+                            </a>
+                            <a
+                              href="/checkout"
+                              className="flex-1 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-center rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+                              onClick={() => setIsCartOpen(false)}
+                            >
+                              <CreditCard size={18} />
+                              {currentLang.cartItems.checkout}
+                            </a>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
               )}
-            </button>
+            </div>
+
+            {/* Sélecteur de langue mobile (à la place du panier) */}
+            <div className={`flex lg:hidden items-center rounded-lg p-0.5 border transition-colors ${
+              scrolled
+                ? "bg-blue-800/50 border-blue-700"
+                : "bg-blue-100 border-blue-200"
+            }`}>
+              <button
+                onClick={() => setLanguage('fr')}
+                className={`px-2 py-1 rounded text-xs font-medium transition-all ${
+                  language === 'fr' 
+                    ? scrolled 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-blue-600 text-white'
+                    : scrolled 
+                      ? 'text-blue-300 hover:text-white hover:bg-blue-700/50' 
+                      : 'text-blue-700 hover:bg-blue-200'
+                }`}
+              >
+                FR
+              </button>
+              <button
+                onClick={() => setLanguage('en')}
+                className={`px-2 py-1 rounded text-xs font-medium transition-all ${
+                  language === 'en' 
+                    ? scrolled 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-blue-600 text-white'
+                    : scrolled 
+                      ? 'text-blue-300 hover:text-white hover:bg-blue-700/50' 
+                      : 'text-blue-700 hover:bg-blue-200'
+                }`}
+              >
+                EN
+              </button>
+            </div>
 
             {/* Bouton Connexion */}
             <a
               href="/login"
-              className="hidden sm:flex items-center gap-2 px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2 lg:py-2.5 border-2 border-blue-300 hover:bg-blue-50 rounded-lg font-medium transition-all hover:scale-105 active:scale-95 text-blue-800 text-sm lg:text-base whitespace-nowrap"
+              className={`hidden md:flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-colors border ${
+                scrolled
+                  ? "text-white hover:text-blue-200 border-transparent hover:border-blue-600 hover:bg-blue-700/50"
+                  : "text-blue-700 hover:text-blue-800 border-transparent hover:border-blue-200 hover:bg-blue-50"
+              }`}
             >
-              <User size={16} className="sm:w-5 sm:h-5" />
-              <span className="hidden md:inline">Connexion</span>
+              <User size={18} />
+              <span>{currentLang.cta.login}</span>
             </a>
 
             {/* Bouton Inscription */}
             <a
               href="/register"
-              className="flex items-center gap-2 px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2 lg:py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 rounded-lg font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg hover:shadow-blue-900/30 text-white text-sm lg:text-base whitespace-nowrap"
+              className={`px-4 py-2.5 rounded-lg font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap transform hover:-translate-y-0.5 ${
+                scrolled
+                  ? "bg-gradient-to-r from-white to-blue-100 text-blue-900 hover:from-blue-100 hover:to-white shadow-blue-900/30"
+                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-blue-500/30"
+              }`}
             >
-              <span className="hidden sm:inline">S'inscrire</span>
-              <span className="sm:hidden">Inscription</span>
+              {currentLang.cta.register}
             </a>
+
+            {/* Menu Mobile Toggle */}
+            <button
+              className={`lg:hidden p-2 rounded-lg transition-colors border ${
+                scrolled
+                  ? "text-white hover:text-blue-200 border-transparent hover:border-blue-600 hover:bg-blue-700/50"
+                  : "text-blue-700 border-transparent hover:border-blue-200 hover:bg-blue-50"
+              }`}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Menu"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="lg:hidden mt-3 sm:mt-4 bg-white/95 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl shadow-blue-900/20 p-4 sm:p-6 animate-fadeInUp border border-blue-200">
-            <div className="space-y-1">
-              {[
-                { label: "Accueil", icon: "🏠", href: "/" },
-                { label: "Catégories", icon: "📚", href: "/categories" },
-                { label: "Livres Audio", icon: "🎧", href: "/audio" },
-                { 
-                  label: "Panier", 
-                  icon: "🛒", 
-                  href: "/cart",
-                  badge: cartItems > 0 ? `(${cartItems})` : ""
-                },
-              ].map((item, index) => (
+        {/* Menu Mobile */}
+        <div className={`lg:hidden fixed inset-x-0 top-0 h-full bg-white transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+          <div className="h-full overflow-y-auto pb-20">
+            {/* Header du menu mobile */}
+            <div className="sticky top-0 bg-white border-b border-blue-100 p-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {/* Logo dans le menu mobile */}
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg p-1.5 shadow-md">
+                    <div className="w-full h-full bg-white rounded-md overflow-hidden">
+                      <img 
+                        src="/images/logo.jpeg" 
+                        alt="Logo" 
+                        className="w-full h-full object-contain p-0.5"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-lg font-bold text-blue-800">MTHS/TMSH</div>
+                    <div className="text-xs text-blue-600 mt-0.5">{currentLang.tagline}</div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                >
+                  <X size={24} className="text-blue-600" />
+                </button>
+              </div>
+            </div>
+
+            {/* Navigation mobile */}
+            <div className="p-4">
+              {/* Panier dans le menu mobile */}
+              <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <ShoppingCart size={20} className="text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-blue-800">{currentLang.menu.cart}</p>
+                      <p className="text-sm text-blue-700">
+                        {cart.length} {cart.length === 1 ? currentLang.cartItems.item : currentLang.cartItems.items}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-blue-700 text-lg">{formatPrice(cartTotal)}</p>
+                    {cart.length > 0 && (
+                      <button
+                        onClick={clearCart}
+                        className="text-xs text-red-500 hover:text-red-700 flex items-center gap-1"
+                      >
+                        <Trash2 size={12} />
+                        Vider
+                      </button>
+                    )}
+                  </div>
+                </div>
+                {cart.length === 0 ? (
+                  <p className="text-center text-gray-500 text-sm">{currentLang.cartItems.empty}</p>
+                ) : (
+                  <div className="space-y-2">
+                    {cart.slice(0, 3).map((item, index) => (
+                      <div key={`${item.id}-${index}`} className="flex items-center gap-2 p-2 bg-white rounded-lg">
+                        <div className="w-10 h-10 bg-blue-50 rounded overflow-hidden flex-shrink-0">
+                          <img 
+                            src={item.cover} 
+                            alt={item.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-blue-900 truncate">{item.title}</p>
+                          <p className="text-xs text-blue-600">{formatPrice(item.price)}</p>
+                        </div>
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-red-400 hover:text-red-600 p-1"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
+                    <div className="flex gap-2 pt-2">
+                      <a
+                        href="/panier"
+                        className="flex-1 py-2 text-center border border-blue-300 text-blue-700 hover:bg-blue-50 rounded-lg text-sm font-medium"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {currentLang.cartItems.viewCart}
+                      </a>
+                      <a
+                        href="/checkout"
+                        className="flex-1 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-center rounded-lg text-sm font-semibold flex items-center justify-center gap-1"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <CreditCard size={16} />
+                        {currentLang.cartItems.checkout}
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Sélecteur de langue mobile */}
+              <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <Globe size={20} className="text-blue-600" />
+                  <span className="font-semibold text-blue-800">Langue / Language</span>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setLanguage('fr')}
+                    className={`flex-1 py-3 rounded-lg text-center font-medium transition-all ${
+                      language === 'fr' 
+                        ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md' 
+                        : 'bg-white text-blue-700 border border-blue-200 hover:bg-blue-50'
+                    }`}
+                  >
+                    Français
+                  </button>
+                  <button
+                    onClick={() => setLanguage('en')}
+                    className={`flex-1 py-3 rounded-lg text-center font-medium transition-all ${
+                      language === 'en' 
+                        ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md' 
+                        : 'bg-white text-blue-700 border border-blue-200 hover:bg-blue-50'
+                    }`}
+                  >
+                    English
+                  </button>
+                </div>
+              </div>
+
+              {/* Menu items - 3 premiers + les autres */}
+              <div className="space-y-2">
+                <div className="text-xs font-semibold text-blue-500 uppercase tracking-wider px-2 py-1">
+                  Navigation Principale
+                </div>
+                {mainMenuItems.map((item) => (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="flex items-center justify-between px-4 py-3.5 text-blue-800 hover:bg-blue-50 rounded-xl transition-colors font-medium border border-transparent hover:border-blue-200"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <span className="text-base">{item.label}</span>
+                    <ChevronDown size={18} className="transform -rotate-90 text-blue-400" />
+                  </a>
+                ))}
+                
+                <div className="text-xs font-semibold text-blue-500 uppercase tracking-wider px-2 py-1 mt-4">
+                  Autres Sections
+                </div>
+                {secondaryMenuItems.map((item) => (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="flex items-center justify-between px-4 py-3.5 text-blue-700 hover:bg-blue-50 rounded-xl transition-colors font-medium border border-transparent hover:border-blue-200"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <span>{item.label}</span>
+                    <ChevronDown size={16} className="transform -rotate-90 text-blue-400" />
+                  </a>
+                ))}
+              </div>
+
+              {/* Actions mobile */}
+              <div className="mt-8 space-y-3">
                 <a
-                  key={item.label}
-                  href={item.href}
-                  className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3.5 text-sm sm:text-base rounded-xl hover:bg-blue-50 transition-all hover:translate-x-2 opacity-0 animate-fadeInSlide text-blue-900 font-medium"
-                  style={{ animationDelay: `${index * 50}ms`, animationFillMode: "forwards" }}
+                  href="/login"
+                  className="flex items-center justify-center gap-2 w-full py-3.5 border-2 border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-50 rounded-xl font-semibold transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg sm:text-xl">{item.icon}</span>
-                    {item.label}
-                  </div>
-                  {item.badge && (
-                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                      {item.badge}
-                    </span>
-                  )}
+                  <User size={20} />
+                  {currentLang.cta.login}
                 </a>
-              ))}
-            </div>
+                
+                <a
+                  href="/register"
+                  className="block w-full py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-center rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {currentLang.cta.register}
+                </a>
+              </div>
 
-            {/* Auth Mobile */}
-            <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-blue-200 space-y-2 sm:space-y-3 opacity-0 animate-fadeIn">
-              <a
-                href="/register"
-                className="block text-center w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base shadow-lg shadow-blue-900/30"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Créer un compte gratuit
-              </a>
-
-              <a
-                href="/login"
-                className="w-full border-2 border-blue-300 hover:bg-blue-50 text-blue-800 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl font-semibold flex items-center justify-center gap-2 text-sm sm:text-base"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <User size={18} className="sm:w-5 sm:h-5" />
-                Se connecter
-              </a>
+              {/* Contact info mobile */}
+              <div className="mt-8 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <Phone size={20} className="text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-blue-800">{currentLang.cta.emergency}</p>
+                    <p className="text-sm text-blue-700 font-semibold">+237 693 21 54 31</p>
+                  </div>
+                </div>
+                <div className="text-sm text-blue-700 space-y-1">
+                  <p className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                    Centre d'Abili, Yaoundé
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                    Lundi - Samedi: 8h - 18h
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        )}
+        </div>
       </nav>
 
-      {/* Styles pour l'animation marquee */}
+      {/* Overlay pour menu mobile */}
+      {isMenuOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
+
+      {/* Styles Animations */}
       <style jsx>{`
         @keyframes marquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-66.666%);
-          }
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
         
         .animate-marquee {
-          animation: marquee 25s linear infinite;
+          animation: marquee 35s linear infinite;
         }
         
         .animate-marquee:hover {
           animation-play-state: paused;
         }
 
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fadeInUp {
-          animation: fadeInUp 0.3s ease-out;
-        }
-
-        @keyframes fadeInSlide {
-          from {
-            opacity: 0;
-            transform: translateX(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        .animate-fadeInSlide {
-          animation: fadeInSlide 0.3s ease-out;
-        }
-
         @keyframes fadeIn {
-          from {
-            opacity: 0;
+          from { 
+            opacity: 0; 
+            transform: translateY(-8px); 
           }
-          to {
-            opacity: 1;
+          to { 
+            opacity: 1; 
+            transform: translateY(0); 
           }
         }
 
         .animate-fadeIn {
-          animation: fadeIn 0.5s ease-out 0.3s forwards;
+          animation: fadeIn 0.2s ease-out;
         }
       `}</style>
     </header>
