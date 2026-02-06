@@ -10,10 +10,13 @@ import {
   Building, 
   ChevronDown, 
   ChevronUp, 
-  ChevronRight, // AJOUT IMPORT MANQUANT
+  ChevronRight,
   CheckCircle, 
   AlertTriangle,
-  FileText // AJOUT IMPORT MANQUANT
+  FileText,
+  Heart,
+  Cross,
+  Users
 } from "lucide-react";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
@@ -33,16 +36,16 @@ function Confidentialite() {
     { id: "collecte", title: "2. Données collectées", icon: <Eye className="w-5 h-5" /> },
     { id: "utilisation", title: "3. Utilisation des données", icon: <Building className="w-5 h-5" /> },
     { id: "partage", title: "4. Partage des données", icon: <Mail className="w-5 h-5" /> },
-    { id: "droits", title: "5. Vos droits RGPD", icon: <CheckCircle className="w-5 h-5" /> },
+    { id: "droits", title: "5. Vos droits", icon: <CheckCircle className="w-5 h-5" /> },
     { id: "securite", title: "6. Sécurité", icon: <Lock className="w-5 h-5" /> },
     { id: "conservation", title: "7. Conservation", icon: <Calendar className="w-5 h-5" /> },
-    { id: "cookies", title: "8. Cookies", icon: <Download className="w-5 h-5" /> }
+    { id: "engagement", title: "8. Notre engagement", icon: <Heart className="w-5 h-5" /> }
   ];
 
   const vosDroits = [
     {
       droit: "Droit d'accès",
-      description: "Accéder à vos données personnelles",
+      description: "Accéder à vos données personnelles et spirituelles",
       delai: "1 mois maximum"
     },
     {
@@ -52,12 +55,7 @@ function Confidentialite() {
     },
     {
       droit: "Droit à l'effacement",
-      description: "Supprimer vos données",
-      delai: "1 mois maximum"
-    },
-    {
-      droit: "Droit à la portabilité",
-      description: "Récupérer vos données",
+      description: "Supprimer vos données personnelles",
       delai: "1 mois maximum"
     },
     {
@@ -67,35 +65,36 @@ function Confidentialite() {
     },
     {
       droit: "Droit à la limitation",
-      description: "Limiter le traitement",
+      description: "Limiter le traitement de vos données",
+      delai: "Sans délai"
+    },
+    {
+      droit: "Droit au retrait du consentement",
+      description: "Retirer votre consentement à tout moment",
       delai: "Sans délai"
     }
   ];
 
-  const cookiesCategories = [
+  const principesConfidentialite = [
     {
-      type: "Cookies essentiels",
-      description: "Nécessaires au fonctionnement du site",
-      exemple: "Authentification, panier d'achat",
-      obligatoire: true
+      principe: "Secret professionnel absolu",
+      description: "Tous les thérapeutes et collaborateurs sont liés par le secret professionnel",
+      icon: "🤐"
     },
     {
-      type: "Cookies de performance",
-      description: "Analyser l'utilisation du site",
-      exemple: "Google Analytics",
-      obligatoire: false
+      principe: "Absence de jugement",
+      description: "Nous accueillons chaque parole sans préjugé ni condamnation",
+      icon: "❤️"
     },
     {
-      type: "Cookies de fonctionnalité",
-      description: "Personnaliser votre expérience",
-      exemple: "Langue, préférences",
-      obligatoire: false
+      principe: "Consentement éclairé",
+      description: "Vous êtes informé et donnez votre consentement pour chaque traitement",
+      icon: "✍️"
     },
     {
-      type: "Cookies publicitaires",
-      description: "Publicités ciblées",
-      exemple: "Réseaux sociaux",
-      obligatoire: false
+      principe: "Minimisation des données",
+      description: "Nous collectons uniquement les données nécessaires à votre accompagnement",
+      icon: "🎯"
     }
   ];
 
@@ -107,7 +106,7 @@ function Confidentialite() {
       {/* Contenu principal */}
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white py-12 md:py-16">
+        <section className="bg-gradient-to-r from-blue-800 to-cyan-700 text-white py-12 md:py-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <div className="flex justify-center mb-6">
@@ -116,23 +115,26 @@ function Confidentialite() {
                 </div>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-                Politique de Confidentialité
+                Charte de Confidentialité
               </h1>
               <p className="text-lg sm:text-xl text-blue-100 max-w-4xl mx-auto">
-                Dernière mise à jour : 15 janvier 2024 • Conforme RGPD
+                Centre MARIE REINE DE LA MISÉRICORDE D'ABILI • Association Mariale d'Abili (ASMAB)
+              </p>
+              <p className="text-base text-blue-200 mt-2">
+                Dernière mise à jour : 15 janvier 2024 • Conforme à la Loi Camerounaise
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-6">
                 <div className="flex items-center gap-2 text-sm bg-white/20 px-4 py-2 rounded-full">
                   <Calendar className="w-4 h-4" />
-                  Entrée en vigueur : 15/01/2024
+                  Fondé en 1979
                 </div>
                 <div className="flex items-center gap-2 text-sm bg-white/20 px-4 py-2 rounded-full">
                   <CheckCircle className="w-4 h-4" />
-                  RGPD conforme
+                  Récépissé N°030/RDA/J12/SAAJP
                 </div>
                 <div className="flex items-center gap-2 text-sm bg-white/20 px-4 py-2 rounded-full">
                   <Lock className="w-4 h-4" />
-                  Données chiffrées
+                  Confidentialité absolue
                 </div>
               </div>
             </div>
@@ -145,14 +147,13 @@ function Confidentialite() {
             {/* Important Notice */}
             <div className="mb-12 bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
               <div className="flex items-start gap-4">
-                <AlertTriangle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                <Heart className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="text-lg font-bold text-gray-800 mb-2">Transparence et protection</h3>
+                  <h3 className="text-lg font-bold text-gray-800 mb-2">Notre engagement pastoral</h3>
                   <p className="text-gray-700">
-                    Nous accordons une importance capitale à la protection de vos données personnelles. 
-                    Cette politique explique comment nous collectons, utilisons et protégeons vos informations. 
-                    Pour toute question, contactez notre Délégué à la Protection des Données (DPO) à 
-                    <a href="mailto:dpo@ebookpro.fr" className="text-blue-600 font-semibold ml-1">dpo@ebookpro.fr</a>.
+                    « Au Centre MARIE REINE DE LA MISÉRICORDE D'ABILI, nous voyons une personne qui souffre, 
+                    pas un problème à condamner. Tout ce que vous partagez est protégé par un secret 
+                    professionnel absolu et traité avec dignité, respect et absence totale de jugement. »
                   </p>
                 </div>
               </div>
@@ -176,27 +177,34 @@ function Confidentialite() {
                         <div className="text-gray-400 group-hover:text-blue-500">
                           {item.icon}
                         </div>
-                        <span className="font-medium">{item.title}</span>
+                        <span className="font-medium text-sm">{item.title}</span>
                       </a>
                     ))}
                   </nav>
 
-                  {/* Contact DPO */}
+                  {/* Contact Responsable */}
                   <div className="mt-8 pt-6 border-t border-gray-200">
-                    <h4 className="font-bold text-gray-800 mb-3">Contact DPO</h4>
+                    <h4 className="font-bold text-gray-800 mb-3">Contact responsable</h4>
                     <div className="space-y-3">
                       <div className="flex items-start gap-2">
                         <Mail className="w-4 h-4 text-blue-600 mt-1 flex-shrink-0" />
                         <div>
-                          <p className="font-medium text-sm text-gray-700">dpo@ebookpro.fr</p>
+                          <p className="font-medium text-sm text-gray-700">contact@mths-abili.org</p>
                           <p className="text-xs text-gray-500">Réponse sous 48h</p>
                         </div>
                       </div>
                       <div className="flex items-start gap-2">
                         <Building className="w-4 h-4 text-blue-600 mt-1 flex-shrink-0" />
                         <div>
-                          <p className="font-medium text-sm text-gray-700">eBookPro SAS</p>
-                          <p className="text-xs text-gray-500">123 Avenue du Livre, 75001 Paris</p>
+                          <p className="font-medium text-sm text-gray-700">Centre MTHS Abili</p>
+                          <p className="text-xs text-gray-500">27 km de Yaoundé, Cameroun</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <Users className="w-4 h-4 text-blue-600 mt-1 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-sm text-gray-700">Association Mariale d'Abili</p>
+                          <p className="text-xs text-gray-500">Récépissé N°030/RDA/J12/SAAJP</p>
                         </div>
                       </div>
                     </div>
@@ -204,10 +212,10 @@ function Confidentialite() {
 
                   <a
                     href="/conditions"
-                    className="mt-6 w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-cyan-600 transition-all shadow-md"
+                    className="mt-6 w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all shadow-md"
                   >
                     <FileText className="w-5 h-5" />
-                    Conditions d'utilisation
+                    Charte et Conditions
                   </a>
                 </div>
               </div>
@@ -219,10 +227,11 @@ function Confidentialite() {
                   <div className="p-6 md:p-8 border-b border-gray-200">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">Introduction</h2>
                     <p className="text-gray-700 leading-relaxed">
-                      La présente Politique de Confidentialité s'applique à l'ensemble des services proposés par 
-                      eBookPro SAS. Elle décrit comment nous collectons, utilisons, partageons et protégeons les 
-                      informations personnelles que vous nous communiquez, conformément au Règlement Général sur 
-                      la Protection des Données (RGPD) et à la loi française « Informatique et Libertés ».
+                      La présente Charte de Confidentialité s'applique à tous les services proposés par le 
+                      Centre MARIE REINE DE LA MISÉRICORDE D'ABILI, géré par l'Association Mariale d'Abili (ASMAB). 
+                      Elle décrit comment nous collectons, utilisons et protégeons les informations personnelles 
+                      et spirituelles que vous nous confiez, conformément à la loi camerounaise et à notre 
+                      charte éthique.
                     </p>
                   </div>
 
@@ -250,30 +259,29 @@ function Confidentialite() {
                       {(openSections.introduction || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
                           <p>
-                            eBookPro SAS, société par actions simplifiée au capital de 500 000 €, immatriculée au 
-                            RCS de Paris sous le numéro 123 456 789, dont le siège social est situé au 
-                            123 Avenue du Livre, 75001 Paris, est responsable du traitement de vos données 
-                            personnelles.
+                            Le Centre MARIE REINE DE LA MISÉRICORDE D'ABILI, association déclarée sous le 
+                            récépissé N°030/RDA/J12/SAAJP du 14 Décembre 2010, est responsable du traitement 
+                            de vos données personnelles et spirituelles.
                           </p>
                           
                           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                             <h4 className="font-bold text-gray-800 mb-2">Notre engagement</h4>
                             <ul className="space-y-2 text-sm">
                               <li className="flex items-start gap-2">
-                                <CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
-                                <span>Transparence totale sur l'utilisation de vos données</span>
+                                <Heart className="w-4 h-4 text-blue-500 mt-0.5" />
+                                <span>Confidentialité absolue de votre parcours spirituel</span>
                               </li>
                               <li className="flex items-start gap-2">
-                                <CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
-                                <span>Minimisation de la collecte des données</span>
+                                <Cross className="w-4 h-4 text-blue-500 mt-0.5" />
+                                <span>Respect de la dignité humaine et de votre liberté</span>
                               </li>
                               <li className="flex items-start gap-2">
-                                <CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
-                                <span>Sécurité maximale des informations</span>
+                                <Shield className="w-4 h-4 text-blue-500 mt-0.5" />
+                                <span>Sécurité maximale de vos informations sensibles</span>
                               </li>
                               <li className="flex items-start gap-2">
-                                <CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
-                                <span>Respect de vos droits RGPD</span>
+                                <Users className="w-4 h-4 text-blue-500 mt-0.5" />
+                                <span>Absence totale de jugement et de discrimination</span>
                               </li>
                             </ul>
                           </div>
@@ -303,8 +311,8 @@ function Confidentialite() {
                       {(openSections.collecte || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
                           <p>
-                            Nous collectons différentes catégories de données personnelles pour fournir et améliorer 
-                            nos services.
+                            Dans le cadre de votre accompagnement spirituel, nous pouvons collecter différentes 
+                            catégories de données personnelles.
                           </p>
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -312,28 +320,28 @@ function Confidentialite() {
                               <h4 className="font-bold text-blue-800 mb-2">Données d'identification</h4>
                               <ul className="space-y-1 text-sm">
                                 <li>• Nom et prénom</li>
-                                <li>• Adresse email</li>
-                                <li>• Numéro de téléphone</li>
-                                <li>• Adresse postale (facturation)</li>
+                                <li>• Date et lieu de naissance</li>
+                                <li>• Adresse et téléphone</li>
+                                <li>• Situation familiale et professionnelle</li>
                               </ul>
                             </div>
                             
                             <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-                              <h4 className="font-bold text-purple-800 mb-2">Données transactionnelles</h4>
+                              <h4 className="font-bold text-purple-800 mb-2">Données spirituelles</h4>
                               <ul className="space-y-1 text-sm">
-                                <li>• Historique d'achats</li>
-                                <li>• Données de paiement</li>
-                                <li>• Préférences de lecture</li>
-                                <li>• Liste de souhaits</li>
+                                <li>• Historique des souffrances spirituelles</li>
+                                <li>• Diagnostic spirituel</li>
+                                <li>• Parcours de guérison</li>
+                                <li>• Témoignages (avec consentement)</li>
                               </ul>
                             </div>
                           </div>
                           
                           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <h4 className="font-bold text-gray-800 mb-2">Données techniques</h4>
+                            <h4 className="font-bold text-gray-800 mb-2">Données de santé</h4>
                             <p className="text-sm text-gray-600">
-                              Adresse IP, type de navigateur, appareil utilisé, système d'exploitation, 
-                              données de connexion (logs), et informations sur votre interaction avec notre site.
+                              Informations médicales pertinentes pour le discernement spirituel, 
+                              toujours dans le respect de la complémentarité avec la médecine moderne.
                             </p>
                           </div>
                         </div>
@@ -362,7 +370,7 @@ function Confidentialite() {
                       {(openSections.utilisation || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
                           <p>
-                            Vos données personnelles sont traitées pour les finalités suivantes :
+                            Vos données personnelles sont traitées exclusivement pour les finalités suivantes :
                           </p>
                           
                           <div className="space-y-3">
@@ -371,9 +379,10 @@ function Confidentialite() {
                                 <span className="font-bold text-blue-700">1</span>
                               </div>
                               <div>
-                                <h4 className="font-bold text-blue-800">Exécution du contrat</h4>
+                                <h4 className="font-bold text-blue-800">Accompagnement spirituel</h4>
                                 <p className="text-sm text-blue-700">
-                                  Gérer votre compte, traiter vos commandes, fournir les services achetés
+                                  Établir un diagnostic spirituel, proposer un parcours de guérison adapté, 
+                                  suivre votre progression
                                 </p>
                               </div>
                             </div>
@@ -383,9 +392,10 @@ function Confidentialite() {
                                 <span className="font-bold text-green-700">2</span>
                               </div>
                               <div>
-                                <h4 className="font-bold text-green-800">Intérêt légitime</h4>
+                                <h4 className="font-bold text-green-800">Sécurité et prévention</h4>
                                 <p className="text-sm text-green-700">
-                                  Améliorer nos services, prévenir la fraude, sécurité du site
+                                  Prévenir les risques, assurer la sécurité des personnes, respecter les 
+                                  obligations légales
                                 </p>
                               </div>
                             </div>
@@ -395,9 +405,10 @@ function Confidentialite() {
                                 <span className="font-bold text-purple-700">3</span>
                               </div>
                               <div>
-                                <h4 className="font-bold text-purple-800">Consentement</h4>
+                                <h4 className="font-bold text-purple-800">Amélioration des services</h4>
                                 <p className="text-sm text-purple-700">
-                                  Envoi de newsletters, cookies non essentiels, publicité ciblée
+                                  Améliorer nos protocoles thérapeutiques (données anonymisées), 
+                                  formation des thérapeutes
                                 </p>
                               </div>
                             </div>
@@ -428,42 +439,44 @@ function Confidentialite() {
                       {(openSections.partage || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
                           <p>
-                            Vos données peuvent être partagées avec des tiers uniquement dans les cas suivants :
+                            Vos données sont protégées par le secret professionnel et ne sont partagées qu'avec 
+                            votre consentement explicite, sauf exceptions légales.
                           </p>
                           
                           <div className="space-y-4">
                             <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                              <h4 className="font-bold text-gray-800 mb-2">Prestataires de services</h4>
+                              <h4 className="font-bold text-gray-800 mb-2">Partage avec consentement</h4>
                               <ul className="space-y-2 text-sm">
                                 <li className="flex items-center gap-2">
-                                  <span className="font-semibold">• Processeurs de paiement :</span>
-                                  <span>Stripe, PayPal (données de transaction)</span>
+                                  <span className="font-semibold">• Équipe thérapeutique :</span>
+                                  <span>Thérapeutes et accompagnants du Centre (secret professionnel)</span>
                                 </li>
                                 <li className="flex items-center gap-2">
-                                  <span className="font-semibold">• Hébergeur :</span>
-                                  <span>Amazon AWS, OVH (données stockées en Europe)</span>
+                                  <span className="font-semibold">• Référents spirituels :</span>
+                                  <span>Prêtres accompagnateurs (avec votre accord)</span>
                                 </li>
                                 <li className="flex items-center gap-2">
-                                  <span className="font-semibold">• Service d'email :</span>
-                                  <span>SendGrid (communications)</span>
+                                  <span className="font-semibold">• Médecins partenaires :</span>
+                                  <span>Dans le cadre de la complémentarité médecine moderne/MTHS</span>
                                 </li>
                               </ul>
                             </div>
                             
                             <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
-                              <h5 className="font-bold text-red-800 mb-2">⚠️ Exceptions strictes</h5>
+                              <h5 className="font-bold text-red-800 mb-2">⚠️ Secret professionnel absolu</h5>
                               <p className="text-red-700 text-sm">
-                                Nous ne vendons jamais vos données personnelles à des tiers. 
-                                Le partage n'intervient qu'en cas d'obligation légale ou avec votre consentement explicite.
+                                Nous ne partageons jamais vos données avec des tiers commerciaux. 
+                                Aucune information n'est vendue ou échangée. Le secret professionnel lie 
+                                tous nos collaborateurs jusqu'à leur mort.
                               </p>
                             </div>
                             
                             <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                              <h4 className="font-bold text-blue-800 mb-2">Transferts internationaux</h4>
+                              <h4 className="font-bold text-blue-800 mb-2">Exceptions légales</h4>
                               <p className="text-sm text-blue-700">
-                                Les données sont stockées exclusivement dans l'Union Européenne. 
-                                En cas de transfert hors UE, nous garantissons un niveau de protection adéquat 
-                                via des clauses contractuelles types de la Commission européenne.
+                                En cas d'obligation légale (danger immédiat pour vous ou autrui, réquisition 
+                                judiciaire), nous pourrions être amenés à communiquer certaines informations 
+                                aux autorités compétentes.
                               </p>
                             </div>
                           </div>
@@ -471,7 +484,7 @@ function Confidentialite() {
                       )}
                     </div>
 
-                    {/* Section 5 - Vos droits RGPD */}
+                    {/* Section 5 - Vos droits */}
                     <div id="droits" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("droits")}
@@ -481,7 +494,7 @@ function Confidentialite() {
                           <div className="bg-emerald-100 p-2 rounded-lg">
                             <CheckCircle className="w-6 h-6 text-emerald-600" />
                           </div>
-                          <h3 className="text-xl font-bold text-gray-800">5. Vos droits RGPD</h3>
+                          <h3 className="text-xl font-bold text-gray-800">5. Vos droits</h3>
                         </div>
                         {openSections.droits ? (
                           <ChevronUp className="w-6 h-6 text-gray-400" />
@@ -493,7 +506,8 @@ function Confidentialite() {
                       {(openSections.droits || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
                           <p>
-                            Conformément au RGPD, vous disposez des droits suivants concernant vos données personnelles :
+                            Conformément à la loi camerounaise et à notre charte éthique, vous disposez des 
+                            droits suivants concernant vos données personnelles :
                           </p>
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -515,11 +529,11 @@ function Confidentialite() {
                           <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-200">
                             <h4 className="font-bold text-blue-800 mb-2">Comment exercer vos droits ?</h4>
                             <p className="text-blue-700 mb-3">
-                              Pour exercer vos droits, contactez notre Délégué à la Protection des Données :
+                              Pour exercer vos droits, contactez notre responsable de la protection des données :
                             </p>
                             <div className="flex flex-col sm:flex-row gap-3">
                               <a
-                                href="mailto:dpo@ebookpro.fr"
+                                href="mailto:contact@mths-abili.org"
                                 className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                               >
                                 <Mail className="w-4 h-4" />
@@ -559,29 +573,29 @@ function Confidentialite() {
                       {(openSections.securite || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
                           <p>
-                            Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour 
-                            protéger vos données contre tout accès non autorisé, altération, divulgation ou destruction.
+                            Nous mettons en œuvre des mesures rigoureuses pour protéger vos données contre 
+                            tout accès non autorisé, perte ou altération.
                           </p>
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-                              <h4 className="font-bold text-indigo-800 mb-2">Mesures techniques</h4>
+                              <h4 className="font-bold text-indigo-800 mb-2">Mesures physiques</h4>
                               <ul className="space-y-2 text-sm">
                                 <li className="flex items-center gap-2">
                                   <Lock className="w-4 h-4 text-indigo-500" />
-                                  Chiffrement SSL/TLS 256-bit
+                                  Archives sécurisées sous clé
                                 </li>
                                 <li className="flex items-center gap-2">
                                   <Lock className="w-4 h-4 text-indigo-500" />
-                                  Pare-feu de nouvelle génération
+                                  Accès contrôlé aux locaux
                                 </li>
                                 <li className="flex items-center gap-2">
                                   <Lock className="w-4 h-4 text-indigo-500" />
-                                  Surveillance 24/7 des systèmes
+                                  Destruction sécurisée des documents
                                 </li>
                                 <li className="flex items-center gap-2">
                                   <Lock className="w-4 h-4 text-indigo-500" />
-                                  Sauvegardes quotidiennes
+                                  Pas de discussion hors cadre professionnel
                                 </li>
                               </ul>
                             </div>
@@ -591,30 +605,30 @@ function Confidentialite() {
                               <ul className="space-y-2 text-sm">
                                 <li className="flex items-center gap-2">
                                   <CheckCircle className="w-4 h-4 text-blue-500" />
-                                  Accès restreint aux données
+                                  Formation au secret professionnel
                                 </li>
                                 <li className="flex items-center gap-2">
                                   <CheckCircle className="w-4 h-4 text-blue-500" />
-                                  Formation RGPD obligatoire
+                                  Accès restreint aux dossiers
                                 </li>
                                 <li className="flex items-center gap-2">
                                   <CheckCircle className="w-4 h-4 text-blue-500" />
-                                  Audit de sécurité annuel
+                                  Procédures de sécurité strictes
                                 </li>
                                 <li className="flex items-center gap-2">
                                   <CheckCircle className="w-4 h-4 text-blue-500" />
-                                  Politique de mots de passe stricts
+                                  Engagement écrit de confidentialité
                                 </li>
                               </ul>
                             </div>
                           </div>
                           
                           <div className="bg-gray-100 p-4 rounded-lg">
-                            <h4 className="font-bold text-gray-800 mb-2">Notification de violation</h4>
+                            <h4 className="font-bold text-gray-800 mb-2">Protection des données numériques</h4>
                             <p className="text-gray-700 text-sm">
-                              En cas de violation de données personnelles, nous nous engageons à notifier 
-                              la CNIL dans les 72 heures et les personnes concernées dans les plus brefs délais, 
-                              conformément aux obligations légales.
+                              Les données numériques sont stockées sur des serveurs sécurisés, avec chiffrement 
+                              des données sensibles. Les sauvegardes sont effectuées régulièrement et stockées 
+                              de manière sécurisée.
                             </p>
                           </div>
                         </div>
@@ -643,8 +657,8 @@ function Confidentialite() {
                       {(openSections.conservation || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
                           <p>
-                            Vos données sont conservées pendant la durée nécessaire à la réalisation des finalités 
-                            pour lesquelles elles ont été collectées, conformément aux obligations légales.
+                            Vos données sont conservées pendant la durée nécessaire à votre accompagnement 
+                            spirituel, conformément à nos obligations légales et éthiques.
                           </p>
                           
                           <div className="overflow-x-auto">
@@ -658,9 +672,9 @@ function Confidentialite() {
                               </thead>
                               <tbody>
                                 <tr className="hover:bg-gray-50">
-                                  <td className="border border-gray-200 p-3">Données de compte actif</td>
-                                  <td className="border border-gray-200 p-3">3 ans après dernière activité</td>
-                                  <td className="border border-gray-200 p-3">Intérêt légitime</td>
+                                  <td className="border border-gray-200 p-3">Dossier d'accompagnement actif</td>
+                                  <td className="border border-gray-200 p-3">Durée du parcours + 5 ans</td>
+                                  <td className="border border-gray-200 p-3">Accompagnement spirituel</td>
                                 </tr>
                                 <tr className="hover:bg-gray-50">
                                   <td className="border border-gray-200 p-3">Données de facturation</td>
@@ -668,14 +682,14 @@ function Confidentialite() {
                                   <td className="border border-gray-200 p-3">Obligation légale</td>
                                 </tr>
                                 <tr className="hover:bg-gray-50">
-                                  <td className="border border-gray-200 p-3">Données de navigation</td>
-                                  <td className="border border-gray-200 p-3">13 mois</td>
-                                  <td className="border border-gray-200 p-3">Consentement</td>
+                                  <td className="border border-gray-200 p-3">Témoignages écrits</td>
+                                  <td className="border border-gray-200 p-3">Jusqu'au retrait du consentement</td>
+                                  <td className="border border-gray-200 p-3">Consentement explicite</td>
                                 </tr>
                                 <tr className="hover:bg-gray-50">
-                                  <td className="border border-gray-200 p-3">Liste de souhaits</td>
-                                  <td className="border border-gray-200 p-3">3 ans après dernière activité</td>
-                                  <td className="border border-gray-200 p-3">Intérêt légitime</td>
+                                  <td className="border border-gray-200 p-3">Données anonymisées</td>
+                                  <td className="border border-gray-200 p-3">Indéfiniment (recherche)</td>
+                                  <td className="border border-gray-200 p-3">Intérêt scientifique</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -685,74 +699,77 @@ function Confidentialite() {
                             <h5 className="font-bold text-amber-800 mb-2">Suppression des données</h5>
                             <p className="text-amber-700">
                               À l'expiration des délais de conservation, vos données sont supprimées de manière 
-                              sécurisée ou anonymisées à des fins statistiques.
+                              sécurisée ou anonymisées à des fins de recherche scientifique (sans identification 
+                              possible).
                             </p>
                           </div>
                         </div>
                       )}
                     </div>
 
-                    {/* Section 8 - Cookies */}
-                    <div id="cookies" className="p-6 md:p-8">
+                    {/* Section 8 - Notre engagement */}
+                    <div id="engagement" className="p-6 md:p-8">
                       <button
-                        onClick={() => toggleSection("cookies")}
+                        onClick={() => toggleSection("engagement")}
                         className="w-full flex justify-between items-center text-left"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-orange-100 p-2 rounded-lg">
-                            <Download className="w-6 h-6 text-orange-600" />
+                          <div className="bg-pink-100 p-2 rounded-lg">
+                            <Heart className="w-6 h-6 text-pink-600" />
                           </div>
-                          <h3 className="text-xl font-bold text-gray-800">8. Cookies et traceurs</h3>
+                          <h3 className="text-xl font-bold text-gray-800">8. Notre engagement éthique</h3>
                         </div>
-                        {openSections.cookies ? (
+                        {openSections.engagement ? (
                           <ChevronUp className="w-6 h-6 text-gray-400" />
                         ) : (
                           <ChevronDown className="w-6 h-6 text-gray-400" />
                         )}
                       </button>
                       
-                      {(openSections.cookies || window.innerWidth > 768) && (
+                      {(openSections.engagement || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
                           <p>
-                            Notre site utilise des cookies pour améliorer votre expérience de navigation.
+                            Au-delà des obligations légales, notre engagement repose sur des principes éthiques 
+                            fondamentaux :
                           </p>
                           
                           <div className="space-y-4">
-                            {cookiesCategories.map((cookie, index) => (
-                              <div key={index} className={`p-4 rounded-lg border ${cookie.obligatoire ? 'border-blue-200 bg-blue-50' : 'border-gray-200 bg-gray-50'}`}>
-                                <div className="flex justify-between items-start mb-2">
-                                  <h4 className="font-bold text-gray-800">{cookie.type}</h4>
-                                  {cookie.obligatoire ? (
-                                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Obligatoire</span>
-                                  ) : (
-                                    <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">Optionnel</span>
-                                  )}
+                            {principesConfidentialite.map((principe, index) => (
+                              <div key={index} className="p-4 rounded-lg border border-blue-200 bg-blue-50">
+                                <div className="flex items-start gap-3 mb-2">
+                                  <span className="text-2xl">{principe.icon}</span>
+                                  <div>
+                                    <h4 className="font-bold text-blue-800">{principe.principe}</h4>
+                                    <p className="text-sm text-blue-700 mt-1">{principe.description}</p>
+                                  </div>
                                 </div>
-                                <p className="text-sm text-gray-600 mb-1">{cookie.description}</p>
-                                <p className="text-xs text-gray-500">Exemple : {cookie.exemple}</p>
                               </div>
                             ))}
                           </div>
                           
                           <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-200">
-                            <h4 className="font-bold text-blue-800 mb-2">Gestion des cookies</h4>
+                            <h4 className="font-bold text-blue-800 mb-2">Engagement écrit des thérapeutes</h4>
                             <p className="text-blue-700 mb-3">
-                              Vous pouvez gérer vos préférences de cookies à tout moment :
+                              Chaque thérapeute et collaborateur signe un engagement de confidentialité qui stipule :
                             </p>
-                            <div className="space-y-2">
-                              <button className="w-full text-left p-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors">
-                                <div className="flex items-center justify-between">
-                                  <span className="font-medium text-blue-700">Modifier mes préférences de cookies</span>
-                                  <ChevronRight className="w-5 h-5 text-blue-500" />
-                                </div>
-                              </button>
-                              <button className="w-full text-left p-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                                <div className="flex items-center justify-between">
-                                  <span className="font-medium text-gray-700">Refuser tous les cookies non essentiels</span>
-                                  <Trash2 className="w-5 h-5 text-gray-500" />
-                                </div>
-                              </button>
-                            </div>
+                            <ul className="space-y-2 text-sm text-blue-700">
+                              <li className="flex items-start gap-2">
+                                <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                                <span>Secret professionnel absolu jusqu'à la mort</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                                <span>Absence de jugement et respect inconditionnel</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                                <span>Protection maximale des données confiées</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                                <span>Non-utilisation des données à des fins personnelles</span>
+                              </li>
+                            </ul>
                           </div>
                         </div>
                       )}
@@ -761,39 +778,44 @@ function Confidentialite() {
 
                   {/* Conclusion */}
                   <div className="p-6 md:p-8 bg-gradient-to-r from-gray-50 to-blue-50 border-t border-gray-200">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">Mises à jour de la politique</h3>
+                    <h3 className="text-xl font-bold text-gray-800 mb-4">Mises à jour et contact</h3>
                     <p className="text-gray-700 mb-6">
-                      Cette politique de confidentialité peut être mise à jour périodiquement. 
-                      Nous vous informerons de tout changement important par email ou via une notification 
-                      sur notre plateforme. La version actuelle est toujours accessible sur cette page.
+                      Cette charte de confidentialité peut être mise à jour pour refléter l'évolution de nos 
+                      pratiques ou des obligations légales. La version actuelle est toujours accessible sur 
+                      cette page. Pour toute question concernant la protection de vos données :
                     </p>
                     
                     <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
                       <div>
-                        <p className="font-bold text-gray-800">Délégué à la Protection des Données</p>
-                        <p className="text-sm text-gray-600">Marie Dupont • dpo@ebookpro.fr</p>
+                        <p className="font-bold text-gray-800">Centre MARIE REINE DE LA MISÉRICORDE D'ABILI</p>
+                        <p className="text-sm text-gray-600">
+                          Association Mariale d'Abili (ASMAB)<br />
+                          Récépissé N°030/RDA/J12/SAAJP du 14 Décembre 2010
+                        </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold text-gray-800">Autorité de contrôle</p>
+                        <p className="font-bold text-gray-800">Contact responsable</p>
                         <p className="text-sm text-gray-600">
-                          CNIL - 3 Place de Fontenoy, 75007 Paris<br />
-                          <a href="https://www.cnil.fr" className="text-blue-600 hover:underline">www.cnil.fr</a>
+                          📧 contact@mths-abili.org<br />
+                          📞 (+237) 693 21 54 31<br />
+                          📍 Abili, 27 km de Yaoundé, Cameroun
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Accept Button */}
+                {/* Accept Statement */}
                 <div className="mt-8 text-center">
                   <div className="inline-flex items-center gap-4 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200">
                     <Shield className="w-8 h-8 text-green-600" />
                     <div className="text-left">
                       <p className="font-bold text-gray-800">
-                        En poursuivant votre navigation, vous acceptez notre politique de confidentialité.
+                        « Votre confiance est sacrée. Votre parole reste ici. »
                       </p>
                       <p className="text-sm text-gray-600">
-                        Pour toute question, contactez notre DPO à dpo@ebookpro.fr
+                        En poursuivant votre navigation ou en sollicitant un accompagnement, 
+                        vous acceptez notre charte de confidentialité et notre engagement éthique.
                       </p>
                     </div>
                   </div>

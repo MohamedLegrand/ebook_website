@@ -24,6 +24,8 @@ import Temoignages from "./pages/temoignages/Temoignages";
 import Boutique from "./pages/boutique/Boutique";
 import Actualites from "./pages/actualites/Actualites";
 
+import Produitdetail from "./pages/produitdetail/Produitdetail"; 
+
 
 function App() {
   return (
@@ -53,6 +55,7 @@ function App() {
           <Route path="/temoignages" element={<Temoignages />} />
           <Route path="/boutique" element={<Boutique />} />
           <Route path="/actualites" element={<Actualites />} />
+          <Route path="/produit/:id" element={<Produitdetail />} />
         </Routes>
       </CartProvider>
     </BrowserRouter> 

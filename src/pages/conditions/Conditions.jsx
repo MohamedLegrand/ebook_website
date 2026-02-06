@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CheckCircle, AlertTriangle, FileText, Shield, User, CreditCard, Globe, Lock, Calendar, Mail, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle, AlertTriangle, FileText, Shield, User, Heart, Globe, Lock, Calendar, Mail, ChevronDown, ChevronUp, Cross, Book } from "lucide-react";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
@@ -14,32 +14,32 @@ function Conditions() {
   };
 
   const tableOfContents = [
-    { id: "general", title: "1. Généralités", icon: <FileText className="w-5 h-5" /> },
-    { id: "account", title: "2. Compte utilisateur", icon: <User className="w-5 h-5" /> },
-    { id: "services", title: "3. Services proposés", icon: <Globe className="w-5 h-5" /> },
-    { id: "pricing", title: "4. Prix et paiement", icon: <CreditCard className="w-5 h-5" /> },
-    { id: "intellectual", title: "5. Propriété intellectuelle", icon: <Shield className="w-5 h-5" /> },
-    { id: "liability", title: "6. Responsabilités", icon: <AlertTriangle className="w-5 h-5" /> },
-    { id: "privacy", title: "7. Données personnelles", icon: <Lock className="w-5 h-5" /> },
-    { id: "modification", title: "8. Modifications", icon: <Calendar className="w-5 h-5" /> }
+    { id: "general", title: "1. Présentation", icon: <FileText className="w-5 h-5" /> },
+    { id: "mission", title: "2. Mission et objectifs", icon: <Cross className="w-5 h-5" /> },
+    { id: "services", title: "3. Services proposés", icon: <Heart className="w-5 h-5" /> },
+    { id: "ethical", title: "4. Charte éthique", icon: <Shield className="w-5 h-5" /> },
+    { id: "accompaniment", title: "5. Accompagnement", icon: <User className="w-5 h-5" /> },
+    { id: "boutique", title: "6. Boutique du Centre", icon: <Book className="w-5 h-5" /> },
+    { id: "privacy", title: "7. Confidentialité", icon: <Lock className="w-5 h-5" /> },
+    { id: "legal", title: "8. Mentions légales", icon: <Globe className="w-5 h-5" /> }
   ];
 
   const importantPoints = [
     {
-      title: "Acceptation obligatoire",
-      description: "L'utilisation de notre plateforme implique l'acceptation pleine et entière des présentes conditions."
+      title: "Confidentialité totale",
+      description: "Respect absolu de la vie privée et protection des données personnelles"
     },
     {
-      title: "Droit d'auteur",
-      description: "Tous les contenus sont protégés par le droit d'auteur et ne peuvent être reproduits sans autorisation."
+      title: "Absence de jugement",
+      description: "Accueil bienveillant sans condamnation ni discrimination"
     },
     {
-      title: "Garantie remboursement",
-      description: "Satisfait ou remboursé sous 14 jours pour tous les achats numériques."
+      title: "Complémentarité médicale",
+      description: "La MTHS complète la médecine moderne, ne la remplace pas"
     },
     {
-      title: "RGPD conforme",
-      description: "Nous respectons scrupuleusement le Règlement Général sur la Protection des Données."
+      title: "Conformité légale",
+      description: "Respect de la Loi N° 2068/PJL/AN de 2024 sur la médecine traditionnelle"
     }
   ];
 
@@ -51,7 +51,7 @@ function Conditions() {
       {/* Contenu principal */}
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12 md:py-16">
+        <section className="bg-gradient-to-r from-blue-800 to-blue-900 text-white py-12 md:py-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <div className="flex justify-center mb-6">
@@ -60,19 +60,26 @@ function Conditions() {
                 </div>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-                Conditions Générales d'Utilisation
+                Charte et Conditions d'Utilisation
               </h1>
-              <p className="text-lg sm:text-xl text-gray-300 max-w-4xl mx-auto">
-                Dernière mise à jour : 15 janvier 2024 • Version 3.2
+              <p className="text-lg sm:text-xl text-gray-300 max-w-4xl mx-auto mb-2">
+                Centre MARIE REINE DE LA MISÉRICORDE D'ABILI
+              </p>
+              <p className="text-base text-blue-200">
+                Association Mariale d'Abili (ASMAB)
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-6">
                 <div className="flex items-center gap-2 text-sm bg-white/10 px-4 py-2 rounded-full">
                   <Calendar className="w-4 h-4" />
-                  Entrée en vigueur : 15/01/2024
+                  Fondé en 1979
                 </div>
                 <div className="flex items-center gap-2 text-sm bg-white/10 px-4 py-2 rounded-full">
                   <Shield className="w-4 h-4" />
-                  RGPD conforme
+                  Conforme Loi 2024
+                </div>
+                <div className="flex items-center gap-2 text-sm bg-white/10 px-4 py-2 rounded-full">
+                  <Cross className="w-4 h-4" />
+                  Médecine révélée
                 </div>
               </div>
             </div>
@@ -83,15 +90,19 @@ function Conditions() {
         <section className="py-12 md:py-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Important Notice */}
-            <div className="mb-12 bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+            <div className="mb-12 bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
               <div className="flex items-start gap-4">
-                <AlertTriangle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                <Heart className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="text-lg font-bold text-gray-800 mb-2">Avertissement important</h3>
-                  <p className="text-gray-700">
-                    En utilisant la plateforme eBookPro, vous acceptez les présentes conditions générales d'utilisation. 
-                    Nous vous recommandons de les lire attentivement. Pour toute question, contactez notre service juridique à 
-                    <a href="mailto:legal@ebookpro.fr" className="text-blue-600 font-semibold ml-1">legal@ebookpro.fr</a>.
+                  <h3 className="text-lg font-bold text-gray-800 mb-2">Notre engagement pastoral</h3>
+                  <p className="text-gray-700 mb-3">
+                    « Au Centre, nous voyons une personne qui souffre, pas un problème à condamner. » 
+                    En utilisant nos services, vous acceptez notre approche holistique fondée sur la dignité humaine, 
+                    la confidentialité et l'absence totale de jugement.
+                  </p>
+                  <p className="text-gray-600 text-sm">
+                    Pour toute question, contactez-nous : 
+                    <a href="tel:+237693215431" className="text-blue-600 font-semibold ml-1">(+237) 693 21 54 31</a>
                   </p>
                 </div>
               </div>
@@ -115,13 +126,13 @@ function Conditions() {
                         <div className="text-gray-400 group-hover:text-blue-500">
                           {item.icon}
                         </div>
-                        <span className="font-medium">{item.title}</span>
+                        <span className="font-medium text-sm">{item.title}</span>
                       </a>
                     ))}
                   </nav>
 
                   <div className="mt-8 pt-6 border-t border-gray-200">
-                    <h4 className="font-bold text-gray-800 mb-3">Points clés</h4>
+                    <h4 className="font-bold text-gray-800 mb-3">Principes clés</h4>
                     <div className="space-y-3">
                       {importantPoints.map((point, index) => (
                         <div key={index} className="flex items-start gap-2">
@@ -136,11 +147,11 @@ function Conditions() {
                   </div>
 
                   <a
-                    href="/privacy"
-                    className="mt-6 w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-cyan-600 transition-all shadow-md"
+                    href="/contact"
+                    className="mt-6 w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all shadow-md"
                   >
-                    <Shield className="w-5 h-5" />
-                    Politique de confidentialité
+                    <Heart className="w-5 h-5" />
+                    Nous contacter
                   </a>
                 </div>
               </div>
@@ -151,11 +162,16 @@ function Conditions() {
                   {/* Introduction */}
                   <div className="p-6 md:p-8 border-b border-gray-200">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">Introduction</h2>
+                    <p className="text-gray-700 leading-relaxed mb-4">
+                      Le présent document établit les principes, la charte éthique et les conditions d'utilisation des services 
+                      du Centre MARIE REINE DE LA MISÉRICORDE D'ABILI, géré par l'Association Mariale d'Abili (ASMAB), 
+                      association déclarée sous le récépissé N°030/RDA/J12/SAAJP du 14 Décembre 2010, 
+                      Préfecture du Ngoumou, Cameroun.
+                    </p>
                     <p className="text-gray-700 leading-relaxed">
-                      Les présentes Conditions Générales d'Utilisation (ci-après « CGU ») régissent l'utilisation de la plateforme 
-                      eBookPro (ci-après « la Plateforme »), éditée par eBookPro SAS, société par actions simplifiée au capital de 
-                      500 000 €, immatriculée au RCS de Paris sous le numéro 123 456 789, dont le siège social est situé au 
-                      123 Avenue du Livre, 75001 Paris.
+                      La Médecine Traditionnelle des Handicapés Spirituels (MTHS) est une médecine holistique révélée 
+                      le 12 mai 1979 par l'apparition de la Sainte Vierge Marie à Jean Paul Sylvain SIDA ABENA à Abili, 
+                      village situé à 27 km de Yaoundé, Cameroun.
                     </p>
                   </div>
 
@@ -171,7 +187,7 @@ function Conditions() {
                           <div className="bg-blue-100 p-2 rounded-lg">
                             <FileText className="w-6 h-6 text-blue-600" />
                           </div>
-                          <h3 className="text-xl font-bold text-gray-800">1. Généralités</h3>
+                          <h3 className="text-xl font-bold text-gray-800">1. Présentation du Centre</h3>
                         </div>
                         {openSections.general ? (
                           <ChevronUp className="w-6 h-6 text-gray-400" />
@@ -183,23 +199,32 @@ function Conditions() {
                       {(openSections.general || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
                           <p>
-                            La Plateforme eBookPro est un service de distribution numérique de livres électroniques et audio 
-                            accessible via le site web www.ebookpro.fr et ses applications mobiles.
+                            Le Centre MARIE REINE DE LA MISÉRICORDE D'ABILI est un lieu de prière, de soins, 
+                            de rééducation morale et de renaissance intérieure, où la foi chrétienne rencontre 
+                            la médecine traditionnelle africaine pour restaurer l'homme dans son intégrité.
                           </p>
                           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <h4 className="font-bold text-gray-800 mb-2">Définitions</h4>
+                            <h4 className="font-bold text-gray-800 mb-2">Identité juridique</h4>
                             <ul className="space-y-2 text-sm">
                               <li className="flex items-start gap-2">
-                                <span className="font-bold text-blue-600">Utilisateur :</span>
-                                <span>Toute personne physique ou morale utilisant la Plateforme.</span>
+                                <span className="font-bold text-blue-600">Nom :</span>
+                                <span>Association Mariale d'Abili (ASMAB)</span>
                               </li>
                               <li className="flex items-start gap-2">
-                                <span className="font-bold text-blue-600">Contenu :</span>
-                                <span>L'ensemble des livres, textes, images, vidéos et autres éléments disponibles sur la Plateforme.</span>
+                                <span className="font-bold text-blue-600">Récépissé :</span>
+                                <span>N°030/RDA/J12/SAAJP du 14 Décembre 2010</span>
                               </li>
                               <li className="flex items-start gap-2">
-                                <span className="font-bold text-blue-600">Compte :</span>
-                                <span>Espace personnel de l'Utilisateur permettant l'accès aux Services.</span>
+                                <span className="font-bold text-blue-600">Localisation :</span>
+                                <span>Village Abili, Préfecture du Ngoumou, 27 km de Yaoundé</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="font-bold text-blue-600">Contact :</span>
+                                <span>(+237) 693 21 54 31 / (+237) 677 31 44 12</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="font-bold text-blue-600">BP :</span>
+                                <span>12561 Yaoundé, Cameroun</span>
                               </li>
                             </ul>
                           </div>
@@ -208,44 +233,54 @@ function Conditions() {
                     </div>
 
                     {/* Section 2 */}
-                    <div id="account" className="p-6 md:p-8">
+                    <div id="mission" className="p-6 md:p-8">
                       <button
-                        onClick={() => toggleSection("account")}
+                        onClick={() => toggleSection("mission")}
                         className="w-full flex justify-between items-center text-left"
                       >
                         <div className="flex items-center gap-3">
                           <div className="bg-purple-100 p-2 rounded-lg">
-                            <User className="w-6 h-6 text-purple-600" />
+                            <Cross className="w-6 h-6 text-purple-600" />
                           </div>
-                          <h3 className="text-xl font-bold text-gray-800">2. Compte utilisateur</h3>
+                          <h3 className="text-xl font-bold text-gray-800">2. Mission et objectifs</h3>
                         </div>
-                        {openSections.account ? (
+                        {openSections.mission ? (
                           <ChevronUp className="w-6 h-6 text-gray-400" />
                         ) : (
                           <ChevronDown className="w-6 h-6 text-gray-400" />
                         )}
                       </button>
                       
-                      {(openSections.account || window.innerWidth > 768) && (
+                      {(openSections.mission || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
-                          <h4 className="font-bold text-gray-800">2.1 Création du compte</h4>
+                          <h4 className="font-bold text-gray-800">2.1 Mission divine</h4>
                           <p>
-                            Pour accéder aux Services, l'Utilisateur doit créer un compte en fournissant des informations 
-                            exactes, complètes et à jour. L'Utilisateur s'engage à maintenir ces informations à jour.
+                            Suite à l'apparition de la Sainte Vierge Marie le 12 mai 1979, notre mission est de :
                           </p>
+                          <ul className="space-y-2 ml-4">
+                            <li className="flex items-start gap-2">
+                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>Apporter la guérison, la conversion et la délivrance aux âmes enchaînées</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>Révéler la Médecine Traditionnelle des Handicapés Spirituels</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>Ramener de l'obscurité à la lumière et du pouvoir de Satan à Dieu</span>
+                            </li>
+                          </ul>
                           
-                          <h4 className="font-bold text-gray-800">2.2 Confidentialité</h4>
-                          <p>
-                            L'Utilisateur est responsable de la confidentialité de ses identifiants et s'engage à 
-                            signaler toute utilisation non autorisée de son compte.
-                          </p>
-                          
-                          <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg">
-                            <h5 className="font-bold text-amber-800 mb-2">⚠️ Important</h5>
-                            <p className="text-amber-700 text-sm">
-                              Tout compte inactif pendant 24 mois consécutifs pourra être suspendu ou supprimé, 
-                              conformément à notre politique de conservation des données.
-                            </p>
+                          <h4 className="font-bold text-gray-800 mt-6">2.2 Objectifs de l'ASMAB</h4>
+                          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                            <ul className="space-y-2 text-sm">
+                              <li>• La lutte contre la dégradation avancée des mœurs et des comportements de déviance</li>
+                              <li>• La valorisation des identités culturelles des peuples d'Afrique noire</li>
+                              <li>• L'approfondissement de la recherche scientifique sur la tradition ancestrale Béti</li>
+                              <li>• La promotion de la Santé pour tous, la Culture de la Paix et du vivre-ensemble</li>
+                              <li>• Le Développement Inclusif et le dialogue des cultures et des Religions</li>
+                            </ul>
                           </div>
                         </div>
                       )}
@@ -259,7 +294,7 @@ function Conditions() {
                       >
                         <div className="flex items-center gap-3">
                           <div className="bg-green-100 p-2 rounded-lg">
-                            <Globe className="w-6 h-6 text-green-600" />
+                            <Heart className="w-6 h-6 text-green-600" />
                           </div>
                           <h3 className="text-xl font-bold text-gray-800">3. Services proposés</h3>
                         </div>
@@ -273,45 +308,46 @@ function Conditions() {
                       {(openSections.services || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
                           <p>
-                            eBookPro propose les services suivants : vente de livres électroniques, abonnements premium, 
-                            livres audio, et services associés.
+                            Le Centre propose une approche thérapeutique holistique basée sur 5 piliers fondamentaux :
                           </p>
                           
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="grid grid-cols-1 gap-4">
                             <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                              <h4 className="font-bold text-blue-800 mb-2">Services inclus</h4>
-                              <ul className="space-y-1 text-sm">
-                                <li className="flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-green-500" />
-                                  Accès à la bibliothèque numérique
+                              <h4 className="font-bold text-blue-800 mb-2">Les 5 Piliers Thérapeutiques</h4>
+                              <ol className="space-y-2 text-sm">
+                                <li className="flex items-start gap-2">
+                                  <span className="font-bold text-blue-600">1.</span>
+                                  <span><strong>Diagnostic spirituel et psychosomatique</strong> - Discernement de l'origine du mal</span>
                                 </li>
-                                <li className="flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-green-500" />
-                                  Synchronisation multi-appareils
+                                <li className="flex items-start gap-2">
+                                  <span className="font-bold text-blue-600">2.</span>
+                                  <span><strong>Naturopathie et remèdes traditionnels améliorés</strong> - Pharmacopée africaine purifiée</span>
                                 </li>
-                                <li className="flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-green-500" />
-                                  Mises à jour gratuites
+                                <li className="flex items-start gap-2">
+                                  <span className="font-bold text-blue-600">3.</span>
+                                  <span><strong>Rituels de purification (rite SO'O inculturé)</strong> - Chemin de purification intérieure</span>
                                 </li>
-                              </ul>
+                                <li className="flex items-start gap-2">
+                                  <span className="font-bold text-blue-600">4.</span>
+                                  <span><strong>Délivrance et désenvoûtement</strong> - Libération par l'autorité du Christ</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="font-bold text-blue-600">5.</span>
+                                  <span><strong>Rééducation morale et réinsertion sociale</strong> - Accompagnement durable</span>
+                                </li>
+                              </ol>
                             </div>
                             
                             <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-                              <h4 className="font-bold text-purple-800 mb-2">Services premium</h4>
-                              <ul className="space-y-1 text-sm">
-                                <li className="flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-purple-500" />
-                                  Livres audio illimités
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-purple-500" />
-                                  Accès anticipé aux nouveautés
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-purple-500" />
-                                  Support prioritaire
-                                </li>
-                              </ul>
+                              <h4 className="font-bold text-purple-800 mb-2">Parcours d'accompagnement en 6 étapes</h4>
+                              <ol className="space-y-1 text-sm">
+                                <li>1. <strong>Accueil</strong> - Réception avec dignité</li>
+                                <li>2. <strong>Écoute</strong> - Temps de parole libérée</li>
+                                <li>3. <strong>Discernement</strong> - Identification de l'origine du mal</li>
+                                <li>4. <strong>Orientation</strong> - Proposition thérapeutique adaptée</li>
+                                <li>5. <strong>Thérapie progressive</strong> - Soins holistiques</li>
+                                <li>6. <strong>Suivi post-guérison</strong> - Accompagnement durable</li>
+                              </ol>
                             </div>
                           </div>
                         </div>
@@ -319,43 +355,65 @@ function Conditions() {
                     </div>
 
                     {/* Section 4 */}
-                    <div id="pricing" className="p-6 md:p-8">
+                    <div id="ethical" className="p-6 md:p-8">
                       <button
-                        onClick={() => toggleSection("pricing")}
+                        onClick={() => toggleSection("ethical")}
                         className="w-full flex justify-between items-center text-left"
                       >
                         <div className="flex items-center gap-3">
                           <div className="bg-amber-100 p-2 rounded-lg">
-                            <CreditCard className="w-6 h-6 text-amber-600" />
+                            <Shield className="w-6 h-6 text-amber-600" />
                           </div>
-                          <h3 className="text-xl font-bold text-gray-800">4. Prix et paiement</h3>
+                          <h3 className="text-xl font-bold text-gray-800">4. Charte éthique</h3>
                         </div>
-                        {openSections.pricing ? (
+                        {openSections.ethical ? (
                           <ChevronUp className="w-6 h-6 text-gray-400" />
                         ) : (
                           <ChevronDown className="w-6 h-6 text-gray-400" />
                         )}
                       </button>
                       
-                      {(openSections.pricing || window.innerWidth > 768) && (
+                      {(openSections.ethical || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
-                          <h4 className="font-bold text-gray-800">4.1 Prix</h4>
+                          <h4 className="font-bold text-gray-800">4.1 Principes fondamentaux</h4>
                           <p>
-                            Les prix sont indiqués en euros toutes taxes comprises (TVA). eBookPro se réserve le droit 
-                            de modifier ses prix à tout moment, sous réserve d'information préalable des Utilisateurs.
+                            Chaque thérapeute et collaborateur du Centre s'engage à respecter les principes suivants :
                           </p>
                           
-                          <h4 className="font-bold text-gray-800">4.2 Paiement</h4>
-                          <p>
-                            Le paiement est exigible immédiatement à la commande. Les moyens de paiement acceptés sont 
-                            précisés lors du processus de commande.
-                          </p>
+                          <div className="space-y-3">
+                            <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                              <h5 className="font-bold text-blue-800 mb-1">✓ Dignité humaine</h5>
+                              <p className="text-sm text-blue-700">
+                                Chaque patient est accueilli comme un enfant de Dieu, avec respect et bienveillance
+                              </p>
+                            </div>
+                            <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                              <h5 className="font-bold text-green-800 mb-1">✓ Confidentialité</h5>
+                              <p className="text-sm text-green-700">
+                                Tout ce qui est partagé reste strictement confidentiel
+                              </p>
+                            </div>
+                            <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+                              <h5 className="font-bold text-purple-800 mb-1">✓ Absence de jugement</h5>
+                              <p className="text-sm text-purple-700">
+                                Nous voyons une personne qui souffre, pas un problème à condamner
+                              </p>
+                            </div>
+                            <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                              <h5 className="font-bold text-orange-800 mb-1">✓ Transparence</h5>
+                              <p className="text-sm text-orange-700">
+                                Aucune promesse magique ou miraculeuse, seulement la vérité
+                              </p>
+                            </div>
+                          </div>
                           
-                          <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
-                            <h5 className="font-bold text-green-800 mb-2">✅ Garantie satisfait ou remboursé</h5>
-                            <p className="text-green-700">
-                              Tout achat peut être remboursé dans un délai de 14 jours à compter de la date d'achat, 
-                              sans avoir à justifier de motifs, conformément au droit de rétractation.
+                          <h4 className="font-bold text-gray-800 mt-6">4.2 Complémentarité avec l'hôpital</h4>
+                          <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
+                            <h5 className="font-bold text-red-800 mb-2">⚠️ Important</h5>
+                            <p className="text-red-700">
+                              La MTHS vient en complément de la médecine moderne et ne remplace en aucun cas 
+                              les soins hospitaliers ou les traitements biomédicaux lorsque ceux-ci sont nécessaires. 
+                              Nous croyons que Dieu agit aussi par la science médicale.
                             </p>
                           </div>
                         </div>
@@ -363,95 +421,125 @@ function Conditions() {
                     </div>
 
                     {/* Section 5 */}
-                    <div id="intellectual" className="p-6 md:p-8">
+                    <div id="accompaniment" className="p-6 md:p-8">
                       <button
-                        onClick={() => toggleSection("intellectual")}
+                        onClick={() => toggleSection("accompaniment")}
                         className="w-full flex justify-between items-center text-left"
                       >
                         <div className="flex items-center gap-3">
                           <div className="bg-red-100 p-2 rounded-lg">
-                            <Shield className="w-6 h-6 text-red-600" />
+                            <User className="w-6 h-6 text-red-600" />
                           </div>
-                          <h3 className="text-xl font-bold text-gray-800">5. Propriété intellectuelle</h3>
+                          <h3 className="text-xl font-bold text-gray-800">5. Conditions d'accompagnement</h3>
                         </div>
-                        {openSections.intellectual ? (
+                        {openSections.accompaniment ? (
                           <ChevronUp className="w-6 h-6 text-gray-400" />
                         ) : (
                           <ChevronDown className="w-6 h-6 text-gray-400" />
                         )}
                       </button>
                       
-                      {(openSections.intellectual || window.innerWidth > 768) && (
+                      {(openSections.accompaniment || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
+                          <h4 className="font-bold text-gray-800">5.1 Modalités d'accès</h4>
                           <p>
-                            L'ensemble des éléments de la Plateforme (textes, images, logos, logiciels, etc.) sont 
-                            protégés par les lois françaises et internationales sur la propriété intellectuelle.
+                            L'accompagnement au Centre nécessite :
+                          </p>
+                          <ul className="space-y-2 ml-4">
+                            <li className="flex items-start gap-2">
+                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>Une demande d'orientation via le formulaire de contact</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>Un rendez-vous préalable avec l'équipe du Centre</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>L'acceptation de la charte éthique et du parcours proposé</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>L'engagement dans un processus progressif de guérison</span>
+                            </li>
+                          </ul>
+                          
+                          <h4 className="font-bold text-gray-800">5.2 Pathologies prises en charge</h4>
+                          <p>
+                            Le Centre accompagne les personnes souffrant de handicaps spirituels : possessions, 
+                            envoûtements, malédictions, blocages mystiques, esclavage spirituel (Kong), 
+                            épilepsie mystique, stérilité spirituelle, troubles mentaux d'origine invisible, etc.
                           </p>
                           
-                          <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
-                            <h5 className="font-bold text-red-800 mb-2">🚫 Interdiction formelle</h5>
-                            <p className="text-red-700">
-                              Toute reproduction, représentation, modification, adaptation ou exploitation, totale ou 
-                              partielle, des contenus de la Plateforme, par quelque procédé que ce soit, sans 
-                              autorisation préalable écrite de eBookPro, est strictement interdite.
+                          <div className="bg-gray-100 p-4 rounded-lg">
+                            <h4 className="font-bold text-gray-800 mb-2">Durée du parcours</h4>
+                            <p className="text-gray-700 text-sm">
+                              La durée varie selon la nature et la profondeur de l'atteinte spirituelle. 
+                              Certaines personnes connaissent une libération rapide, d'autres nécessitent 
+                              un accompagnement progressif sur plusieurs semaines ou mois.
                             </p>
                           </div>
-                          
-                          <h4 className="font-bold text-gray-800">Licence d'utilisation</h4>
-                          <p>
-                            L'achat d'un livre numérique confère à l'Utilisateur une licence personnelle, non exclusive 
-                            et non transférable pour l'utilisation du contenu à des fins strictement personnelles.
-                          </p>
                         </div>
                       )}
                     </div>
 
                     {/* Section 6 */}
-                    <div id="liability" className="p-6 md:p-8">
+                    <div id="boutique" className="p-6 md:p-8">
                       <button
-                        onClick={() => toggleSection("liability")}
+                        onClick={() => toggleSection("boutique")}
                         className="w-full flex justify-between items-center text-left"
                       >
                         <div className="flex items-center gap-3">
                           <div className="bg-orange-100 p-2 rounded-lg">
-                            <AlertTriangle className="w-6 h-6 text-orange-600" />
+                            <Book className="w-6 h-6 text-orange-600" />
                           </div>
-                          <h3 className="text-xl font-bold text-gray-800">6. Responsabilités</h3>
+                          <h3 className="text-xl font-bold text-gray-800">6. Boutique du Centre</h3>
                         </div>
-                        {openSections.liability ? (
+                        {openSections.boutique ? (
                           <ChevronUp className="w-6 h-6 text-gray-400" />
                         ) : (
                           <ChevronDown className="w-6 h-6 text-gray-400" />
                         )}
                       </button>
                       
-                      {(openSections.liability || window.innerWidth > 768) && (
+                      {(openSections.boutique || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
-                          <h4 className="font-bold text-gray-800">6.1 Responsabilité d'eBookPro</h4>
+                          <h4 className="font-bold text-gray-800">6.1 Produits disponibles</h4>
                           <p>
-                            eBookPro s'engage à fournir les Services avec diligence et selon les règles de l'art. 
-                            Cependant, eBookPro ne pourra être tenu responsable des dommages indirects.
+                            La boutique propose des produits éthiques et responsables :
                           </p>
                           
-                          <h4 className="font-bold text-gray-800">6.2 Responsabilité de l'Utilisateur</h4>
-                          <p>
-                            L'Utilisateur est responsable de l'utilisation qu'il fait des Services et s'engage à ne pas 
-                            porter atteinte au bon fonctionnement de la Plateforme.
-                          </p>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                              <h4 className="font-bold text-blue-800 mb-2">Supports pédagogiques</h4>
+                              <ul className="space-y-1 text-sm">
+                                <li>• Livres doctrinaux</li>
+                                <li>• Manuels cliniques</li>
+                                <li>• Revue Le Monde Parallèle</li>
+                                <li>• Supports audio</li>
+                              </ul>
+                            </div>
+                            
+                            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                              <h4 className="font-bold text-green-800 mb-2">Produits naturels</h4>
+                              <ul className="space-y-1 text-sm">
+                                <li>• Produits naturels certifiés</li>
+                                <li>• Remèdes Traditionnels Améliorés (RTA)</li>
+                                <li>• Infusions et baumes</li>
+                                <li>• Huiles thérapeutiques</li>
+                              </ul>
+                            </div>
+                          </div>
                           
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                            <div className="p-4 bg-gray-50 rounded-lg">
-                              <h5 className="font-bold text-gray-700 mb-2">Force majeure</h5>
-                              <p className="text-sm text-gray-600">
-                                eBookPro ne pourra être tenu pour responsable en cas de force majeure ou de faits indépendants de sa volonté.
-                              </p>
-                            </div>
-                            <div className="p-4 bg-gray-50 rounded-lg">
-                              <h5 className="font-bold text-gray-700 mb-2">Limitation</h5>
-                              <p className="text-sm text-gray-600">
-                                La responsabilité d'eBookPro est limitée au montant payé par l'Utilisateur pour le Service concerné.
-                              </p>
-                            </div>
+                          <h4 className="font-bold text-gray-800">6.2 Encadrement éthique</h4>
+                          <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg">
+                            <h5 className="font-bold text-amber-800 mb-2">⚠️ Engagement qualité</h5>
+                            <ul className="text-amber-700 text-sm space-y-2">
+                              <li>• Chaque produit est accompagné d'informations claires et responsables</li>
+                              <li>• Aucune promesse magique ou instantanée</li>
+                              <li>• Conformité à la Loi N° 2068/PJL/AN de 2024</li>
+                              <li>• Contrôles qualité stricts sur tous les RTA</li>
+                            </ul>
                           </div>
                         </div>
                       )}
@@ -467,7 +555,7 @@ function Conditions() {
                           <div className="bg-indigo-100 p-2 rounded-lg">
                             <Lock className="w-6 h-6 text-indigo-600" />
                           </div>
-                          <h3 className="text-xl font-bold text-gray-800">7. Données personnelles</h3>
+                          <h3 className="text-xl font-bold text-gray-800">7. Confidentialité et protection des données</h3>
                         </div>
                         {openSections.privacy ? (
                           <ChevronUp className="w-6 h-6 text-gray-400" />
@@ -479,20 +567,20 @@ function Conditions() {
                       {(openSections.privacy || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
                           <p>
-                            Les données personnelles des Utilisateurs sont traitées conformément à notre Politique de 
-                            Confidentialité, accessible à tout moment sur la Plateforme et conforme au Règlement Général 
-                            sur la Protection des Données (RGPD).
+                            Toutes les informations personnelles et médicales sont protégées conformément aux normes 
+                            en vigueur et à la charte éthique du Centre. Nous garantissons la confidentialité totale 
+                            de votre parcours.
                           </p>
                           
                           <div className="bg-indigo-50 border border-indigo-200 p-4 rounded-lg">
                             <h5 className="font-bold text-indigo-800 mb-2">Vos droits</h5>
-                            <p className="text-indigo-700 mb-3">
-                              Conformément à la loi « Informatique et Libertés » et au RGPD, vous disposez des droits suivants :
+                            <p className="text-indigo-700 mb-3 text-sm">
+                              Vous disposez des droits suivants concernant vos données personnelles :
                             </p>
                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                               <li className="flex items-center gap-2">
                                 <CheckCircle className="w-4 h-4 text-indigo-500" />
-                                Droit d'accès
+                                Droit d'accès à vos données
                               </li>
                               <li className="flex items-center gap-2">
                                 <CheckCircle className="w-4 h-4 text-indigo-500" />
@@ -504,55 +592,76 @@ function Conditions() {
                               </li>
                               <li className="flex items-center gap-2">
                                 <CheckCircle className="w-4 h-4 text-indigo-500" />
-                                Droit à la portabilité
+                                Droit à la confidentialité
                               </li>
                             </ul>
+                          </div>
+
+                          <div className="bg-blue-50 p-4 rounded-lg">
+                            <h5 className="font-bold text-blue-800 mb-2">Sécurité des données</h5>
+                            <p className="text-blue-700 text-sm">
+                              Tous les dossiers spirituels et médicaux sont conservés de manière sécurisée. 
+                              Aucune information ne sera partagée avec des tiers sans votre consentement explicite, 
+                              sauf obligation légale.
+                            </p>
                           </div>
                         </div>
                       )}
                     </div>
 
                     {/* Section 8 */}
-                    <div id="modification" className="p-6 md:p-8">
+                    <div id="legal" className="p-6 md:p-8">
                       <button
-                        onClick={() => toggleSection("modification")}
+                        onClick={() => toggleSection("legal")}
                         className="w-full flex justify-between items-center text-left"
                       >
                         <div className="flex items-center gap-3">
                           <div className="bg-cyan-100 p-2 rounded-lg">
-                            <Calendar className="w-6 h-6 text-cyan-600" />
+                            <Globe className="w-6 h-6 text-cyan-600" />
                           </div>
-                          <h3 className="text-xl font-bold text-gray-800">8. Modifications</h3>
+                          <h3 className="text-xl font-bold text-gray-800">8. Mentions légales et conformité</h3>
                         </div>
-                        {openSections.modification ? (
+                        {openSections.legal ? (
                           <ChevronUp className="w-6 h-6 text-gray-400" />
                         ) : (
                           <ChevronDown className="w-6 h-6 text-gray-400" />
                         )}
                       </button>
                       
-                      {(openSections.modification || window.innerWidth > 768) && (
+                      {(openSections.legal || window.innerWidth > 768) && (
                         <div className="mt-6 space-y-4 text-gray-700 animate-fadeIn">
+                          <h4 className="font-bold text-gray-800">8.1 Statut juridique</h4>
                           <p>
-                            eBookPro se réserve le droit de modifier à tout moment les présentes CGU. Les modifications 
-                            entreront en vigueur dès leur publication sur la Plateforme.
+                            Le Centre MARIE REINE DE LA MISÉRICORDE D'ABILI est géré par l'Association Mariale d'Abili (ASMAB), 
+                            enregistrée et reconnue conformément aux réglementations camerounaises.
                           </p>
                           
+                          <h4 className="font-bold text-gray-800">8.2 Conformité légale</h4>
+                          <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
+                            <h5 className="font-bold text-green-800 mb-2">✅ Loi sur la médecine traditionnelle</h5>
+                            <p className="text-green-700">
+                              Nos pratiques respectent la <strong>Loi N° 2068/PJL/AN de décembre 2024</strong> qui encadre 
+                              l'exercice et l'organisation de la médecine traditionnelle au Cameroun. Notre statut juridique 
+                              est conforme à toutes les exigences légales.
+                            </p>
+                          </div>
+                          
                           <div className="bg-gray-100 p-4 rounded-lg">
-                            <h4 className="font-bold text-gray-800 mb-2">Notification des modifications</h4>
-                            <p className="text-gray-700">
-                              Les Utilisateurs seront informés des modifications importantes par email ou par une 
-                              notification sur la Plateforme au moins 30 jours avant leur entrée en vigueur.
+                            <h4 className="font-bold text-gray-800 mb-2">Modifications</h4>
+                            <p className="text-gray-700 text-sm">
+                              Le Centre se réserve le droit de modifier la présente charte pour améliorer ses services 
+                              ou se conformer aux évolutions légales. Les utilisateurs seront informés de toute modification 
+                              significative.
                             </p>
                           </div>
                           
                           <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
                             <Mail className="w-5 h-5 text-blue-600" />
                             <div>
-                              <p className="font-medium text-blue-800">Questions juridiques ?</p>
+                              <p className="font-medium text-blue-800">Questions ou préoccupations ?</p>
                               <p className="text-sm text-blue-700">
-                                Contactez notre service juridique à 
-                                <a href="mailto:legal@ebookpro.fr" className="font-semibold ml-1">legal@ebookpro.fr</a>
+                                Contactez-nous : 
+                                <a href="tel:+237693215431" className="font-semibold ml-1">(+237) 693 21 54 31</a>
                               </p>
                             </div>
                           </div>
@@ -565,38 +674,38 @@ function Conditions() {
                   <div className="p-6 md:p-8 bg-gradient-to-r from-gray-50 to-blue-50 border-t border-gray-200">
                     <h3 className="text-xl font-bold text-gray-800 mb-4">Conclusion</h3>
                     <p className="text-gray-700 mb-6">
-                      Les présentes Conditions Générales d'Utilisation constituent l'intégralité de l'accord entre 
-                      l'Utilisateur et eBookPro. En cas de contradiction entre les différentes versions linguistiques, 
-                      la version française prévaudra.
+                      En utilisant les services du Centre MARIE REINE DE LA MISÉRICORDE D'ABILI, vous acceptez 
+                      les présentes conditions et vous engagez dans un parcours de guérison spirituelle fondé sur 
+                      la foi, la dignité humaine et l'accompagnement bienveillant.
                     </p>
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
                         <div className="font-bold text-gray-800 mb-1">Juridiction</div>
-                        <div className="text-sm text-gray-600">Tribunaux de Paris</div>
+                        <div className="text-sm text-gray-600">Tribunaux du Cameroun</div>
                       </div>
                       <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
                         <div className="font-bold text-gray-800 mb-1">Loi applicable</div>
-                        <div className="text-sm text-gray-600">Droit français</div>
+                        <div className="text-sm text-gray-600">Loi N° 2068/PJL/AN 2024</div>
                       </div>
                       <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
-                        <div className="font-bold text-gray-800 mb-1">Langue</div>
-                        <div className="text-sm text-gray-600">Français</div>
+                        <div className="font-bold text-gray-800 mb-1">Fondation</div>
+                        <div className="text-sm text-gray-600">12 mai 1979</div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Accept Button */}
+                {/* Accept Statement */}
                 <div className="mt-8 text-center">
-                  <div className="inline-flex items-center gap-4 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200">
-                    <CheckCircle className="w-8 h-8 text-green-600" />
+                  <div className="inline-flex items-center gap-4 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200">
+                    <Heart className="w-8 h-8 text-blue-600" />
                     <div className="text-left">
                       <p className="font-bold text-gray-800">
-                        En poursuivant votre navigation, vous acceptez les présentes conditions.
+                        « Vous n'êtes pas seul face à ce que vous vivez. »
                       </p>
                       <p className="text-sm text-gray-600">
-                        Dernière acceptation enregistrée le 15 janvier 2024
+                        En poursuivant votre navigation, vous acceptez notre approche holistique et notre charte éthique.
                       </p>
                     </div>
                   </div>

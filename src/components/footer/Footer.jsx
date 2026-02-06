@@ -47,7 +47,7 @@ function Footer() {
         title: "Légal & Contact",
         links: [
           { label: "FAQ - Questions Fréquentes", href: "/faq", icon: "❓" },
-          { label: "Conditions d'Utilisation", href: "/conditions-utilisation", icon: "📝" },
+          { label: "Conditions d'Utilisation", href: "/conditions", icon: "📝" },
           { label: "Politique de Confidentialité", href: "/confidentialite", icon: "🛡️" },
           { label: "Mentions Légales", href: "/mentions-legales", icon: "⚖️" },
           { label: "Charte Éthique", href: "/ethique", icon: "✨" },
@@ -131,9 +131,9 @@ function Footer() {
         title: "Legal & Contact",
         links: [
           { label: "FAQ - Frequently Asked Questions", href: "/faq", icon: "❓" },
-          { label: "Terms of Use", href: "/conditions-utilisation", icon: "📝" },
+          { label: "Terms of Use", href: "/conditions", icon: "📝" },
           { label: "Privacy Policy", href: "/confidentialite", icon: "🛡️" },
-          { label: "Legal Notice", href: "/mentions-legales", icon: "⚖️" },
+          { label: "Legal Notice", href: "/mentions-legales", icon: "⚖️" },    
           { label: "Ethical Charter", href: "/ethique", icon: "✨" },
           { label: "Data Protection (GDPR)", href: "/rgpd", icon: "🔒" },
           { label: "Cameroonian Law 2024", href: "/loi-2024", icon: "📜" },
@@ -460,7 +460,7 @@ function Footer() {
                   FAQ
                 </a>
                 <span className="text-blue-500">•</span>
-                <a href="/conditions-utilisation" className="text-blue-300 hover:text-white transition-colors flex items-center gap-1">
+                <a href="/conditions" className="text-blue-300 hover:text-white transition-colors flex items-center gap-1">
                   <FileText size={12} />
                   Conditions
                 </a>
