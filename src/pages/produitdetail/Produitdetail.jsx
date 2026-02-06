@@ -61,7 +61,14 @@ function Produitdetail() {
     }
   };
 
-  // Données de test complètes
+  // Fonction pour gérer les erreurs d'images
+  const handleImageError = (e, imagePath, fallbackImage = "/images/default-book.jpg") => {
+    console.warn(`Image non trouvée: ${imagePath}`);
+    e.target.src = fallbackImage;
+    e.target.onerror = null; // Éviter les boucles infinies
+  };
+
+  // Données de test complètes avec résumés uniques
   const allProducts = [
     {
       id: 1,
@@ -70,9 +77,9 @@ function Produitdetail() {
       desc: "Manuel complet de la Médecine Traditionnelle des Handicapés Spirituels.",
       prixFCFA: 15000,
       images: [
-        "https://via.placeholder.com/600x800/1e40af/ffffff?text=Couverture+1",
-        "https://via.placeholder.com/600x800/1d4ed8/ffffff?text=Couverture+2",
-        "https://via.placeholder.com/600x800/0ea5e9/ffffff?text=Intérieur"
+        "/images/livre1/livre1_1.png",
+        "/images/livre1/livre1_2.png",
+        "/images/livre1/livre1_3.png"
       ],
       format: ["Papier", "PDF"],
       pages: 320,
@@ -81,7 +88,7 @@ function Produitdetail() {
       isbn: "978-2-954-12345-6",
       datePublication: "2023",
       langue: "Français",
-      resume: `Ce manuel complet présente la Médecine Traditionnelle des Handicapés Spirituels (MTHS) dans son intégralité. L'ouvrage explore les fondements doctrinaux, les méthodes de diagnostic des handicaps spirituels, et les protocoles thérapeutiques traditionnels réinterprétés dans une perspective chrétienne africaine. Une référence indispensable pour les praticiens et les chercheurs en médecine traditionnelle africaine.`
+      resume: `Ce manuel fondamental explore l'approche chrétienne africaine face aux phénomènes de sorcellerie. Basé sur 20 ans de recherches ethnologiques, il présente des méthodes concrètes pour identifier et contrer les influences spirituelles négatives tout en préservant les valeurs chrétiennes. Inclut des études de cas documentés dans différentes communautés d'Afrique centrale.`
     },
     {
       id: 2,
@@ -90,9 +97,9 @@ function Produitdetail() {
       desc: "Étude approfondie du rite SO'O dans sa version christianisée.",
       prixFCFA: 10000,
       images: [
-        "https://via.placeholder.com/600x800/7c3aed/ffffff?text=Couverture+1",
-        "https://via.placeholder.com/600x800/8b5cf6/ffffff?text=Couverture+2",
-        "https://via.placeholder.com/600x800/a78bfa/ffffff?text=Intérieur"
+        "/images/livre2/livre2_1.png",
+        "/images/livre2/livre2_2.png",
+        "/images/livre2/livre2_3.png"
       ],
       format: ["Papier", "PDF", "EPUB"],
       pages: 240,
@@ -101,7 +108,7 @@ function Produitdetail() {
       isbn: "978-2-954-12346-3",
       datePublication: "2023",
       langue: "Français",
-      resume: "Étude approfondie du rite SO'O dans sa version christianisée. Ce livre détaille les méthodes d'identification et les protocoles de protection selon la tradition MTHS."
+      resume: `Ouvrage spécialisé dédié aux signes distinctifs et aux comportements révélateurs des personnes impliquées dans la sorcellerie. Méthodologie d'observation développée par les anciens, combinant analyse comportementale, symbolique traditionnelle et discernement spirituel. Contient un guide illustré des marques corporelles traditionnellement associées.`
     },
     {
       id: 3,
@@ -110,9 +117,9 @@ function Produitdetail() {
       desc: "Guide des remèdes traditionnels améliorés et leur intégration.",
       prixFCFA: 12500,
       images: [
-        "https://via.placeholder.com/600x800/059669/ffffff?text=Couverture+1",
-        "https://via.placeholder.com/600x800/10b981/ffffff?text=Couverture+2",
-        "https://via.placeholder.com/600x800/34d399/ffffff?text=Intérieur"
+        "/images/livre3/livre3_1.png",
+        "/images/livre3/livre3_2.png",
+        "/images/livre3/livre3_3.png"
       ],
       format: ["Papier"],
       pages: 280,
@@ -121,7 +128,7 @@ function Produitdetail() {
       isbn: "978-2-954-12347-0",
       datePublication: "2023",
       langue: "Français",
-      resume: "Guide complet des remèdes traditionnels améliorés selon la médecine MTHS. Inclut des protocoles de traitement et des études de cas."
+      resume: `Guide thérapeutique complet offrant 47 protocoles de soins contre les persécutions spirituelles. Chaque méthode intègre des plantes médicinales, des prières spécifiques et des rites symboliques. Basé sur des recueils ancestraux réinterprétés selon une éthique chrétienne, avec des dosages précis et des contre-indications.`
     },
     {
       id: 4,
@@ -130,9 +137,9 @@ function Produitdetail() {
       desc: "Méthodologie du diagnostic des handicaps spirituels.",
       prixFCFA: 9500,
       images: [
-        "https://via.placeholder.com/600x800/d97706/ffffff?text=Couverture+1",
-        "https://via.placeholder.com/600x800/f59e0b/ffffff?text=Couverture+2",
-        "https://via.placeholder.com/600x800/fbbf24/ffffff?text=Intérieur"
+        "/images/livre4/livre4_1.png",
+        "/images/livre4/livre4_2.png",
+        "/images/livre4/livre4_3.png"
       ],
       format: ["PDF", "EPUB"],
       pages: 180,
@@ -140,7 +147,7 @@ function Produitdetail() {
       type: "E-book",
       datePublication: "2023",
       langue: "Français",
-      resume: "Méthodologie complète du diagnostic des handicaps spirituels selon la révélation de JPSSA."
+      resume: `Biographie spirituelle et analyse doctrinale de JPSSA, le révélateur de la Médecine MTHS. Explore sa vision, ses expériences mystiques et l'élaboration progressive de sa méthodologie diagnostique. Inclut des témoignages inédits de ses premiers disciples et des documents d'archives.`
     },
     {
       id: 5,
@@ -149,9 +156,9 @@ function Produitdetail() {
       desc: "Guide pratique des rites de purification selon la tradition Béti.",
       prixFCFA: 11000,
       images: [
-        "https://via.placeholder.com/600x800/db2777/ffffff?text=Couverture+1",
-        "https://via.placeholder.com/600x800/ec4899/ffffff?text=Couverture+2",
-        "https://via.placeholder.com/600x800/f472b6/ffffff?text=Intérieur"
+        "/images/livre5/livre5_1.png",
+        "/images/livre5/livre5_2.png",
+        "/images/livre5/livre5_3.png"
       ],
       format: ["Papier", "PDF"],
       pages: 210,
@@ -160,7 +167,7 @@ function Produitdetail() {
       isbn: "978-2-954-12348-7",
       datePublication: "2023",
       langue: "Français",
-      resume: "Guide pratique des rites de purification selon la tradition Béti, adapté au contexte musulman africain."
+      resume: `Premier ouvrage adaptant les principes MTHS au contexte islamique africain. Examine les points de convergence entre les traditions spirituelles africaines et la doctrine musulmane, proposant des formules de protection validées par des érudits coraniques. Approche interreligieuse unique.`
     },
     {
       id: 6,
@@ -169,9 +176,9 @@ function Produitdetail() {
       desc: "Fondements théologiques de l'intégration culturelle africaine.",
       prixFCFA: 13500,
       images: [
-        "https://via.placeholder.com/600x800/0f766e/ffffff?text=Couverture+1",
-        "https://via.placeholder.com/600x800/14b8a6/ffffff?text=Couverture+2",
-        "https://via.placeholder.com/600x800/2dd4bf/ffffff?text=Intérieur"
+        "/images/livre6/livre6_1.png",
+        "/images/livre6/livre6_2.png",
+        "/images/livre6/livre6_3.png"
       ],
       format: ["Papier"],
       pages: 290,
@@ -180,7 +187,7 @@ function Produitdetail() {
       isbn: "978-2-954-12349-4",
       datePublication: "2023",
       langue: "Français",
-      resume: "Analyse théologique approfondie des principes spirituels antagonistes selon la tradition MTHS."
+      resume: `Étude théologique audacieuse décrivant les principes spirituels inversés qui gouvernent les dynamiques occultes. Chaque "commandement" est analysé à travers des récits bibliques, des traditions orales et des cas cliniques contemporains. Ouvrage controversé mais fondamental.`
     },
     {
       id: 7,
@@ -189,9 +196,9 @@ function Produitdetail() {
       desc: "Approche intégrative de la guérison selon la révélation de 1979.",
       prixFCFA: 16000,
       images: [
-        "https://via.placeholder.com/600x800/4338ca/ffffff?text=Couverture+1",
-        "https://via.placeholder.com/600x800/4f46e5/ffffff?text=Couverture+2",
-        "https://via.placeholder.com/600x800/6366f1/ffffff?text=Intérieur"
+        "/images/livre7/livre7_1.png",
+        "/images/livre7/livre7_2.png",
+        "/images/livre7/livre7_3.png"
       ],
       format: ["Papier", "PDF"],
       pages: 350,
@@ -200,7 +207,7 @@ function Produitdetail() {
       isbn: "978-2-954-12350-0",
       datePublication: "2023",
       langue: "Français",
-      resume: "Étude approfondie des mécanismes de transmission intergénérationnelle des handicaps spirituels."
+      resume: `Analyse approfondie des mécanismes héréditaires et psychologiques de transmission des patterns spirituels négatifs. Propose des arbres généalogiques spirituels et des méthodologies pour briser les chaînes transgénérationnelles. Basé sur 150 études familiales sur trois générations.`
     },
     {
       id: 8,
@@ -209,9 +216,9 @@ function Produitdetail() {
       desc: "Analyse et solutions pour briser les chaînes familiales.",
       prixFCFA: 12000,
       images: [
-        "https://via.placeholder.com/600x800/f59e0b/ffffff?text=Couverture+1",
-        "https://via.placeholder.com/600x800/fbbf24/ffffff?text=Couverture+2",
-        "https://via.placeholder.com/600x800/fcd34d/ffffff?text=Intérieur"
+        "/images/livre8/livre8_1.png",
+        "/images/livre8/livre8_2.png",
+        "/images/livre8/livre8_3.png"
       ],
       format: ["Papier"],
       pages: 230,
@@ -220,7 +227,7 @@ function Produitdetail() {
       isbn: "978-2-954-12351-7",
       datePublication: "2023",
       langue: "Français",
-      resume: "Analyse détaillée de la cosmologie spirituelle selon la tradition MTHS et protocoles de libération."
+      resume: `Exploration cartographique des dimensions spirituelles parallèles selon les traditions africaines. Décrit les différents plans d'existence, leurs habitants et les lois qui les régissent. Guide pratique pour naviguer ces réalités dans une optique de protection et de guérison.`
     },
     {
       id: 9,
@@ -229,9 +236,9 @@ function Produitdetail() {
       desc: "Interface entre psychologie moderne et spiritualité africaine.",
       prixFCFA: 14000,
       images: [
-        "https://via.placeholder.com/600x800/8b5cf6/ffffff?text=Couverture+1",
-        "https://via.placeholder.com/600x800/a78bfa/ffffff?text=Couverture+2",
-        "https://via.placeholder.com/600x800/c4b5fd/ffffff?text=Intérieur"
+        "/images/livre9/livre9_1.png",
+        "/images/livre9/livre9_2.png",
+        "/images/livre9/livre9_3.png"
       ],
       format: ["PDF", "EPUB"],
       pages: 260,
@@ -239,7 +246,7 @@ function Produitdetail() {
       type: "E-book",
       datePublication: "2023",
       langue: "Français",
-      resume: "Protocoles thérapeutiques intégrant psychologie moderne et spiritualité africaine traditionnelle."
+      resume: `Manuel technique présentant 12 protocoles thérapeutiques standardisés de la MTHS. Chaque protocole combine interventions spirituelles, phytothérapie et accompagnement psychologique. Inclut des grilles d'évaluation, des fiches de suivi et des critères de réussite mesurables.`
     },
     {
       id: 10,
@@ -248,9 +255,9 @@ function Produitdetail() {
       desc: "Rites de passage christianisés pour les étapes de la vie.",
       prixFCFA: 11500,
       images: [
-        "https://via.placeholder.com/600x800/10b981/ffffff?text=Couverture+1",
-        "https://via.placeholder.com/600x800/34d399/ffffff?text=Couverture+2",
-        "https://via.placeholder.com/600x800/6ee7b7/ffffff?text=Intérieur"
+        "/images/livre10/livre10_1.png",
+        "/images/livre10/livre10_2.png",
+        "/images/livre10/livre10_3.png"
       ],
       format: ["Papier"],
       pages: 200,
@@ -259,7 +266,7 @@ function Produitdetail() {
       isbn: "978-2-954-12352-4",
       datePublication: "2023",
       langue: "Français",
-      resume: "Analyse des conflits spirituels en Afrique et proposition de rites de passage christianisés."
+      resume: `Analyse géopolitique des conflits spirituels contemporains en Afrique. Examine comment les traditions ancestrales, les religions importées et les nouvelles spiritualités s'affrontent et se recomposent. Propose des cadres de dialogue et d'intégration pour une paix spirituelle durable.`
     },
     {
       id: 11,
@@ -268,9 +275,9 @@ function Produitdetail() {
       desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
       prixFCFA: 17000,
       images: [
-        "https://via.placeholder.com/600x800/ef4444/ffffff?text=Couverture+1",
-        "https://via.placeholder.com/600x800/f87171/ffffff?text=Couverture+2",
-        "https://via.placeholder.com/600x800/fca5a5/ffffff?text=Intérieur"
+        "/images/livre11/livre11_1.png",
+        "/images/livre11/livre11_2.png",
+        "/images/livre11/livre11_3.png"
       ],
       format: ["Papier", "PDF"],
       pages: 310,
@@ -279,14 +286,13 @@ function Produitdetail() {
       isbn: "978-2-954-12353-1",
       datePublication: "2023",
       langue: "Français",
-      resume: "Protocoles complets d'exorcisme et de délivrance selon la tradition chrétienne africaine MTHS."
+      resume: `Approche holistique des maladies dans le contexte africain, intégrant causes physiques, psychologiques et spirituelles. Présente une typologie des "maladies spirituelles" avec symptômes distinctifs et traitements appropriés. Inclut des rituels de guérison complets avec prières spécifiques.`
     }
   ];
 
   const loadProductFromId = useCallback(() => {
     setIsLoading(true);
     
-    // Simuler un délai de chargement
     setTimeout(() => {
       const foundProduct = allProducts.find(p => p.id === parseInt(id));
       
@@ -306,7 +312,6 @@ function Produitdetail() {
 
   useEffect(() => {
     if (location.state) {
-      // Utiliser un timeout pour éviter l'appel synchrone
       const timer = setTimeout(() => {
         setProduct(location.state.product);
         setCategory(location.state.category);
@@ -316,7 +321,6 @@ function Produitdetail() {
       
       return () => clearTimeout(timer);
     } else {
-      // Charger depuis l'ID
       loadProductFromId();
     }
   }, [id, location.state, loadProductFromId]);
@@ -374,6 +378,32 @@ function Produitdetail() {
     }
   };
 
+  // Gestion des images
+  const getImages = () => {
+    // Si le produit a déjà un tableau d'images, on l'utilise
+    if (product && product.images && product.images.length > 0) {
+      return product.images;
+    }
+    // Si on a une seule image, on génère les deux autres basées sur l'ID
+    else if (product && product.image) {
+      const livreNum = product.id || 1;
+      return [
+        `/images/livre${livreNum}/livre${livreNum}_1.png`,
+        `/images/livre${livreNum}/livre${livreNum}_2.png`,
+        `/images/livre${livreNum}/livre${livreNum}_3.png`
+      ];
+    }
+    // Images par défaut
+    else {
+      const livreNum = product?.id || 1;
+      return [
+        `/images/livre${livreNum}/livre${livreNum}_1.png`,
+        `/images/livre${livreNum}/livre${livreNum}_2.png`,
+        `/images/livre${livreNum}/livre${livreNum}_3.png`
+      ];
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
@@ -409,23 +439,6 @@ function Produitdetail() {
     );
   }
 
-  // Gestion des images
-  const getImages = () => {
-    if (product.images && product.images.length > 0) {
-      return product.images;
-    } else if (product.image) {
-      // Si une seule image est disponible, la dupliquer pour la galerie
-      return [product.image, product.image, product.image];
-    } else {
-      // Images par défaut
-      return [
-        "https://via.placeholder.com/600x800/1e40af/ffffff?text=Couverture",
-        "https://via.placeholder.com/600x800/1d4ed8/ffffff?text=Arrière",
-        "https://via.placeholder.com/600x800/0ea5e9/ffffff?text=Intérieur"
-      ];
-    }
-  };
-
   const images = getImages();
 
   return (
@@ -452,9 +465,7 @@ function Produitdetail() {
                 src={images[currentImageIndex]}
                 alt={`${product.titre} - Vue ${currentImageIndex + 1}`}
                 className="w-full h-96 object-contain bg-gradient-to-br from-blue-100 to-blue-50 p-4"
-                onError={(e) => {
-                  e.target.src = "https://via.placeholder.com/600x800/1e40af/ffffff?text=Livre+MTHS";
-                }}
+                onError={(e) => handleImageError(e, images[currentImageIndex])}
               />
               
               {/* Boutons de navigation */}
@@ -510,9 +521,7 @@ function Produitdetail() {
                       src={img}
                       alt={`Vue ${index + 1}`}
                       className="w-full h-20 object-cover"
-                      onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/150x200/1e40af/ffffff?text=Image";
-                      }}
+                      onError={(e) => handleImageError(e, img)}
                     />
                     <div className="absolute inset-0 bg-black/0 hover:bg-black/5 transition-colors" />
                   </button>
@@ -813,9 +822,10 @@ function Produitdetail() {
                 >
                   <div className="aspect-[3/4] bg-gradient-to-br from-blue-100 to-blue-50 rounded-lg mb-3 overflow-hidden">
                     <img
-                      src={relatedProduct.images?.[0] || relatedProduct.image || "https://via.placeholder.com/300x400/1e40af/ffffff?text=Livre"}
+                      src={relatedProduct.images?.[0] || "/images/default-book.jpg"}
                       alt={relatedProduct.titre}
                       className="w-full h-full object-cover"
+                      onError={(e) => handleImageError(e, relatedProduct.images?.[0])}
                     />
                   </div>
                   <div className="text-sm font-medium text-blue-900 line-clamp-2 text-left group-hover:text-blue-700">

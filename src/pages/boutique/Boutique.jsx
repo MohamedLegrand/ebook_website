@@ -103,7 +103,14 @@ function Boutique() {
   };
 
   const handleViewDetails = (product) => {
-    // Crée une copie propre du produit (sans éléments React)
+    // Crée un tableau d'images pour ce produit avec les 3 vues
+    const productImages = [
+      `/images/livre${product.id}/livre${product.id}_1.png`,
+      `/images/livre${product.id}/livre${product.id}_2.png`,
+      `/images/livre${product.id}/livre${product.id}_3.png`
+    ];
+    
+    // Crée une copie propre du produit avec TOUTES les images
     const cleanProduct = {
       id: product.id,
       titre: product.titre,
@@ -111,6 +118,7 @@ function Boutique() {
       desc: product.desc,
       prixFCFA: product.prixFCFA,
       image: product.image,
+      images: productImages, // Ajout du tableau complet d'images
       format: product.format,
       pages: product.pages,
       stock: product.stock,
@@ -120,7 +128,7 @@ function Boutique() {
       langue: product.langue
     };
     
-    // Crée une copie propre de la catégorie (sans icône React)
+    // Crée une copie propre de la catégorie
     const currentCat = categories[selectedCategory];
     const cleanCategory = {
       id: currentCat.id,
@@ -128,7 +136,6 @@ function Boutique() {
       count: currentCat.count,
       description: currentCat.description,
       couleur: currentCat.couleur
-      // On ne passe pas l'icône (c'est un élément React)
     };
     
     // Navigation vers la page de détails
@@ -156,7 +163,7 @@ function Boutique() {
           auteur: "Centre MTHS",
           desc: "Manuel complet de la Médecine Traditionnelle des Handicapés Spirituels.",
           prixFCFA: 15000,
-          image: "https://via.placeholder.com/400x600/1e40af/ffffff?text=Couverture",
+          image: "/images/livre1/livre1_1.png",
           format: ["Papier", "PDF"],
           pages: 320,
           stock: 50,
@@ -171,7 +178,7 @@ function Boutique() {
           auteur: "Centre MTHS",
           desc: "Étude approfondie du rite SO'O dans sa version christianisée.",
           prixFCFA: 10000,
-          image: "https://via.placeholder.com/400x600/7c3aed/ffffff?text=Couverture",
+          image: "/images/livre2/livre2_1.png",
           format: ["Papier", "PDF", "EPUB"],
           pages: 240,
           stock: 35,
@@ -186,7 +193,7 @@ function Boutique() {
           auteur: "Centre MTHS",
           desc: "Guide des remèdes traditionnels améliorés et leur intégration.",
           prixFCFA: 12500,
-          image: "https://via.placeholder.com/400x600/059669/ffffff?text=Couverture",
+          image: "/images/livre3/livre3_1.png",
           format: ["Papier"],
           pages: 280,
           stock: 40,
@@ -201,7 +208,7 @@ function Boutique() {
           auteur: "Centre MTHS",
           desc: "Méthodologie du diagnostic des handicaps spirituels.",
           prixFCFA: 9500,
-          image: "https://via.placeholder.com/400x600/d97706/ffffff?text=Couverture",
+          image: "/images/livre4/livre4_1.png",
           format: ["PDF", "EPUB"],
           pages: 180,
           stock: 60,
@@ -215,7 +222,7 @@ function Boutique() {
           auteur: "Centre MTHS",
           desc: "Guide pratique des rites de purification selon la tradition Béti.",
           prixFCFA: 11000,
-          image: "https://via.placeholder.com/400x600/db2777/ffffff?text=Couverture",
+          image: "/images/livre5/livre5_1.png",
           format: ["Papier", "PDF"],
           pages: 210,
           stock: 45,
@@ -230,7 +237,7 @@ function Boutique() {
           auteur: "Centre MTHS",
           desc: "Fondements théologiques de l'intégration culturelle africaine.",
           prixFCFA: 13500,
-          image: "https://via.placeholder.com/400x600/0f766e/ffffff?text=Couverture",
+          image: "/images/livre6/livre6_1.png",
           format: ["Papier"],
           pages: 290,
           stock: 30,
@@ -245,7 +252,7 @@ function Boutique() {
           auteur: "Centre MTHS",
           desc: "Approche intégrative de la guérison selon la révélation de 1979.",
           prixFCFA: 16000,
-          image: "https://via.placeholder.com/400x600/4338ca/ffffff?text=Couverture",
+          image: "/images/livre7/livre7_1.png",
           format: ["Papier", "PDF"],
           pages: 350,
           stock: 25,
@@ -260,7 +267,7 @@ function Boutique() {
           auteur: "Centre MTHS",
           desc: "Analyse et solutions pour briser les chaînes familiales.",
           prixFCFA: 12000,
-          image: "https://via.placeholder.com/400x600/f59e0b/ffffff?text=Couverture",
+          image: "/images/livre8/livre8_1.png",
           format: ["Papier"],
           pages: 230,
           stock: 40,
@@ -275,7 +282,7 @@ function Boutique() {
           auteur: "Centre MTHS",
           desc: "Interface entre psychologie moderne et spiritualité africaine.",
           prixFCFA: 14000,
-          image: "https://via.placeholder.com/400x600/8b5cf6/ffffff?text=Couverture",
+          image: "/images/livre9/livre9_1.png",
           format: ["PDF", "EPUB"],
           pages: 260,
           stock: 35,
@@ -289,7 +296,7 @@ function Boutique() {
           auteur: "Centre MTHS",
           desc: "Rites de passage christianisés pour les étapes de la vie.",
           prixFCFA: 11500,
-          image: "https://via.placeholder.com/400x600/10b981/ffffff?text=Couverture",
+          image: "/images/livre10/livre10_1.png",
           format: ["Papier"],
           pages: 200,
           stock: 50,
@@ -304,7 +311,7 @@ function Boutique() {
           auteur: "Centre MTHS",
           desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
           prixFCFA: 17000,
-          image: "https://via.placeholder.com/400x600/ef4444/ffffff?text=Couverture",
+          image: "/images/livre11/livre11_1.png",
           format: ["Papier", "PDF"],
           pages: 310,
           stock: 20,
@@ -528,7 +535,7 @@ function Boutique() {
                 </div>
               </div>
 
-              {/* Products Grid - Layout amélioré */}
+              {/* Products Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {currentCategory.produits.map((produit) => (
                   <div
@@ -558,7 +565,7 @@ function Boutique() {
                         alt={produit.titre}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         onError={(e) => {
-                          e.target.src = "https://via.placeholder.com/400x600/1e40af/ffffff?text=Livre+MTHS";
+                          e.target.src = "/images/default-book.jpg";
                         }}
                       />
                       
