@@ -67,10 +67,10 @@ function Header() {
         search: "Rechercher"
       },
       announcement: {
-        msg1: "Guérir l'Invisible, Restaurer l'Homme",
-        msg2: "Centre Marie Reine de la Miséricorde",
-        msg3: "Corps, Âme et Esprit : Une Seule Guérison",
-        msg4: "Médecine Holistique Traditionnelle"
+        msg1: "NOTRE MISSION :",
+        msg2: "GUERRIR L'AME",
+        msg3: "RESTAURER LE CORPS",
+        msg4: "LIBERER L'ESPRIT"
       },
       cartItems: {
         empty: "Votre panier est vide",
@@ -317,7 +317,7 @@ function Header() {
                   {/* Conteneur de l'image */}
                   <div className="relative w-full h-full rounded-sm sm:rounded-md overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
                     <img 
-                      src="/images/logo.jpeg" 
+                      src="/images/logo.png" 
                       alt="Logo MTHS" 
                       className="w-full h-full object-contain p-0.5"
                       onError={(e) => {
@@ -507,20 +507,13 @@ function Header() {
                           </div>
                           <div className="flex flex-col sm:flex-row gap-2">
                             <a
-                              href="/panier"
+                              href="/cart"
                               className="py-2 sm:py-3 text-center border-2 border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-50 rounded-lg font-medium transition-colors text-sm sm:text-base"
                               onClick={() => setIsCartOpen(false)}
                             >
                               {currentLang.cartItems.viewCart}
                             </a>
-                            <a
-                              href="/checkout"
-                              className="py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-center rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base flex items-center justify-center gap-2"
-                              onClick={() => setIsCartOpen(false)}
-                            >
-                              <CreditCard size={16} className="sm:w-5 sm:h-5" />
-                              {currentLang.cartItems.checkout}
-                            </a>
+                           
                           </div>
                         </div>
                       </>

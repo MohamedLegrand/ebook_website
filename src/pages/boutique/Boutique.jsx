@@ -153,7 +153,7 @@ function Boutique() {
       id: 0,
       name: "Livres Doctrinaux & Manuels Clinique",
       icon: <BookOpen className="w-5 h-5" />,
-      count: 11,
+      count: 16, // Mise à jour de 11 à 16
       description: "Ouvrages de référence sur la Médecine Traditionnelle des Handicapés Spirituels",
       couleur: "from-blue-500 to-blue-600",
       produits: [
@@ -320,6 +320,82 @@ function Boutique() {
           datePublication: "2023",
           langue: "Français"
         },
+        // Nouveaux livres 12 à 16
+        {
+          id: 12,
+          titre: "Religion Chinoise face à la Sorcellerie",
+          auteur: "Centre MTHS",
+          desc: "Analyse comparée des traditions spirituelles chinoises et africaines face aux phénomènes occultes.",
+          prixFCFA: 17000,
+          image: "/images/livre12/livre12_1.png",
+          format: ["Papier", "PDF"],
+          pages: 310,
+          stock: 20,
+          type: "Livre",
+          isbn: "978-2-954-12354-8",
+          datePublication: "2023",
+          langue: "Français"
+        },
+        {
+          id: 13,
+          titre: "La vie apres la Mort",
+          auteur: "Centre MTHS",
+          desc: "Enquête sur les conceptions africaines de l'au-delà et leur intégration dans la foi chrétienne.",
+          prixFCFA: 17000,
+          image: "/images/livre13/livre13_1.png",
+          format: ["Papier", "PDF"],
+          pages: 310,
+          stock: 20,
+          type: "Livre",
+          isbn: "978-2-954-12355-5",
+          datePublication: "2023",
+          langue: "Français"
+        },
+        {
+          id: 14,
+          titre: "Ange ou Demon",
+          auteur: "Centre MTHS",
+          desc: "Discernement des esprits dans la tradition chrétienne africaine.",
+          prixFCFA: 17000,
+          image: "/images/livre14/livre14_1.png",
+          format: ["Papier", "PDF"],
+          pages: 310,
+          stock: 20,
+          type: "Livre",
+          isbn: "978-2-954-12356-2",
+          datePublication: "2023",
+          langue: "Français"
+        },
+        {
+          id: 15,
+          titre: "Chretien africain et la maladie",
+          auteur: "Centre MTHS",
+          desc: "Comprendre et guérir selon une approche holistique chrétienne-africaine.",
+          prixFCFA: 17000,
+          image: "/images/livre15/livre15_1.png",
+          format: ["Papier", "PDF"],
+          pages: 310,
+          stock: 20,
+          type: "Livre",
+          isbn: "978-2-954-12357-9",
+          datePublication: "2023",
+          langue: "Français"
+        },
+        {
+          id: 16,
+          titre: "Comment vivre ensemble avec les sorciers",
+          auteur: "Centre MTHS",
+          desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
+          prixFCFA: 17000,
+          image: "/images/livre16/livre16_1.png",
+          format: ["Papier", "PDF"],
+          pages: 310,
+          stock: 20,
+          type: "Livre",
+          isbn: "978-2-954-12358-6",
+          datePublication: "2023",
+          langue: "Français"
+        }
       ]
     },
     {

@@ -286,7 +286,83 @@ const WhyChooseUs = () => {
       isbn: "978-2-954-12353-1",
       datePublication: "2023",
       langue: "Français"
+    },
+    {
+      id: 12,
+      titre: "Religion Chinoise face à la Sorcellerie",
+      auteur: "Centre MTHS",
+      desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
+      prixFCFA: 17000,
+      image: "/images/livre12/livre12_1.png",
+      format: ["Papier", "PDF"],
+      pages: 310,
+      stock: 20,
+      type: "Livre",
+      isbn: "978-2-954-12353-1",
+      datePublication: "2023",
+      langue: "Français"
+    },
+    {
+      id: 13,
+      titre: "La vie apres la Mort",
+      auteur: "Centre MTHS",
+      desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
+      prixFCFA: 17000,
+      image: "/images/livre13/livre13_1.png",
+      format: ["Papier", "PDF"],
+      pages: 310,
+      stock: 20,
+      type: "Livre",
+      isbn: "978-2-954-12353-1",
+      datePublication: "2023",
+      langue: "Français"
+    },
+    {
+      id: 14,
+      titre: "Ange ou Demon",
+      auteur: "Centre MTHS",
+      desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
+      prixFCFA: 17000,
+      image: "/images/livre14/livre14_1.png", 
+      format: ["Papier", "PDF"],
+      pages: 310,
+      stock: 20,
+      type: "Livre",
+      isbn: "978-2-954-12353-1",
+      datePublication: "2023",
+      langue: "Français"
+    },
+    {
+      id: 15,
+      titre: "Chretien africian et la maladie", 
+      auteur: "Centre MTHS",
+      desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
+      prixFCFA: 17000,
+      image: "/images/livre15/livre15_1.png",
+      format: ["Papier", "PDF"],
+      pages: 310,
+      stock: 20,
+      type: "Livre",
+      isbn: "978-2-954-12353-1",
+      datePublication: "2023",
+      langue: "Français"
+    },
+    {
+      id: 16,
+      titre: "Comment vivre ensemble avec les sorciers",
+      auteur: "Centre MTHS",
+      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
+      prixFCFA: 17000,
+      image: "/images/livre16/livre16_1.png",
+      format: ["Papier", "PDF"],
+      pages: 310,
+      stock: 20,
+      type: "Livre",
+      isbn: "978-2-954-12353-1",
+      datePublication: "2023",
+      langue: "Français"
     }
+    
   ];
 
   const filteredLivres = livres.filter(livre =>
