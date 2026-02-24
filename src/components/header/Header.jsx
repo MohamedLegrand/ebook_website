@@ -1,11 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
-import { 
-  User, Menu, X, Phone, Globe, ChevronDown, Search, 
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { Link } from "react-router-dom";
+import {
+  User, Menu, X, Phone, Globe, ChevronDown, Search,
   ShoppingCart, Package, Trash2, CreditCard, ArrowRight,
   Home, Info, Heart, BookOpen, MessageCircle, ShoppingBag,
   Newspaper, Mail
 } from "lucide-react";
 import { useCart } from "../../context/CartContext";
+
+// Hook personnalisé pour détecter les clics en dehors d'un élément
+function useOnClickOutside(ref, handler) {
+  useEffect(() => {
+    const listener = (event) => {
+      if (!ref.current || ref.current.contains(event.target)) {
+        return;
+      }
+      handler(event);
+    };
+    document.addEventListener("mousedown", listener);
+    return () => {
+      document.removeEventListener("mousedown", listener);
+    };
+  }, [ref, handler]);
+}
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,25 +30,29 @@ function Header() {
   const [language, setLanguage] = useState('fr');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
   const menuRef = useRef(null);
   const cartRef = useRef(null);
 
   const { cart, removeFromCart, clearCart, getCartTotal } = useCart();
 
-  // Fermer le menu en cliquant à l'extérieur
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
-      }
-      if (cartRef.current && !cartRef.current.contains(event.target)) {
-        setIsCartOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // Fermer le menu et le panier au clic extérieur
+  useOnClickOutside(menuRef, useCallback(() => setIsMenuOpen(false), []));
+  useOnClickOutside(cartRef, useCallback(() => setIsCartOpen(false), []));
 
+  // Empêcher le défilement du body quand le menu mobile est ouvert
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
+
+  // Détection du scroll pour changer le style du header
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -40,8 +61,8 @@ function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Traductions
-  const t = {
+  // Objet de traductions (mémoïsé)
+  const t = useMemo(() => ({
     fr: {
       tagline: "Médecine Traditionnelle des Handicapés Spirituels",
       menu: {
@@ -122,12 +143,12 @@ function Header() {
         item: "item"
       }
     }
-  };
+  }), []);
 
   const currentLang = t[language];
 
-  // Icônes pour le menu mobile
-  const menuIcons = {
+  // Icônes du menu (mémoïsées car statiques)
+  const menuIcons = useMemo(() => ({
     home: <Home className="w-5 h-5" />,
     about: <Info className="w-5 h-5" />,
     handicap: <Heart className="w-5 h-5" />,
@@ -139,17 +160,16 @@ function Header() {
     shop: <ShoppingBag className="w-5 h-5" />,
     news: <Newspaper className="w-5 h-5" />,
     contact: <Mail className="w-5 h-5" />
-  };
+  }), []);
 
-  // Seulement 3 éléments dans le menu principal
-  const mainMenuItems = [
+  // Menus principaux et secondaires (mémoïsés en fonction de la langue)
+  const mainMenuItems = useMemo(() => [
     { label: currentLang.menu.home, href: "/", icon: "home" },
     { label: currentLang.menu.about, href: "/mths", icon: "about" },
     { label: currentLang.menu.handicap, href: "/handicap", icon: "handicap" }
-  ];
+  ], [currentLang]);
 
-  // Tous les autres éléments vont dans "Plus"
-  const secondaryMenuItems = [
+  const secondaryMenuItems = useMemo(() => [
     { label: currentLang.menu.approach, href: "/approche", icon: "approach" },
     { label: currentLang.menu.pathologies, href: "/pathologies", icon: "pathologies" },
     { label: currentLang.menu.journey, href: "/parcours", icon: "journey" },
@@ -158,14 +178,12 @@ function Header() {
     { label: currentLang.menu.shop, href: "/boutique", icon: "shop" },
     { label: currentLang.menu.news, href: "/actualites", icon: "news" },
     { label: currentLang.menu.contact, href: "/contact", icon: "contact" },
-  ];
+  ], [currentLang]);
 
-  // Formatage du prix
   const formatPrice = (price) => {
     return price.toLocaleString('fr-FR') + ' FCFA';
   };
 
-  // Calculer le total du panier
   const cartTotal = getCartTotal();
 
   return (
@@ -177,7 +195,7 @@ function Header() {
       }`}
       ref={menuRef}
     >
-      {/* Bandeau Urgence */}
+      {/* Bandeau supérieur (urgence, langue) */}
       <div className={`transition-all duration-300 ${
         scrolled 
           ? "bg-gradient-to-r from-blue-800 to-blue-900 border-b border-blue-700" 
@@ -186,14 +204,14 @@ function Header() {
         <div className="max-w-7xl mx-auto px-3 sm:px-4">
           <div className="py-1.5 sm:py-2 flex items-center justify-between text-xs sm:text-sm">
             <div className="flex items-center gap-2 sm:gap-4">
-              <a 
-                href="/urgence" 
+              <Link 
+                to="/urgence" 
                 className="flex items-center gap-1.5 sm:gap-2 hover:text-blue-100 transition-colors font-medium whitespace-nowrap"
               >
                 <Phone size={12} className="sm:w-3 sm:h-3" />
                 <span className="hidden xs:inline sm:inline">{currentLang.cta.emergency} :</span>
                 <span className="font-bold text-xs sm:text-sm">+237 693 21 54 31</span>
-              </a>
+              </Link>
               <div className="hidden md:flex items-center gap-4">
                 <span className="w-1 h-1 bg-blue-300 rounded-full"></span>
                 <span className={`transition-colors ${scrolled ? "text-blue-200" : "text-blue-100"}`}>
@@ -209,7 +227,6 @@ function Header() {
               >
                 <Search size={14} className="sm:w-4 sm:h-4" />
               </button>
-              {/* Sélecteur de langue dans le bandeau supérieur (desktop) */}
               <div className="hidden sm:flex items-center gap-1 sm:gap-2">
                 <Globe size={12} className="sm:w-3 sm:h-3" />
                 <button
@@ -219,6 +236,7 @@ function Header() {
                       ? 'bg-white/20 text-white' 
                       : scrolled ? 'text-blue-300 hover:text-white' : 'text-blue-100 hover:text-white'
                   }`}
+                  aria-label="Français"
                 >
                   FR
                 </button>
@@ -230,6 +248,7 @@ function Header() {
                       ? 'bg-white/20 text-white' 
                       : scrolled ? 'text-blue-300 hover:text-white' : 'text-blue-100 hover:text-white'
                   }`}
+                  aria-label="English"
                 >
                   EN
                 </button>
@@ -260,6 +279,7 @@ function Header() {
               <button 
                 onClick={() => setIsSearchOpen(false)}
                 className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2"
+                aria-label="Fermer la recherche"
               >
                 <X size={18} color={scrolled ? "#93c5fd" : "#60a5fa"} />
               </button>
@@ -268,7 +288,7 @@ function Header() {
         </div>
       )}
 
-      {/* Bandeau Annonces */}
+      {/* Bandeau défilant (annonce) */}
       <div className={`bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200 transition-all duration-300 ${
         scrolled ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100 h-auto'
       }`}>
@@ -303,18 +323,15 @@ function Header() {
       {/* Navigation principale */}
       <nav className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <a href="/" className="flex items-center gap-2 sm:gap-3 group min-w-0 flex-1 sm:flex-none">
+          {/* Logo et titre */}
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 group min-w-0 flex-1 sm:flex-none">
             <div className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 flex-shrink-0">
-              {/* Carte/Encadré du logo */}
               <div className={`absolute inset-0 rounded-lg sm:rounded-xl p-1.5 sm:p-2 shadow-xl transition-all duration-300 transform group-hover:scale-[1.02] ${
                 scrolled 
                   ? "bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 shadow-blue-900/30 group-hover:shadow-blue-800/40"
                   : "bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 shadow-blue-500/30 group-hover:shadow-blue-600/40"
               }`}>
-                {/* Cadre blanc interne */}
                 <div className="w-full h-full bg-white rounded-md sm:rounded-lg overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border border-white">
-                  {/* Conteneur de l'image */}
                   <div className="relative w-full h-full rounded-sm sm:rounded-md overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
                     <img 
                       src="/images/logo.png" 
@@ -330,7 +347,6 @@ function Header() {
               </div>
             </div>
             
-            {/* Texte à côté du logo */}
             <div className="flex flex-col min-w-0">
               <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight truncate">
                 <span className={`transition-colors ${
@@ -352,14 +368,14 @@ function Header() {
                 {currentLang.tagline}
               </p>
             </div>
-          </a>
+          </Link>
 
-          {/* Menu Desktop - 3 éléments seulement */}
+          {/* Menu desktop (visible à partir de lg) */}
           <div className="hidden lg:flex items-center gap-1 ml-4">
             {mainMenuItems.map((item) => (
-              <a
+              <Link
                 key={item.label}
-                href={item.href}
+                to={item.href}
                 className={`px-3 sm:px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 whitespace-nowrap border ${
                   scrolled
                     ? "text-white hover:text-blue-200 hover:bg-blue-700/50 border-transparent hover:border-blue-600"
@@ -367,49 +383,52 @@ function Header() {
                 }`}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
             
-            {/* Menu déroulant "Plus" */}
+            {/* Sous-menu "Plus" */}
             <div className="relative group">
-              <button className={`flex items-center px-3 sm:px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 border ${
-                scrolled
-                  ? "text-white hover:text-blue-200 hover:bg-blue-700/50 border-transparent hover:border-blue-600"
-                  : "text-blue-800 hover:text-blue-600 hover:bg-blue-50 border-transparent hover:border-blue-200"
-              }`}>
+              <button 
+                className={`flex items-center px-3 sm:px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 border ${
+                  scrolled
+                    ? "text-white hover:text-blue-200 hover:bg-blue-700/50 border-transparent hover:border-blue-600"
+                    : "text-blue-800 hover:text-blue-600 hover:bg-blue-50 border-transparent hover:border-blue-200"
+                }`}
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
                 Plus <ChevronDown size={16} className="ml-1 group-hover:rotate-180 transition-transform" />
               </button>
               <div className="absolute right-0 mt-2 w-56 bg-white shadow-2xl rounded-xl border border-blue-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
                 <div className="p-2">
                   {secondaryMenuItems.map((item) => (
-                    <a
+                    <Link
                       key={item.label}
-                      href={item.href}
+                      to={item.href}
                       className="flex items-center px-4 py-3 text-sm text-blue-800 hover:bg-blue-50 rounded-lg transition-colors mb-1 last:mb-0"
                     >
                       <span className="flex-1">{item.label}</span>
                       <ChevronDown size={14} className="transform -rotate-90 text-blue-400" />
-                    </a>
+                    </Link>
                   ))}
                 </div>
                 
-                {/* Section Urgence */}
                 <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-t border-blue-200 p-3">
-                  <a 
-                    href="/urgence" 
+                  <Link 
+                    to="/urgence" 
                     className="flex items-center gap-2 text-blue-700 hover:text-blue-800 font-medium text-sm"
                   >
                     <Phone size={14} />
                     <span>Urgence : +237 693 21 54 31</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Actions */}
+          {/* Actions utilisateur (panier, langue mobile, login, register, menu hamburger) */}
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3" ref={cartRef}>
-            {/* Panier d'achat */}
+            {/* Panier */}
             <div className="relative">
               <button
                 onClick={() => setIsCartOpen(!isCartOpen)}
@@ -419,6 +438,8 @@ function Header() {
                     : "text-blue-700 hover:text-blue-800 border-transparent hover:border-blue-200 hover:bg-blue-50"
                 }`}
                 aria-label="Panier"
+                aria-expanded={isCartOpen}
+                aria-controls="cart-dropdown"
               >
                 <ShoppingCart size={18} className="sm:w-5 sm:h-5" />
                 {cart.length > 0 && (
@@ -428,9 +449,12 @@ function Header() {
                 )}
               </button>
 
-              {/* Panier déroulant */}
+              {/* Dropdown panier */}
               {isCartOpen && (
-                <div className="fixed sm:absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-80 md:w-96 bg-white shadow-2xl rounded-xl border border-blue-100 z-50 animate-fadeIn top-16 sm:top-auto">
+                <div
+                  id="cart-dropdown"
+                  className="fixed sm:absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-80 md:w-96 bg-white shadow-2xl rounded-xl border border-blue-100 z-50 animate-fadeIn top-16 sm:top-auto"
+                >
                   <div className="p-3 sm:p-4">
                     <div className="flex items-center justify-between mb-3 sm:mb-4">
                       <h3 className="font-bold text-base sm:text-lg text-blue-900 flex items-center gap-2">
@@ -441,6 +465,7 @@ function Header() {
                         <button
                           onClick={clearCart}
                           className="text-xs text-red-500 hover:text-red-700 flex items-center gap-1"
+                          aria-label="Vider le panier"
                         >
                           <Trash2 size={12} className="sm:w-3 sm:h-3" />
                           <span className="hidden sm:inline">Vider</span>
@@ -452,14 +477,14 @@ function Header() {
                       <div className="text-center py-6 sm:py-8">
                         <Package size={40} className="sm:w-12 sm:h-12 text-blue-200 mx-auto mb-3 sm:mb-4" />
                         <p className="text-gray-500 mb-3 sm:mb-4 text-sm sm:text-base">{currentLang.cartItems.empty}</p>
-                        <a
-                          href="/boutique"
+                        <Link
+                          to="/boutique"
                           className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium text-sm sm:text-base"
                           onClick={() => setIsCartOpen(false)}
                         >
                           {currentLang.cartItems.continueShopping}
                           <ArrowRight size={14} className="sm:w-4 sm:h-4" />
-                        </a>
+                        </Link>
                       </div>
                     ) : (
                       <>
@@ -506,14 +531,20 @@ function Header() {
                             <span className="text-lg sm:text-xl font-bold text-blue-700">{formatPrice(cartTotal)}</span>
                           </div>
                           <div className="flex flex-col sm:flex-row gap-2">
-                            <a
-                              href="/cart"
-                              className="py-2 sm:py-3 text-center border-2 border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-50 rounded-lg font-medium transition-colors text-sm sm:text-base"
+                            <Link
+                              to="/cart"
+                              className="flex-1 py-2 sm:py-3 text-center border-2 border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-50 rounded-lg font-medium transition-colors text-sm sm:text-base"
                               onClick={() => setIsCartOpen(false)}
                             >
                               {currentLang.cartItems.viewCart}
-                            </a>
-                           
+                            </Link>
+                            <Link
+                              to="/checkout"
+                              className="flex-1 py-2 sm:py-3 text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-colors text-sm sm:text-base shadow-md"
+                              onClick={() => setIsCartOpen(false)}
+                            >
+                              {currentLang.cartItems.checkout}
+                            </Link>
                           </div>
                         </div>
                       </>
@@ -523,8 +554,8 @@ function Header() {
               )}
             </div>
 
-            {/* Sélecteur de langue mobile */}
-            <div className={`flex lg:hidden items-center rounded-lg p-0.5 border transition-colors ${
+            {/* Sélecteur de langue mobile (visible uniquement en dessous de sm) */}
+            <div className={`flex sm:hidden items-center rounded-lg p-0.5 border transition-colors ${
               scrolled
                 ? "bg-blue-800/50 border-blue-700"
                 : "bg-blue-100 border-blue-200"
@@ -540,6 +571,7 @@ function Header() {
                       ? 'text-blue-300 hover:text-white hover:bg-blue-700/50' 
                       : 'text-blue-700 hover:bg-blue-200'
                 }`}
+                aria-label="Français"
               >
                 FR
               </button>
@@ -554,14 +586,15 @@ function Header() {
                       ? 'text-blue-300 hover:text-white hover:bg-blue-700/50' 
                       : 'text-blue-700 hover:bg-blue-200'
                 }`}
+                aria-label="English"
               >
                 EN
               </button>
             </div>
 
-            {/* Bouton Connexion */}
-            <a
-              href="/login"
+            {/* Lien connexion (caché en mobile) */}
+            <Link
+              to="/login"
               className={`hidden md:flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors border ${
                 scrolled
                   ? "text-white hover:text-blue-200 border-transparent hover:border-blue-600 hover:bg-blue-700/50"
@@ -570,11 +603,11 @@ function Header() {
             >
               <User size={16} className="sm:w-4 sm:h-4" />
               <span className="text-sm">{currentLang.cta.login}</span>
-            </a>
+            </Link>
 
-            {/* Bouton Inscription */}
-            <a
-              href="/register"
+            {/* Lien inscription (caché en mobile) */}
+            <Link
+              to="/register"
               className={`hidden sm:inline-flex px-3 sm:px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap transform hover:-translate-y-0.5 ${
                 scrolled
                   ? "bg-gradient-to-r from-white to-blue-100 text-blue-900 hover:from-blue-100 hover:to-white shadow-blue-900/30"
@@ -582,9 +615,9 @@ function Header() {
               }`}
             >
               {currentLang.cta.register}
-            </a>
+            </Link>
 
-            {/* Menu Mobile Toggle */}
+            {/* Bouton menu hamburger (mobile) */}
             <button
               className={`lg:hidden p-1.5 sm:p-2 rounded-lg transition-colors border ${
                 scrolled
@@ -592,27 +625,38 @@ function Header() {
                   : "text-blue-700 border-transparent hover:border-blue-200 hover:bg-blue-50"
               }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Menu"
+              aria-label="Menu principal"
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
             >
               {isMenuOpen ? <X size={20} className="sm:w-6 sm:h-6" /> : <Menu size={20} className="sm:w-6 sm:h-6" />}
             </button>
           </div>
         </div>
 
-        {/* Menu Mobile */}
-        <div className={`lg:hidden fixed inset-x-0 top-0 h-full bg-white transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        {/* Menu mobile (slide-in) */}
+        <div
+          id="mobile-menu"
+          aria-hidden={!isMenuOpen}
+          className={`lg:hidden fixed inset-x-0 top-0 h-full bg-white transform transition-transform duration-300 ease-in-out z-50 ${
+            isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
           <div className="h-full overflow-y-auto pb-20">
-            {/* Header du menu mobile */}
+            {/* En-tête du menu mobile */}
             <div className="sticky top-0 bg-white border-b border-blue-100 p-3 sm:p-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 sm:gap-3">
-                  {/* Logo dans le menu mobile */}
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg p-1 sm:p-1.5 shadow-md">
                     <div className="w-full h-full bg-white rounded-md overflow-hidden">
                       <img 
-                        src="/images/logo.jpeg" 
+                        src="/images/logo.png" 
                         alt="Logo" 
                         className="w-full h-full object-contain p-0.5"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232963cc'/%3E%3Cstop offset='100%25' stop-color='%231e429f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23grad)'/%3E%3Ctext x='50' y='55' font-family='Arial, sans-serif' font-size='28' font-weight='bold' fill='white' text-anchor='middle' letter-spacing='1px'%3EMTHS%3C/text%3E%3Ctext x='50' y='75' font-family='Arial, sans-serif' font-size='14' fill='%23bfdbfe' text-anchor='middle'%3E/TMSH%3C/text%3E%3C/svg%3E";
+                        }}
                       />
                     </div>
                   </div>
@@ -624,15 +668,15 @@ function Header() {
                 <button
                   onClick={() => setIsMenuOpen(false)}
                   className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                  aria-label="Fermer le menu"
                 >
                   <X size={20} className="sm:w-6 sm:h-6 text-blue-600" />
                 </button>
               </div>
             </div>
 
-            {/* Navigation mobile */}
             <div className="p-3 sm:p-4">
-              {/* Panier dans le menu mobile */}
+              {/* Résumé du panier dans le menu mobile */}
               <div className="mb-4 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2 sm:gap-3">
@@ -652,6 +696,7 @@ function Header() {
                       <button
                         onClick={clearCart}
                         className="text-xs text-red-500 hover:text-red-700 flex items-center gap-1 mt-1"
+                        aria-label="Vider le panier"
                       >
                         <Trash2 size={10} className="sm:w-3 sm:h-3" />
                         Vider
@@ -679,33 +724,33 @@ function Header() {
                         <button
                           onClick={() => removeFromCart(item.id)}
                           className="text-red-400 hover:text-red-600 p-1 flex-shrink-0"
+                          aria-label="Supprimer"
                         >
                           <Trash2 size={12} className="sm:w-4 sm:h-4" />
                         </button>
                       </div>
                     ))}
                     <div className="flex gap-2 pt-2">
-                      <a
-                        href="/panier"
+                      <Link
+                        to="/cart"
                         className="flex-1 py-2 text-center border border-blue-300 text-blue-700 hover:bg-blue-50 rounded-lg text-xs sm:text-sm font-medium"
                         onClick={() => setIsMenuOpen(false)}
                       >
                         {currentLang.cartItems.viewCart}
-                      </a>
-                      <a
-                        href="/checkout"
-                        className="flex-1 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-center rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1"
+                      </Link>
+                      <Link
+                        to="/checkout"
+                        className="flex-1 py-2 text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-md"
                         onClick={() => setIsMenuOpen(false)}
                       >
-                        <CreditCard size={14} className="sm:w-4 sm:h-4" />
                         {currentLang.cartItems.checkout}
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Sélecteur de langue mobile */}
+              {/* Sélecteur de langue dans le menu mobile */}
               <div className="mb-6 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
                 <div className="flex items-center gap-2 mb-3">
                   <Globe size={18} className="sm:w-5 sm:h-5 text-blue-600" />
@@ -735,15 +780,15 @@ function Header() {
                 </div>
               </div>
 
-              {/* Menu items */}
+              {/* Liens du menu mobile */}
               <div className="space-y-1">
                 <div className="text-xs font-semibold text-blue-500 uppercase tracking-wider px-2 py-1">
                   Navigation Principale
                 </div>
                 {mainMenuItems.map((item) => (
-                  <a
+                  <Link
                     key={item.label}
-                    href={item.href}
+                    to={item.href}
                     className="flex items-center justify-between px-3 sm:px-4 py-3 text-blue-800 hover:bg-blue-50 rounded-xl transition-colors font-medium border border-transparent hover:border-blue-200"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -754,16 +799,16 @@ function Header() {
                       <span className="text-sm sm:text-base">{item.label}</span>
                     </div>
                     <ChevronDown size={16} className="transform -rotate-90 text-blue-400" />
-                  </a>
+                  </Link>
                 ))}
                 
                 <div className="text-xs font-semibold text-blue-500 uppercase tracking-wider px-2 py-1 mt-3">
                   Autres Sections
                 </div>
                 {secondaryMenuItems.map((item) => (
-                  <a
+                  <Link
                     key={item.label}
-                    href={item.href}
+                    to={item.href}
                     className="flex items-center justify-between px-3 sm:px-4 py-3 text-blue-700 hover:bg-blue-50 rounded-xl transition-colors font-medium border border-transparent hover:border-blue-200"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -774,31 +819,31 @@ function Header() {
                       <span className="text-sm sm:text-base">{item.label}</span>
                     </div>
                     <ChevronDown size={14} className="transform -rotate-90 text-blue-400" />
-                  </a>
+                  </Link>
                 ))}
               </div>
 
-              {/* Actions mobile */}
+              {/* Boutons Connexion / Inscription dans le menu mobile */}
               <div className="mt-6 space-y-2">
-                <a
-                  href="/login"
+                <Link
+                  to="/login"
                   className="flex items-center justify-center gap-2 w-full py-3 border-2 border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-50 rounded-xl font-semibold transition-colors text-sm sm:text-base"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <User size={18} className="sm:w-5 sm:h-5" />
                   {currentLang.cta.login}
-                </a>
+                </Link>
                 
-                <a
-                  href="/register"
+                <Link
+                  to="/register"
                   className="block w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-center rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {currentLang.cta.register}
-                </a>
+                </Link>
               </div>
 
-              {/* Contact info mobile */}
+              {/* Coordonnées d'urgence */}
               <div className="mt-6 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
                 <div className="flex items-center gap-2 sm:gap-3 mb-3">
                   <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg">
@@ -825,15 +870,16 @@ function Header() {
         </div>
       </nav>
 
-      {/* Overlay pour menu mobile */}
+      {/* Overlay sombre quand le menu mobile est ouvert */}
       {isMenuOpen && (
         <div 
           className="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
           onClick={() => setIsMenuOpen(false)}
+          aria-hidden="true"
         />
       )}
 
-      {/* Styles Animations */}
+      {/* Styles CSS pour les animations */}
       <style jsx>{`
         @keyframes marquee {
           0% { transform: translateX(0); }

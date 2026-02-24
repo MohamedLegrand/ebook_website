@@ -91,7 +91,7 @@ const ALL_PRODUCTS = [
     titre: "Chrétien africain face à la sorcellerie",
     auteur: "NGA Marie Constantin & SIDA ABENA Jean Paul Sylvain",
     desc: "Manuel de référence sur la confrontation chrétienne aux phénomènes de sorcellerie en Afrique.",
-    prixFCFA: 15000,
+    prixFCFA: 6500,
     images: [
       "/images/livre1/livre1_1.png",
       "/images/livre1/livre1_2.png",
@@ -124,7 +124,7 @@ Un guide indispensable pour tout chrétien africain soucieux de vivre sa foi ave
     titre: "Comment reconnaître à vue d'œil un sorcier",
     auteur: "SIDA ABENA Jean Paul Sylvain",
     desc: "Guide d'observation et de discernement des personnes impliquées dans les pratiques occultes.",
-    prixFCFA: 10000,
+    prixFCFA: 6500,
     images: [
       "/images/livre2/livre2_1.png",
       "/images/livre2/livre2_2.png",
@@ -157,7 +157,7 @@ Un manuel pratique et nuancé, conçu pour les accompagnateurs spirituels et les
     titre: "Comment se soigner des persécutions spirituelles",
     auteur: "SIDA ABENA Jean Paul Sylvain",
     desc: "Guide thérapeutique intégrant remèdes naturels, prières et rites de délivrance.",
-    prixFCFA: 12500,
+    prixFCFA: 6500,
     images: [
       "/images/livre3/livre3_1.png",
       "/images/livre3/livre3_2.png",
@@ -190,7 +190,7 @@ Un manuel de référence pour toute personne confrontée à des manifestations s
     titre: "À la rencontre de JPSSA",
     auteur: "Centre MTHS",
     desc: "Biographie spirituelle et doctrinale du fondateur de la Médecine Traditionnelle des Handicapés Spirituels.",
-    prixFCFA: 9500,
+    prixFCFA: 6500,
     images: [
       "/images/livre4/livre4_1.png",
       "/images/livre4/livre4_2.png",
@@ -222,7 +222,7 @@ Une rencontre essentielle pour comprendre les sources vives d'une médecine de l
     titre: "Le musulman face à la sorcellerie",
     auteur: "Centre MTHS",
     desc: "Première approche interreligieuse adaptant les principes MTHS au contexte islamique africain.",
-    prixFCFA: 11000,
+    prixFCFA: 6500,
     images: [
       "/images/livre5/livre5_1.png",
       "/images/livre5/livre5_2.png",
@@ -255,7 +255,7 @@ Une contribution majeure au dialogue interreligieux africain, qui démontre que 
     titre: "Les dix commandements de Satan",
     auteur: "SIDA ABENA Jean Paul Sylvain",
     desc: "Étude théologique des principes spirituels inversés qui gouvernent les dynamiques occultes en Afrique.",
-    prixFCFA: 13500,
+    prixFCFA: 6500,
     images: [
       "/images/livre6/livre6_1.png",
       "/images/livre6/livre6_2.png",
@@ -288,7 +288,7 @@ Un texte qui dérange, qui éclaire et qui libère — réservé aux personnes p
     titre: "La transmission de la sorcellerie au sein d'une famille",
     auteur: "NGA Marie Constantin & SIDA ABENA Jean Paul Sylvain",
     desc: "Analyse des mécanismes héréditaires et transgénérationnels de transmission des liens occultes dans les lignées africaines.",
-    prixFCFA: 16000,
+    prixFCFA: 6500,
     images: [
       "/images/livre7/livre7_1.png",
       "/images/livre7/livre7_2.png",
@@ -321,7 +321,7 @@ Un livre qui change des vies et libère des lignées entières — peut-être la
     titre: "La vie spirituelle du sorcier — Univers astral de la sorcellerie",
     auteur: "SIDA ABENA Jean Paul Sylvain",
     desc: "Exploration cartographique des dimensions spirituelles parallèles selon les traditions africaines et la révélation MTHS.",
-    prixFCFA: 12000,
+    prixFCFA: 6500,
     images: [
       "/images/livre8/livre8_1.png",
       "/images/livre8/livre8_2.png",
@@ -354,7 +354,7 @@ Une plongée vertigineuse dans le monde invisible — pour mieux comprendre, et 
     titre: "Protocole thérapeutique MTHS",
     auteur: "Centre MTHS — Équipe clinique",
     desc: "Manuel technique standardisé des douze protocoles thérapeutiques de la Médecine Traditionnelle des Handicapés Spirituels.",
-    prixFCFA: 14000,
+    prixFCFA: 6500,
     images: [
       "/images/livre9/livre9_1.png",
       "/images/livre9/livre9_2.png",
@@ -386,7 +386,7 @@ L'outil de travail indispensable pour tout praticien MTHS désireux d'exercer av
     titre: "La guerre des spiritualités en Afrique",
     auteur: "NGA Marie Constantin",
     desc: "Analyse géopolitique et théologique des conflits spirituels contemporains sur le continent africain.",
-    prixFCFA: 11500,
+    prixFCFA: 6500,
     images: [
       "/images/livre10/livre10_1.png",
       "/images/livre10/livre10_2.png",
@@ -419,7 +419,7 @@ Un livre nécessaire, urgent et visionnaire — la contribution d'un intellectue
     titre: "Chrétien africain face à la maladie",
     auteur: "NGA Marie Constantin, SIDA ABENA Jean Paul Sylvain, M'BOLO Raphaël Yves Guy, MANGA Élisabeth Angeline",
     desc: "Approche holistique des maladies dans le contexte africain, intégrant dimensions physiques, spirituelles et communautaires.",
-    prixFCFA: 17000,
+    prixFCFA: 6500,
     images: [
       "/images/livre11/livre11_1.png",
       "/images/livre11/livre11_2.png",
@@ -452,7 +452,7 @@ Un livre qui réconcilie la foi et la science, la tradition et la modernité, au
     titre: "Religion chinoise face à la sorcellerie",
     auteur: "Centre MTHS",
     desc: "Étude comparée des traditions spirituelles chinoises et africaines face aux phénomènes occultes — un dialogue interculturel inédit.",
-    prixFCFA: 17000,
+    prixFCFA: 6500,
     images: [
       "/images/livre12/livre12_1.png",
       "/images/livre12/livre12_2.png",
@@ -485,7 +485,7 @@ Un livre d'une originalité rare, qui ouvre des horizons inattendus et contribue
     titre: "La vie après la mort",
     auteur: "Centre MTHS",
     desc: "Enquête théologique et anthropologique sur les conceptions africaines de l'au-delà et leur dialogue avec la foi chrétienne.",
-    prixFCFA: 17000,
+    prixFCFA: 6500,
     images: [
       "/images/livre13/livre13_1.png",
       "/images/livre13/livre13_2.png",
@@ -518,7 +518,7 @@ Des récits d'expériences de mort imminente vécues par des Africains, et des t
     titre: "Ange ou Démon",
     auteur: "Centre MTHS",
     desc: "Manuel pratique du discernement des esprits dans la tradition chrétienne africaine — distinguer les manifestations bénéfiques des influences maléfiques.",
-    prixFCFA: 17000,
+    prixFCFA: 6500,
     images: [
       "/images/livre14/livre14_1.png",
       "/images/livre14/livre14_2.png",
@@ -551,7 +551,7 @@ Des cas concrets — certains simples, d'autres vertigineux dans leur ambiguït�
     titre: "Chrétien africain et la maladie",
     auteur: "Centre MTHS",
     desc: "Guide holistique de compréhension et de guérison des maladies selon une approche intégrant foi chrétienne, médecine moderne et thérapies africaines.",
-    prixFCFA: 17000,
+    prixFCFA: 6500,
     images: [
       "/images/livre15/livre15_1.png",
       "/images/livre15/livre15_2.png",
@@ -584,7 +584,7 @@ Des témoignages émouvants de personnes ayant vécu des guérisons remarquables
     titre: "Comment vivre ensemble avec les sorciers",
     auteur: "Centre MTHS",
     desc: "Stratégies pratiques de coexistence, de protection et de réconciliation dans des communautés marquées par la sorcellerie.",
-    prixFCFA: 17000,
+    prixFCFA: 6500,
     images: [
       "/images/livre16/livre16_1.png",
       "/images/livre16/livre16_2.png",

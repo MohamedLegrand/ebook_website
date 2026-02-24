@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail, Clock, AlertTriangle, HelpCircle, FileText, Shield } from "lucide-react";
 
 function Footer() {
@@ -7,7 +8,6 @@ function Footer() {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  // Traductions
   const t = {
     fr: {
       about: {
@@ -195,7 +195,6 @@ function Footer() {
     <footer className="bg-gradient-to-br from-blue-950 via-blue-900 to-emerald-950 border-t-4 border-amber-500 shadow-2xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         
-        {/* Disclaimer Médical - OBLIGATOIRE */}
         <div className="bg-gradient-to-r from-yellow-900/30 to-red-900/30 border-l-4 border-yellow-500 p-4 sm:p-6 mb-8 sm:mb-12 rounded-lg backdrop-blur-sm">
           <div className="flex items-start gap-3 sm:gap-4">
             <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-400 flex-shrink-0 mt-1" />
@@ -213,10 +212,8 @@ function Footer() {
           </div>
         </div>
 
-        {/* Contenu Principal Footer */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8 mb-8 sm:mb-12">
           
-          {/* Colonne 1 : À Propos */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
               <div className="bg-gradient-to-br from-amber-500 to-blue-700 p-3 rounded-xl shadow-lg">
@@ -237,7 +234,6 @@ function Footer() {
               {currentLang.about.description}
             </p>
             
-            {/* Réseaux Sociaux */}
             <div className="flex gap-2 sm:gap-3 mb-4">
               <a href="https://facebook.com/mths" target="_blank" rel="noopener noreferrer" className="bg-blue-700 hover:bg-blue-600 text-white p-2 rounded-lg transition-all duration-300 hover:scale-110">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -261,7 +257,6 @@ function Footer() {
               </a>
             </div>
 
-            {/* Horaires */}
             <div className="bg-blue-900/30 p-3 rounded-lg border border-blue-700">
               <h5 className="text-amber-400 font-semibold text-xs sm:text-sm mb-2 flex items-center gap-2">
                 <Clock size={16} />
@@ -275,7 +270,6 @@ function Footer() {
             </div>
           </div>
 
-          {/* Colonne 2 : Soins & Accompagnement */}
           <div>
             <h4 className="text-white font-bold text-base sm:text-lg mb-4 pb-2 border-b border-amber-500">
               {currentLang.care.title}
@@ -283,19 +277,18 @@ function Footer() {
             <ul className="space-y-2 sm:space-y-3">
               {currentLang.care.links.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-blue-200 hover:text-amber-400 text-xs sm:text-sm transition-all duration-200 hover:translate-x-2 inline-flex items-center group"
                   >
                     <span className="w-1.5 h-1.5 bg-amber-500 rounded-full mr-2 group-hover:bg-amber-400"></span>
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Colonne 3 : Ressources */}
           <div>
             <h4 className="text-white font-bold text-base sm:text-lg mb-4 pb-2 border-b border-amber-500">
               {currentLang.resources.title}
@@ -303,19 +296,18 @@ function Footer() {
             <ul className="space-y-2 sm:space-y-3">
               {currentLang.resources.links.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-blue-200 hover:text-emerald-400 text-xs sm:text-sm transition-all duration-200 hover:translate-x-2 inline-flex items-center group"
                   >
                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2 group-hover:bg-emerald-400"></span>
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Colonne 4 : Légal & Contact */}
           <div className="lg:col-span-1">
             <h4 className="text-white font-bold text-base sm:text-lg mb-4 pb-2 border-b border-amber-500">
               {currentLang.legal.title}
@@ -323,24 +315,22 @@ function Footer() {
             <ul className="space-y-2 sm:space-y-3">
               {currentLang.legal.links.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-blue-200 hover:text-white text-xs sm:text-sm transition-all duration-200 hover:translate-x-2 inline-flex items-center group"
                   >
                     <span className="text-sm mr-2 opacity-70 group-hover:opacity-100">{link.icon}</span>
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Barre Séparatrice */}
         <div className="border-t border-blue-700 pt-6 sm:pt-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 sm:mb-8">
             
-            {/* Contact Rapide */}
             <div>
               <h5 className="text-amber-400 font-semibold text-sm mb-3 flex items-center gap-2">
                 <MapPin size={16} />
@@ -375,7 +365,6 @@ function Footer() {
               </div>
             </div>
 
-            {/* Moyens de Paiement */}
             <div>
               <h5 className="text-amber-400 font-semibold text-sm mb-3">
                 {currentLang.payment.title}
@@ -402,7 +391,6 @@ function Footer() {
               </div>
             </div>
 
-            {/* Newsletter */}
             <div>
               <h5 className="text-amber-400 font-semibold text-sm mb-1">
                 {currentLang.newsletter.title}
@@ -437,10 +425,8 @@ function Footer() {
             </div>
           </div>
 
-          {/* Barre Copyright */}
           <div className="border-t border-blue-700 pt-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-              {/* Copyright */}
               <div>
                 <p className="text-blue-200 text-xs sm:text-sm">
                   © {currentYear} <span className="font-bold text-white">MTHS/TMSH</span> — {currentLang.footer.copyright}
@@ -453,33 +439,31 @@ function Footer() {
                 </p>
               </div>
 
-              {/* Liens Légaux */}
               <div className="flex flex-wrap gap-2 sm:gap-3 justify-center text-xs">
-                <a href="/faq" className="text-blue-300 hover:text-white transition-colors flex items-center gap-1">
+                <Link to="/faq" className="text-blue-300 hover:text-white transition-colors flex items-center gap-1">
                   <HelpCircle size={12} />
                   FAQ
-                </a>
+                </Link>
                 <span className="text-blue-500">•</span>
-                <a href="/conditions" className="text-blue-300 hover:text-white transition-colors flex items-center gap-1">
+                <Link to="/conditions" className="text-blue-300 hover:text-white transition-colors flex items-center gap-1">
                   <FileText size={12} />
                   Conditions
-                </a>
+                </Link>
                 <span className="text-blue-500">•</span>
-                <a href="/confidentialite" className="text-blue-300 hover:text-white transition-colors flex items-center gap-1">
+                <Link to="/confidentialite" className="text-blue-300 hover:text-white transition-colors flex items-center gap-1">
                   <Shield size={12} />
                   Confidentialité
-                </a>
+                </Link>
                 <span className="text-blue-500">•</span>
-                <a href="/mentions-legales" className="text-blue-300 hover:text-white transition-colors">
+                <Link to="/mentions-legales" className="text-blue-300 hover:text-white transition-colors">
                   Mentions Légales
-                </a>
+                </Link>
                 <span className="text-blue-500">•</span>
-                <a href="/rgpd" className="text-blue-300 hover:text-white transition-colors">
+                <Link to="/rgpd" className="text-blue-300 hover:text-white transition-colors">
                   RGPD
-                </a>
+                </Link>
               </div>
 
-              {/* Sécurité */}
               <div className="flex items-center gap-2 text-blue-300 text-xs">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                 <span className="font-semibold">Site Sécurisé SSL</span>
@@ -489,7 +473,6 @@ function Footer() {
         </div>
       </div>
 
-      {/* Watermark Final */}
       <div className="bg-blue-950 py-3 text-center border-t border-blue-800">
         <p className="text-blue-400 text-xs">
           {currentLang.footer.watermark} 🕊️ ✨ 🙏
