@@ -361,7 +361,83 @@ const WhyChooseUs = () => {
       isbn: "978-2-954-12353-1",
       datePublication: "2023",
       langue: "Français"
+    },
+    {
+      id: 17,
+      titre: "LE SATANISME ET LA DERIVE DU MONDE",
+      auteur: "Centre MTHS",
+      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
+      prixFCFA: 6500,
+      image: "/images/livre17/livre17_1.png",
+      format: ["Papier", "PDF"],
+      pages: 310,
+      stock: 20,
+      type: "Livre",
+      isbn: "978-2-954-12353-1",
+      datePublication: "2023",
+      langue: "Français"
+    },
+    {
+      id: 18,
+      titre: "Tradition africaine et christianisme",
+      auteur: "Centre MTHS",
+      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
+      prixFCFA: 6500,
+      image: "/images/livre18/livre18_1.png",
+      format: ["Papier", "PDF"],
+      pages: 310,
+      stock: 20,
+      type: "Livre",
+      isbn: "978-2-954-12353-1",
+      datePublication: "2023",
+      langue: "Français"
+    },
+    {
+      id: 19,
+      titre: "Le bhoudisme face à la sorcellerie et au Satanisme",
+      auteur: "Centre MTHS",
+      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
+      prixFCFA: 6500,
+      image: "/images/livre19/livre19_1.png",
+      format: ["Papier", "PDF"],
+      pages: 310,
+      stock: 20,
+      type: "Livre",
+      isbn: "978-2-954-12353-1",
+      datePublication: "2023",
+      langue: "Français"
+    },
+    {
+      id: 20,
+      titre: "Secte et sociétés secrtes africaine",
+      auteur: "Centre MTHS",
+      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
+      prixFCFA: 6500,
+      image: "/images/livre20/livre20_1.png",
+      format: ["Papier", "PDF"],
+      pages: 310,
+      stock: 20,
+      type: "Livre",
+      isbn: "978-2-954-12353-1",
+      datePublication: "2023",
+      langue: "Français"
+    },
+    {
+      id: 21,
+      titre: "Comment Comprendre et interpreter le Rêve",
+      auteur: "Centre MTHS",
+      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
+      prixFCFA: 6500,
+      image: "/images/livre21/livre21_1.png",
+      format: ["Papier", "PDF"],
+      pages: 310,
+      stock: 20,
+      type: "Livre",
+      isbn: "978-2-954-12353-1",
+      datePublication: "2023",
+      langue: "Français"
     }
+    
     
   ];
 

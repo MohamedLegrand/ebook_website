@@ -45,7 +45,7 @@ function Hero() {
       cta: "Découvrir",
       auteur: "Centre MTHS",
       type: "Livre doctrinal",
-      prixFCFA: 15000,
+      prixFCFA: 6500,
       pages: 320,
       stock: 50
     },
@@ -60,7 +60,7 @@ function Hero() {
       cta: "Écouter",
       auteur: "Centre MTHS",
       type: "Manuel clinique",
-      prixFCFA: 10000,
+      prixFCFA: 6500,
       pages: 240,
       stock: 35
     },
@@ -75,7 +75,7 @@ function Hero() {
       cta: "Protection",
       auteur: "Centre MTHS",
       type: "Guide thérapeutique",
-      prixFCFA: 12500,
+      prixFCFA: 6500,
       pages: 280,
       stock: 40
     },
@@ -90,7 +90,7 @@ function Hero() {
       cta: "Biographie",
       auteur: "Centre MTHS",
       type: "E-book biographique",
-      prixFCFA: 9500,
+      prixFCFA: 6500,
       pages: 180,
       stock: 60
     },
@@ -105,7 +105,7 @@ function Hero() {
       cta: "Interreligieux",
       auteur: "Centre MTHS",
       type: "Livre interreligieux",
-      prixFCFA: 11000,
+      prixFCFA: 6500,
       pages: 210,
       stock: 45
     },
@@ -120,7 +120,7 @@ function Hero() {
       cta: "Théologie",
       auteur: "Centre MTHS",
       type: "Ouvrage théologique",
-      prixFCFA: 13500,
+      prixFCFA: 6500,
       pages: 290,
       stock: 30
     },
@@ -135,7 +135,7 @@ function Hero() {
       cta: "Transgénérationnel",
       auteur: "Centre MTHS",
       type: "Analyse familiale",
-      prixFCFA: 16000,
+      prixFCFA: 6500,
       pages: 350,
       stock: 25
     },
@@ -150,7 +150,7 @@ function Hero() {
       cta: "Télécharger",
       auteur: "Centre MTHS",
       type: "E-book technique",
-      prixFCFA: 14000,
+      prixFCFA: 6500,
       pages: 260,
       stock: 35
     }
