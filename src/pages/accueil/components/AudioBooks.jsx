@@ -178,18 +178,7 @@ function AudioBooks() {
       stock: 50,
       type: "Livre"
     },
-    {
-      id: 11,
-      titre: "Chretien africain face a la maladi",
-      auteur: "Centre MTHS",
-      desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre11/livre11_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre"
-    }
+    
   ];
 
   // Transformation en livres audio

@@ -93,8 +93,8 @@ const ALL_PRODUCTS = [
     prixFCFA: 6500,
     images: [
       "/images/livre1/livre1_1.png",
-      "/images/livre1/livre1_2.png",
-      "/images/livre1/livre1_3.png"
+      "/images/livre1/livre1_3.png",
+      "/images/livre1/livre1_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 320,
@@ -130,8 +130,8 @@ Ce livre ne vous fera pas peur. Il vous donnera des armes. Et après l'avoir lu,
     prixFCFA: 6500,
     images: [
       "/images/livre2/livre2_1.png",
-      "/images/livre2/livre2_2.png",
-      "/images/livre2/livre2_3.png"
+      "/images/livre2/livre2_3.png",
+      "/images/livre2/livre2_2.png"
     ],
     format: ["Papier", "PDF", "EPUB"],
     pages: 240,
@@ -167,8 +167,8 @@ Après avoir refermé ce livre, vous ne verrez plus les gens qui vous entourent 
     prixFCFA: 6500,
     images: [
       "/images/livre3/livre3_1.png",
-      "/images/livre3/livre3_2.png",
-      "/images/livre3/livre3_3.png"
+      "/images/livre3/livre3_3.png",
+      "/images/livre3/livre3_2.png"
     ],
     format: ["Papier"],
     pages: 280,
@@ -204,8 +204,8 @@ Si vous souffrez ou si vous accompagnez quelqu'un qui souffre, ce livre peut cha
     prixFCFA: 6500,
     images: [
       "/images/livre4/livre4_1.png",
-      "/images/livre4/livre4_2.png",
-      "/images/livre4/livre4_3.png"
+      "/images/livre4/livre4_3.png",
+      "/images/livre4/livre4_2.png"
     ],
     format: ["PDF", "EPUB"],
     pages: 180,
@@ -242,8 +242,8 @@ Certaines rencontres changent une vie. Celle-ci peut être l'une d'elles.`
     prixFCFA: 6500,
     images: [
       "/images/livre5/livre5_1.png",
-      "/images/livre5/livre5_2.png",
-      "/images/livre5/livre5_3.png"
+      "/images/livre5/livre5_3.png",
+      "/images/livre5/livre5_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 210,
@@ -277,8 +277,8 @@ Si vous êtes musulman et que vous cherchez des réponses à des réalités que 
     prixFCFA: 6500,
     images: [
       "/images/livre6/livre6_1.png",
-      "/images/livre6/livre6_2.png",
-      "/images/livre6/livre6_3.png"
+      "/images/livre6/livre6_3.png",
+      "/images/livre6/livre6_2.png"
     ],
     format: ["Papier"],
     pages: 290,
@@ -316,8 +316,8 @@ Ce livre est dérangeant. Il est éclairant. Il est libérateur. Il est réserv�
     prixFCFA: 6500,
     images: [
       "/images/livre7/livre7_1.png",
-      "/images/livre7/livre7_2.png",
-      "/images/livre7/livre7_3.png"
+      "/images/livre7/livre7_3.png",
+      "/images/livre7/livre7_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 350,
@@ -353,8 +353,8 @@ Peut-être que votre famille attend que quelqu'un lise ce livre. Peut-être que 
     prixFCFA: 6500,
     images: [
       "/images/livre8/livre8_1.png",
-      "/images/livre8/livre8_2.png",
-      "/images/livre8/livre8_3.png"
+      "/images/livre8/livre8_3.png",
+      "/images/livre8/livre8_2.png"
     ],
     format: ["Papier"],
     pages: 230,
@@ -390,8 +390,8 @@ Une plongée vertigineuse dans le monde invisible. Pour mieux comprendre — et 
     prixFCFA: 6500,
     images: [
       "/images/livre9/livre9_1.png",
-      "/images/livre9/livre9_2.png",
-      "/images/livre9/livre9_3.png"
+      "/images/livre9/livre9_3.png",
+      "/images/livre9/livre9_2.png"
     ],
     format: ["PDF", "EPUB"],
     pages: 260,
@@ -426,8 +426,8 @@ La médecine de l'âme mérite autant de rigueur que la médecine du corps. Ce l
     prixFCFA: 6500,
     images: [
       "/images/livre10/livre10_1.png",
-      "/images/livre10/livre10_2.png",
-      "/images/livre10/livre10_3.png"
+      "/images/livre10/livre10_3.png",
+      "/images/livre10/livre10_2.png"
     ],
     format: ["Papier"],
     pages: 200,
@@ -455,43 +455,7 @@ Ce livre vous donnera les clés pour comprendre l'Afrique profonde. Pas l'Afriqu
 
 Un livre nécessaire. Un livre urgent. Un livre que l'Afrique attendait.`
   },
-  {
-    id: 11,
-    titre: "Chrétien africain face à la maladie",
-    auteur: "NGA Marie Constantin, SIDA ABENA Jean Paul Sylvain, M'BOLO Raphaël Yves Guy, MANGA Élisabeth Angeline",
-    desc: "Approche holistique des maladies dans le contexte africain, intégrant dimensions physiques, spirituelles et communautaires.",
-    prixFCFA: 6500,
-    images: [
-      "/images/livre11/livre11_1.png",
-      "/images/livre11/livre11_2.png",
-      "/images/livre11/livre11_3.png"
-    ],
-    format: ["Papier", "PDF"],
-    pages: 310,
-    stock: 20,
-    type: "Livre",
-    isbn: "978-2-9541234-1-6",
-    datePublication: "2023",
-    langue: "Français",
-    pointsCles: [
-      "Typologie des maladies spirituelles avec symptômes distinctifs",
-      "Interface entre médecine moderne et médecine spirituelle",
-      "Rituels de guérison complets avec prières spécifiques",
-      "Cas cliniques documentés avec protocoles appliqués"
-    ],
-    publicCible: ["Chrétiens africains malades", "Professionnels de santé chrétiens", "Pasteurs et accompagnateurs"],
-    resume: `Vous êtes allé chez le médecin. Les résultats sont normaux. Mais vous n'allez pas bien. Vous avez prié. Les symptômes reviennent. Votre famille ne comprend pas. Vous commencez à vous demander si vous n'êtes pas simplement en train de devenir fou.
-
-Vous ne l'êtes pas. Et ce livre vous le prouvera.
-
-Cet ouvrage collectif — réunissant quatre auteurs aux formations complémentaires — propose quelque chose que ni la médecine moderne ni la théologie seule ne peut offrir : une approche intégrale de la maladie qui prend en compte le corps, l'âme, l'esprit et le collectif en même temps.
-
-En Afrique, la maladie n'est presque jamais seulement biologique. Elle est relationnelle. Spirituelle. Communautaire. Un médecin qui ignore cette réalité rate souvent l'essentiel. Un pasteur qui ignore les dimensions organiques peut mettre une vie en danger. Il faut les deux — et plus encore.
-
-Ce livre vous donne cette vision complète. Il classe les maladies selon leur nature profonde, propose des protocoles de guérison intégraux combinant médecine, phytothérapie, prière et réconciliation communautaire, et illustre chaque approche par des cas cliniques documentés.
-
-Lisez-le si vous êtes malade. Lisez-le si vous accompagnez des malades. Lisez-le pour ne jamais plus regarder la maladie — la vôtre ou celle des autres — avec les mêmes yeux limités.`
-  },
+  
   {
     id: 12,
     titre: "Religion chinoise face à la sorcellerie",
@@ -500,8 +464,8 @@ Lisez-le si vous êtes malade. Lisez-le si vous accompagnez des malades. Lisez-l
     prixFCFA: 6500,
     images: [
       "/images/livre12/livre12_1.png",
-      "/images/livre12/livre12_2.png",
-      "/images/livre12/livre12_3.png"
+      "/images/livre12/livre12_3.png",
+      "/images/livre12/livre12_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -537,8 +501,8 @@ Un livre d'une originalité absolue — qui élargit l'horizon de tout ce que vo
     prixFCFA: 6500,
     images: [
       "/images/livre13/livre13_1.png",
-      "/images/livre13/livre13_2.png",
-      "/images/livre13/livre13_3.png"
+      "/images/livre13/livre13_3.png",
+      "/images/livre13/livre13_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -574,8 +538,8 @@ Si vous avez perdu quelqu'un. Si vous craignez la mort. Si vous cherchez à comp
     prixFCFA: 6500,
     images: [
       "/images/livre14/livre14_1.png",
-      "/images/livre14/livre14_2.png",
-      "/images/livre14/livre14_3.png"
+      "/images/livre14/livre14_3.png",
+      "/images/livre14/livre14_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -613,8 +577,8 @@ Ce livre ne vous rendra pas infaillible. Mais il vous rendra infiniment plus sag
     prixFCFA: 6500,
     images: [
       "/images/livre15/livre15_1.png",
-      "/images/livre15/livre15_2.png",
-      "/images/livre15/livre15_3.png"
+      "/images/livre15/livre15_3.png",
+      "/images/livre15/livre15_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -650,8 +614,8 @@ Ce livre vous restitue quelque chose de précieux : votre dignité de malade afr
     prixFCFA: 6500,
     images: [
       "/images/livre16/livre16_1.png",
-      "/images/livre16/livre16_2.png",
-      "/images/livre16/livre16_3.png"
+      "/images/livre16/livre16_3.png",
+      "/images/livre16/livre16_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -687,8 +651,8 @@ Parce que la coexistence n'est pas la capitulation. C'est la sagesse la plus hau
     prixFCFA: 6500,
     images: [
       "/images/livre17/livre17_1.png",
-      "/images/livre17/livre17_2.png",
-      "/images/livre17/livre17_3.png"
+      "/images/livre17/livre17_3.png",
+      "/images/livre17/livre17_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -724,8 +688,8 @@ Parce que comprendre la dérive du monde, c'est refuser d'en être emporté.`
     prixFCFA: 6500,
     images: [
       "/images/livre18/livre18_1.png",
-      "/images/livre18/livre18_2.png",
-      "/images/livre18/livre18_3.png"
+      "/images/livre18/livre18_3.png",
+      "/images/livre18/livre18_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -761,8 +725,8 @@ Vous n'aurez plus jamais à choisir.`
     prixFCFA: 6500,
     images: [
       "/images/livre19/livre19_1.png",
-      "/images/livre19/livre19_2.png",
-      "/images/livre19/livre19_3.png"
+      "/images/livre19/livre19_3.png",
+      "/images/livre19/livre19_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -798,8 +762,8 @@ Que vous soyez croyant, chercheur ou simplement curieux de comprendre comment l'
     prixFCFA: 6500,
     images: [
       "/images/livre20/livre20_1.png",
-      "/images/livre20/livre20_2.png",
-      "/images/livre20/livre20_3.png"
+      "/images/livre20/livre20_3.png",
+      "/images/livre20/livre20_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -835,8 +799,8 @@ Ce que vous ne savez pas peut vous contrôler. Ce que vous savez peut vous libé
     prixFCFA: 6500,
     images: [
       "/images/livre21/livre21_1.png",
-      "/images/livre21/livre21_2.png",
-      "/images/livre21/livre21_3.png"
+      "/images/livre21/livre21_3.png",
+      "/images/livre21/livre21_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -865,7 +829,49 @@ Vous apprendrez à distinguer un rêve de révélation divine d'un rêve d'attaq
 Un protocole de réponse spirituelle est proposé pour les rêves alarmants. Une méthode de journal de rêves structure votre pratique dans la durée.
 
 La nuit vous parle. Il est temps d'apprendre à l'écouter.`
-  }
+  },
+ {
+  id: 22,
+  titre: "Comment obtenir ta Délivrance et ta Victoire contre le Diable, les Démons et les Sorciers",
+  auteur: "Centre MTHS",
+  desc: "Guide pratique de délivrance et de guerre spirituelle selon les protocoles éprouvés du Centre MTHS.",
+  prixFCFA: 6500,
+  images: [
+    "/images/livre22/livre22_1.png",
+    "/images/livre22/livre22_3.png",
+    "/images/livre22/livre22_2.png"
+  ],
+  format: ["Papier", "PDF"],
+  pages: 310,
+  stock: 20,
+  type: "Livre",
+  isbn: "978-2-9541234-6-1",
+  datePublication: "2023",
+  langue: "Français",
+  pointsCles: [
+    "Comprendre la nature de l'oppression spirituelle : modes opératoires du diable, des démons et des sorciers",
+    "Identifier les portes d'entrée des forces obscures dans une vie (traumatismes, pactes, lignées)",
+    "Protocole de délivrance en trois phases : rupture des liens, nettoyage intérieur, restauration de l'identité",
+    "Stratégies concrètes pour maintenir sa victoire et prévenir les rechutes",
+    "Témoignages édifiants de personnes libérées et accompagnées au Centre MTHS"
+  ],
+  publicCible: ["Personnes troublées par leurs rêves", "Accompagnateurs spirituels", "Tout chrétien africain"],
+  resume: `Vous avez tout essayé. Les prières, les jeûnes, les consultations, les onctions. Pourtant, la même oppression revient. Les mêmes cauchemars. Les mêmes blocages. Les mêmes échecs répétés. Et au fond de vous, une question vous ronge : est‑ce que la délivrance existe vraiment pour moi ?
+
+Oui. Elle existe. Et ce livre vous montre le chemin.
+
+Élaboré à partir de centaines de cas traités au Centre Marie Reine de la Miséricorde d’Abili, ce guide pratique vous livre les protocoles éprouvés qui ont libéré des milliers de personnes des griffes de l’ennemi. Pas des théories, pas des formules toutes faites : une méthode progressive, concrète, qui respecte votre rythme et votre histoire.
+
+Vous découvrirez d’abord comment fonctionne réellement l’oppression spirituelle : comment le diable, les démons et les sorciers opèrent ensemble ou séparément, quelles sont leurs cibles favorites, et surtout quelles sont les portes par lesquelles ils entrent dans une vie – parfois sans que vous le sachiez.
+
+Ensuite, vous serez guidé pas à pas à travers un processus de délivrance en trois phases : la rupture des liens, le nettoyage intérieur, et la restauration de votre identité spirituelle. Chaque phase est détaillée avec des prières spécifiques, des actes de guerre spirituelle et des accompagnements concrets.
+
+Mais ce livre va plus loin. Il vous apprend à garder votre victoire. Parce que beaucoup sont délivrés, mais peu le restent. Vous saurez comment construire des défenses durables, comment discerner les retours offensifs de l’ennemi, et comment vivre chaque jour dans la liberté que le Christ a gagnée pour vous.
+
+Des témoignages poignants ponctuent ces pages – des histoires de personnes qui étaient liées depuis l’enfance, qui avaient tout perdu, et qui aujourd’hui marchent dans une liberté totale.
+
+La délivrance n’est pas un événement. C’est un processus. Et ce processus peut commencer aujourd’hui, avec ce livre entre vos mains. Préparez‑vous à vivre ce que vous n’osiez plus espérer. Votre victoire est à portée.`
+}
 ];
 
 function Produitdetail() {
@@ -1228,6 +1234,17 @@ function Produitdetail() {
                   ✓ Produit ajouté au panier avec succès
                 </p>
               )}
+
+              {/* BOUTON "LIRE UN EXTRAIT" (PDF) */}
+              <a
+                href={`/images/extrait/livre${product.id}.pdf`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 border-2 border-blue-500 text-blue-600 hover:bg-blue-50 mt-3"
+              >
+                <BookOpen className="w-6 h-6" />
+                Lire un extrait (PDF)
+              </a>
             </div>
 
             {/* Caractéristiques */}

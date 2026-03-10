@@ -1,56 +1,140 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft, CreditCard, Shield, Truck, RotateCcw, LogIn } from "lucide-react";
+import {
+  ShoppingCart, Trash2, Plus, Minus, ArrowLeft, CreditCard,
+  Shield, Truck, RotateCcw, LogIn, Banknote, DollarSign, Euro
+} from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import Header from "../../components/header/Header";
 
+// ─────────────────────────────────────────────
+// Configuration des devises
+// ─────────────────────────────────────────────
+const CURRENCIES = [
+  {
+    code: "FCFA",
+    label: "FCFA",
+    flag: "🇨🇲",
+    description: "Franc CFA",
+    rate: 1,
+    activeClass: "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md",
+    badgeBg: "bg-green-50",
+    badgeBorder: "border-green-300",
+    badgeText: "text-green-700",
+  },
+  {
+    code: "USD",
+    label: "USD $",
+    flag: "🇺🇸",
+    description: "Dollar américain",
+    rate: 0.00165,
+    activeClass: "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md",
+    badgeBg: "bg-blue-50",
+    badgeBorder: "border-blue-300",
+    badgeText: "text-blue-700",
+  },
+  {
+    code: "EUR",
+    label: "EUR €",
+    flag: "🇪🇺",
+    description: "Euro",
+    rate: 0.00152,
+    activeClass: "bg-gradient-to-r from-indigo-500 to-indigo-700 text-white shadow-md",
+    badgeBg: "bg-indigo-50",
+    badgeBorder: "border-indigo-300",
+    badgeText: "text-indigo-700",
+  },
+];
+
+const formatPrice = (priceFCFA, currencyCode) => {
+  const cur = CURRENCIES.find((c) => c.code === currencyCode) || CURRENCIES[0];
+  const converted = priceFCFA * cur.rate;
+  switch (currencyCode) {
+    case "USD": return `$${converted.toFixed(2)}`;
+    case "EUR": return `€${converted.toFixed(2)}`;
+    default:    return `${Math.round(converted).toLocaleString("fr-FR")} FCFA`;
+  }
+};
+
+// ─────────────────────────────────────────────
+// Sélecteur de devise
+// ─────────────────────────────────────────────
+const CurrencySelector = ({ currency, onChange }) => (
+  <div className="flex items-center gap-3 flex-wrap">
+    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+      Devise :
+    </span>
+    <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1 shadow-sm">
+      {CURRENCIES.map((cur) => {
+        const isActive = currency === cur.code;
+        return (
+          <button
+            key={cur.code}
+            onClick={() => onChange(cur.code)}
+            title={cur.description}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
+              isActive ? cur.activeClass : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            }`}
+          >
+            <span className="text-base leading-none">{cur.flag}</span>
+            <span>{cur.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  </div>
+);
+
+// ─────────────────────────────────────────────
+// Badge prix inline (avec équivalent FCFA)
+// ─────────────────────────────────────────────
+const PriceDisplay = ({ priceFCFA, currency, large = false, showEquiv = false }) => {
+  const cur = CURRENCIES.find((c) => c.code === currency) || CURRENCIES[0];
+  return (
+    <div className="text-right">
+      <span className={`font-bold ${large ? "text-xl" : "text-base"} ${cur.badgeText}`}>
+        {formatPrice(priceFCFA, currency)}
+      </span>
+      {showEquiv && currency !== "FCFA" && (
+        <div className="text-xs text-gray-400 mt-0.5">
+          ≈ {Math.round(priceFCFA).toLocaleString("fr-FR")} FCFA
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────
+// Composant principal Cart
+// ─────────────────────────────────────────────
 function Cart() {
   const { cart, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
-  const navigate = useNavigate(); // Hook pour la navigation
-  
+  const navigate = useNavigate();
+
+  const [currency, setCurrency] = useState("FCFA");
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [promoApplied, setPromoApplied] = useState(false);
 
-  // Calculer le sous-total en fonction de la devise (pour l'exemple, nous utiliserons €)
   const subtotal = getCartTotal();
-  const shippingFee = subtotal > 30000 ? 0 : 500; // Exemple: 500 FCFA si < 30000 FCFA
+  const shippingFee = subtotal > 30000 ? 0 : 500;
   const total = subtotal + shippingFee - discount;
 
-  // Fonction pour formater le prix (simplifié pour l'exemple)
-  const formatPrice = (price) => {
-    // Dans un cas réel, vous utiliserez le contexte de devise
-    return `${(price / 100).toFixed(2)}€`; // Conversion centimes -> euros pour l'exemple
-  };
-
-  // Gérer l'augmentation de quantité
   const increaseQuantity = (id, type) => {
-    const item = cart.find(item => item.id === id && item.type === type);
-    if (item) {
-      updateQuantity(id, type, (item.quantity || 1) + 1);
-    }
+    const item = cart.find((i) => i.id === id && i.type === type);
+    if (item) updateQuantity(id, type, (item.quantity || 1) + 1);
   };
 
-  // Gérer la diminution de quantité
   const decreaseQuantity = (id, type) => {
-    const item = cart.find(item => item.id === id && item.type === type);
-    if (item && (item.quantity || 1) > 1) {
-      updateQuantity(id, type, (item.quantity || 1) - 1);
-    }
+    const item = cart.find((i) => i.id === id && i.type === type);
+    if (item && (item.quantity || 1) > 1) updateQuantity(id, type, (item.quantity || 1) - 1);
   };
 
-  // Appliquer un code promo
   const applyPromoCode = () => {
-    const codes = {
-      "LIVRE10": 0.10, // 10%
-      "READ20": 0.20,  // 20%
-      "EBOOK15": 0.15  // 15%
-    };
-    
-    if (codes[promoCode.toUpperCase()]) {
-      const discountPercentage = codes[promoCode.toUpperCase()];
-      const discountAmount = subtotal * discountPercentage;
-      setDiscount(discountAmount);
+    const codes = { LIVRE10: 0.10, READ20: 0.20, EBOOK15: 0.15 };
+    const key = promoCode.toUpperCase();
+    if (codes[key]) {
+      setDiscount(subtotal * codes[key]);
       setPromoApplied(true);
     } else {
       alert("Code promo invalide");
@@ -59,32 +143,22 @@ function Cart() {
     }
   };
 
-  // Obtenir l'image par défaut selon le type
-  const getDefaultImage = (type) => {
-    if (type === "audiobook") {
-      return "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w-200&h=300&fit=crop";
-    }
-    return "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&h=300&fit=crop";
-  };
+  const getDefaultImage = (type) =>
+    type === "audiobook"
+      ? "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=200&h=300&fit=crop"
+      : "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&h=300&fit=crop";
 
-  // Obtenir la catégorie selon le type
-  const getCategory = (type) => {
-    if (type === "audiobook") return "Livre Audio";
-    return "Livre numérique";
-  };
+  const getCategory = (type) => (type === "audiobook" ? "Livre Audio" : "Livre numérique");
 
-  // Fonction pour gérer le paiement
   const handleCheckout = () => {
-    // Rediriger vers la page de login avec un message
-    navigate('/login', { 
-      state: { 
-        from: 'cart',
-        message: 'Vous devez être connecté pour effectuer un paiement.' 
-      } 
+    navigate("/login", {
+      state: { from: "cart", message: "Vous devez être connecté pour effectuer un paiement." },
     });
   };
 
-  // Si le panier est vide
+  const activeCur = CURRENCIES.find((c) => c.code === currency) || CURRENCIES[0];
+
+  // ── PANIER VIDE ──
   if (cart.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
@@ -102,14 +176,14 @@ function Cart() {
               <div className="flex gap-4 justify-center">
                 <Link
                   to="/categories"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg hover:shadow-blue-900/30"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg"
                 >
                   <ArrowLeft className="w-5 h-5" />
                   Explorer les livres
                 </Link>
                 <Link
                   to="/audio"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all shadow-lg hover:shadow-purple-900/30"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all shadow-lg"
                 >
                   <ShoppingCart className="w-5 h-5" />
                   Explorer les livres audio
@@ -127,36 +201,45 @@ function Cart() {
       <Header />
       <div className="pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Votre Panier</h1>
-            <p className="text-gray-600">
-              {cart.length} {cart.length > 1 ? "articles" : "article"} dans votre panier
-            </p>
+
+          {/* ── EN-TÊTE avec sélecteur de devise ── */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-1">Votre Panier</h1>
+              <p className="text-gray-600">
+                {cart.length} {cart.length > 1 ? "articles" : "article"} dans votre panier
+              </p>
+            </div>
+            {/* SÉLECTEUR DE DEVISE */}
+            <CurrencySelector currency={currency} onChange={setCurrency} />
           </div>
 
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Liste des articles */}
+
+            {/* ── LISTE DES ARTICLES ── */}
             <div className="lg:w-2/3">
               <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
-                {/* En-tête du tableau */}
+
+                {/* En-tête tableau */}
                 <div className="hidden md:grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-200 text-sm font-semibold text-gray-600">
                   <div className="col-span-5">Produit</div>
                   <div className="col-span-2 text-center">Format</div>
                   <div className="col-span-2 text-center">Quantité</div>
                   <div className="col-span-2 text-center">Prix</div>
-                  <div className="col-span-1"></div>
+                  <div className="col-span-1" />
                 </div>
 
-                {/* Liste des articles */}
                 {cart.map((item) => (
-                  <div key={`${item.id}-${item.type}`} className="flex flex-col md:grid md:grid-cols-12 gap-4 py-4 sm:py-6 border-b border-gray-100 last:border-0">
+                  <div
+                    key={`${item.id}-${item.type}`}
+                    className="flex flex-col md:grid md:grid-cols-12 gap-4 py-4 sm:py-6 border-b border-gray-100 last:border-0"
+                  >
                     {/* Produit */}
                     <div className="col-span-5 flex items-start gap-4">
                       <img
                         src={item.cover || getDefaultImage(item.type)}
                         alt={item.title}
-                        className="w-20 h-28 object-cover rounded-lg shadow-md"
+                        className="w-20 h-28 object-cover rounded-lg shadow-md flex-shrink-0"
                       />
                       <div>
                         <h3 className="font-semibold text-gray-900">{item.title}</h3>
@@ -167,11 +250,13 @@ function Cart() {
                         {item.duration && (
                           <p className="text-sm text-gray-500 mt-1">Durée : {item.duration}</p>
                         )}
-                        <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full mt-2 ${
-                          item.type === "audiobook" 
-                            ? "bg-purple-100 text-purple-700" 
-                            : "bg-blue-100 text-blue-700"
-                        }`}>
+                        <span
+                          className={`inline-block px-2 py-1 text-xs font-medium rounded-full mt-2 ${
+                            item.type === "audiobook"
+                              ? "bg-purple-100 text-purple-700"
+                              : "bg-blue-100 text-blue-700"
+                          }`}
+                        >
                           {getCategory(item.type)}
                         </span>
                       </div>
@@ -179,11 +264,13 @@ function Cart() {
 
                     {/* Format */}
                     <div className="col-span-2 flex items-center justify-center">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        item.type === "audiobook" 
-                          ? "bg-purple-100 text-purple-700" 
-                          : "bg-green-100 text-green-700"
-                      }`}>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          item.type === "audiobook"
+                            ? "bg-purple-100 text-purple-700"
+                            : "bg-green-100 text-green-700"
+                        }`}
+                      >
                         {item.type === "audiobook" ? "Audio" : "eBook"}
                       </span>
                     </div>
@@ -211,21 +298,27 @@ function Cart() {
                       </div>
                     </div>
 
-                    {/* Prix */}
+                    {/* Prix — affiché dans la devise choisie */}
                     <div className="col-span-2 flex items-center justify-center">
                       <div className="text-center">
-                        <p className="font-bold text-lg text-gray-900">
-                          {formatPrice(item.price * (item.quantity || 1))}
+                        <p className={`font-bold text-lg ${activeCur.badgeText}`}>
+                          {formatPrice(item.price * (item.quantity || 1), currency)}
                         </p>
                         {(item.quantity || 1) > 1 && (
                           <p className="text-sm text-gray-500">
-                            {formatPrice(item.price)} l'unité
+                            {formatPrice(item.price, currency)} / unité
+                          </p>
+                        )}
+                        {/* Équivalent FCFA si autre devise */}
+                        {currency !== "FCFA" && (
+                          <p className="text-xs text-gray-400 mt-0.5">
+                            ≈ {Math.round(item.price * (item.quantity || 1)).toLocaleString("fr-FR")} FCFA
                           </p>
                         )}
                       </div>
                     </div>
 
-                    {/* Actions */}
+                    {/* Supprimer */}
                     <div className="col-span-1 flex items-center justify-end">
                       <button
                         onClick={() => removeFromCart(item.id, item.type)}
@@ -238,7 +331,7 @@ function Cart() {
                   </div>
                 ))}
 
-                {/* Actions du panier */}
+                {/* Actions bas de liste */}
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 mt-6 border-t border-gray-200">
                   <Link
                     to="/categories"
@@ -249,9 +342,7 @@ function Cart() {
                   </Link>
                   <button
                     onClick={() => {
-                      if (window.confirm("Voulez-vous vraiment vider votre panier ?")) {
-                        clearCart();
-                      }
+                      if (window.confirm("Voulez-vous vraiment vider votre panier ?")) clearCart();
                     }}
                     className="flex items-center gap-2 px-4 py-2 text-red-600 hover:text-red-700 font-medium hover:bg-red-50 rounded-lg transition-colors"
                   >
@@ -263,69 +354,121 @@ function Cart() {
 
               {/* Garanties */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-blue-100">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <Shield className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Paiement sécurisé</h4>
-                      <p className="text-sm text-gray-600">SSL 256-bit</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-blue-100">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <Truck className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Livraison instantanée</h4>
-                      <p className="text-sm text-gray-600">Téléchargement immédiat</p>
+                {[
+                  { Icon: Shield, title: "Paiement sécurisé", sub: "SSL 256-bit" },
+                  { Icon: Truck, title: "Livraison instantanée", sub: "Téléchargement immédiat" },
+                  { Icon: RotateCcw, title: "Garantie satisfait", sub: "30 jours de remboursement" },
+                ].map(({ Icon, title, sub }) => (
+                  <div key={title} className="bg-white p-4 rounded-xl shadow-sm border border-blue-100">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-blue-100 rounded-lg">
+                        <Icon className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">{title}</h4>
+                        <p className="text-sm text-gray-600">{sub}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-blue-100">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <RotateCcw className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Garantie satisfait</h4>
-                      <p className="text-sm text-gray-600">30 jours de remboursement</p>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
-            {/* Récapitulatif */}
+            {/* ── RÉCAPITULATIF ── */}
             <div className="lg:w-1/3">
               <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Récapitulatif de commande</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Récapitulatif</h2>
+
+                {/* Sélecteur de devise dans le récap aussi */}
+                <div className="mb-5 pb-4 border-b border-gray-100">
+                  <CurrencySelector currency={currency} onChange={setCurrency} />
+                </div>
 
                 {/* Détails des prix */}
                 <div className="space-y-3 mb-6">
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-start">
                     <span className="text-gray-600">Sous-total</span>
-                    <span className="font-medium">{formatPrice(subtotal)}</span>
+                    <div className="text-right">
+                      <span className={`font-semibold ${activeCur.badgeText}`}>
+                        {formatPrice(subtotal, currency)}
+                      </span>
+                      {currency !== "FCFA" && (
+                        <div className="text-xs text-gray-400">
+                          ≈ {subtotal.toLocaleString("fr-FR")} FCFA
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex justify-between">
+
+                  <div className="flex justify-between items-start">
                     <span className="text-gray-600">Frais de livraison</span>
-                    <span className={`font-medium ${shippingFee === 0 ? 'text-green-600' : ''}`}>
-                      {shippingFee === 0 ? 'Gratuit' : formatPrice(shippingFee)}
-                    </span>
+                    <div className="text-right">
+                      {shippingFee === 0 ? (
+                        <span className="font-semibold text-green-600">Gratuit</span>
+                      ) : (
+                        <>
+                          <span className={`font-semibold ${activeCur.badgeText}`}>
+                            {formatPrice(shippingFee, currency)}
+                          </span>
+                          {currency !== "FCFA" && (
+                            <div className="text-xs text-gray-400">
+                              ≈ {shippingFee.toLocaleString("fr-FR")} FCFA
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
                   </div>
+
                   {discount > 0 && (
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-start">
                       <span className="text-gray-600">Réduction</span>
-                      <span className="font-medium text-green-600">-{formatPrice(discount)}</span>
+                      <div className="text-right">
+                        <span className="font-semibold text-green-600">
+                          -{formatPrice(discount, currency)}
+                        </span>
+                        {currency !== "FCFA" && (
+                          <div className="text-xs text-gray-400">
+                            ≈ -{Math.round(discount).toLocaleString("fr-FR")} FCFA
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
-                  <div className="border-t border-gray-200 pt-3 mt-3">
-                    <div className="flex justify-between text-lg font-bold">
-                      <span>Total</span>
-                      <span>{formatPrice(total)}</span>
+
+                  {/* Total */}
+                  <div className={`border-t border-gray-200 pt-3 mt-3 rounded-xl p-3 ${activeCur.badgeBg} border ${activeCur.badgeBorder}`}>
+                    <div className="flex justify-between items-start">
+                      <span className="text-lg font-bold text-gray-800">Total</span>
+                      <div className="text-right">
+                        <span className={`text-2xl font-bold ${activeCur.badgeText}`}>
+                          {formatPrice(total, currency)}
+                        </span>
+                        {currency !== "FCFA" && (
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            ≈ {Math.round(total).toLocaleString("fr-FR")} FCFA
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Récapitulatif des 3 devises */}
+                    <div className="mt-3 pt-3 border-t border-dashed border-gray-300 grid grid-cols-3 gap-2 text-center">
+                      {CURRENCIES.map((cur) => (
+                        <button
+                          key={cur.code}
+                          onClick={() => setCurrency(cur.code)}
+                          className={`rounded-lg py-1.5 px-1 transition-all ${
+                            currency === cur.code
+                              ? `${cur.badgeBg} ${cur.badgeText} font-bold ring-1 ring-current`
+                              : "bg-white text-gray-500 hover:bg-gray-50"
+                          }`}
+                        >
+                          <div className="text-base">{cur.flag}</div>
+                          <div className="text-xs font-semibold">{cur.code}</div>
+                          <div className="text-xs font-bold">{formatPrice(total, cur.code)}</div>
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -348,42 +491,38 @@ function Cart() {
                     </button>
                   </div>
                   {promoApplied && (
-                    <p className="text-green-600 text-sm mt-2 flex items-center gap-1">
-                      ✓ Code promo appliqué
-                    </p>
+                    <p className="text-green-600 text-sm mt-2">✓ Code promo appliqué</p>
                   )}
                   <p className="text-xs text-gray-500 mt-2">
                     Codes disponibles : LIVRE10, READ20, EBOOK15
                   </p>
                 </div>
 
-                {/* Bouton de paiement avec redirection vers login */}
+                {/* Bouton paiement */}
                 <button
                   onClick={handleCheckout}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg hover:shadow-blue-900/30 mb-4"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg mb-4"
                 >
                   <LogIn className="w-5 h-5" />
                   Se connecter pour payer
                 </button>
 
-                {/* Informations supplémentaires */}
-                <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-2">
-                    <span className="font-medium text-amber-600">⚠️ Attention :</span> 
-                    <br />
-                    Vous devez être connecté pour effectuer un paiement
+                <div className="text-center space-y-1">
+                  <p className="text-sm text-gray-600">
+                    <span className="font-medium text-amber-600">⚠️</span>{" "}
+                    Connexion requise pour le paiement
                   </p>
                   <p className="text-xs text-gray-500">
-                    Aucun renseignement bancaire n'est stocké sur nos serveurs
+                    Aucun renseignement bancaire stocké sur nos serveurs
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500">
                     <Shield className="inline w-3 h-3 mr-1" />
                     Transaction 100% sécurisée
                   </p>
                 </div>
               </div>
 
-              {/* Suggestions */}
+              {/* Créer un compte */}
               <div className="mt-6 bg-white rounded-2xl shadow-lg p-6">
                 <h3 className="font-bold text-gray-900 mb-4">Pas encore de compte ?</h3>
                 <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-100">

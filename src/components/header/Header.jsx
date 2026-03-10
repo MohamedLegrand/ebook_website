@@ -4,918 +4,649 @@ import {
   User, Menu, X, Phone, Globe, ChevronDown, Search,
   ShoppingCart, Package, Trash2, CreditCard, ArrowRight,
   Home, Info, Heart, BookOpen, MessageCircle, ShoppingBag,
-  Newspaper, Mail
+  Newspaper, Mail, Sparkles, AlertCircle, ChevronRight
 } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 
-// Hook personnalisé pour détecter les clics en dehors d'un élément
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
     const listener = (event) => {
-      if (!ref.current || ref.current.contains(event.target)) {
-        return;
-      }
+      if (!ref.current || ref.current.contains(event.target)) return;
       handler(event);
     };
     document.addEventListener("mousedown", listener);
-    return () => {
-      document.removeEventListener("mousedown", listener);
-    };
+    return () => document.removeEventListener("mousedown", listener);
   }, [ref, handler]);
 }
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [language, setLanguage] = useState('fr');
+  const [language, setLanguage] = useState("fr");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeSection, setActiveSection] = useState(null);
 
   const menuRef = useRef(null);
   const cartRef = useRef(null);
+  const searchRef = useRef(null);
 
   const { cart, removeFromCart, clearCart, getCartTotal } = useCart();
 
-  // Fermer le menu et le panier au clic extérieur
-  useOnClickOutside(menuRef, useCallback(() => setIsMenuOpen(false), []));
   useOnClickOutside(cartRef, useCallback(() => setIsCartOpen(false), []));
 
-  // Empêcher le défilement du body quand le menu mobile est ouvert
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
+      setActiveSection(null);
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    return () => { document.body.style.overflow = "unset"; };
   }, [isMenuOpen]);
 
-  // Détection du scroll pour changer le style du header
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Objet de traductions (mémoïsé)
+  useEffect(() => {
+    if (isSearchOpen && searchRef.current) {
+      searchRef.current.focus();
+    }
+  }, [isSearchOpen]);
+
   const t = useMemo(() => ({
     fr: {
       tagline: "Médecine Traditionnelle des Handicapés Spirituels",
-      menu: {
-        home: "Accueil",
-        about: "Qu'est-ce que la MTHS ?",
-        handicap: "Handicap Spirituel",
-        approach: "Approche Thérapeutique",
-        pathologies: "Pathologies",
-        journey: "Parcours",
-        ritual: "Rite SO'O",
-        testimonies: "Témoignages",
-        shop: "Boutique",
-        news: "Actualités",
-        contact: "Contact",
-        cart: "Panier",
-        checkout: "Paiement",
-        continueShopping: "Continuer les achats"
+      taglineShort: "MTHS",
+      nav: [
+        { label: "Accueil", href: "/", icon: "home" },
+        { label: "La MTHS", href: "/mths", icon: "about" },
+        { label: "Handicap Spirituel", href: "/handicap", icon: "handicap" },
+        { label: "Approche Thérapeutique", href: "/approche", icon: "approach" },
+        { label: "Pathologies", href: "/pathologies", icon: "pathologies" },
+        { label: "Parcours", href: "/parcours", icon: "journey" },
+        { label: "Rite SO'O", href: "/rites", icon: "ritual" },
+        { label: "Témoignages", href: "/temoignages", icon: "testimonies" },
+        { label: "Boutique", href: "/boutique", icon: "shop" },
+        { label: "Actualités", href: "/actualites", icon: "news" },
+        { label: "Contact", href: "/contact", icon: "contact" },
+      ],
+      cta: { login: "Connexion", register: "S'inscrire", emergency: "Urgence", search: "Rechercher..." },
+      cart: {
+        title: "Panier", empty: "Votre panier est vide", total: "Total",
+        view: "Voir le panier", checkout: "Payer", clear: "Vider",
+        continue: "Continuer mes achats", item: "article", items: "articles"
       },
-      cta: {
-        login: "Connexion",
-        register: "S'inscrire",
-        emergency: "Urgence Spirituelle",
-        search: "Rechercher"
-      },
-      announcement: {
-        msg1: "NOTRE MISSION :",
-        msg2: "GUERRIR L'AME",
-        msg3: "RESTAURER LE CORPS",
-        msg4: "LIBERER L'ESPRIT"
-      },
-      cartItems: {
-        empty: "Votre panier est vide",
-        total: "Total",
-        remove: "Supprimer",
-        viewCart: "Voir le panier",
-        checkout: "Procéder au paiement",
-        items: "article(s)",
-        item: "article"
-      }
+      ticker: ["NOTRE MISSION", "GUÉRIR L'ÂME", "RESTAURER LE CORPS", "LIBÉRER L'ESPRIT", "Centre Marie Reine de la Miséricorde"]
     },
     en: {
       tagline: "Traditional Medicine for the Spiritually Handicapped",
-      menu: {
-        home: "Home",
-        about: "What is TMSH?",
-        handicap: "Spiritual Handicap",
-        approach: "Therapeutic Approach",
-        pathologies: "Pathologies",
-        journey: "Journey",
-        ritual: "SO'O Ritual",
-        testimonies: "Testimonies",
-        shop: "Shop",
-        news: "News",
-        contact: "Contact",
-        cart: "Cart",
-        checkout: "Checkout",
-        continueShopping: "Continue Shopping"
+      taglineShort: "TMSH",
+      nav: [
+        { label: "Home", href: "/", icon: "home" },
+        { label: "About TMSH", href: "/mths", icon: "about" },
+        { label: "Spiritual Handicap", href: "/handicap", icon: "handicap" },
+        { label: "Therapeutic Approach", href: "/approche", icon: "approach" },
+        { label: "Pathologies", href: "/pathologies", icon: "pathologies" },
+        { label: "Journey", href: "/parcours", icon: "journey" },
+        { label: "SO'O Ritual", href: "/rites", icon: "ritual" },
+        { label: "Testimonies", href: "/temoignages", icon: "testimonies" },
+        { label: "Shop", href: "/boutique", icon: "shop" },
+        { label: "News", href: "/actualites", icon: "news" },
+        { label: "Contact", href: "/contact", icon: "contact" },
+      ],
+      cta: { login: "Login", register: "Sign Up", emergency: "Emergency", search: "Search..." },
+      cart: {
+        title: "Cart", empty: "Your cart is empty", total: "Total",
+        view: "View Cart", checkout: "Checkout", clear: "Clear",
+        continue: "Continue Shopping", item: "item", items: "items"
       },
-      cta: {
-        login: "Login",
-        register: "Register",
-        emergency: "Spiritual Emergency",
-        search: "Search"
-      },
-      announcement: {
-        msg1: "Healing the Invisible, Restoring Humanity",
-        msg2: "Mary Queen of Mercy Center",
-        msg3: "Body, Soul and Spirit: One Healing",
-        msg4: "Traditional Holistic Medicine"
-      },
-      cartItems: {
-        empty: "Your cart is empty",
-        total: "Total",
-        remove: "Remove",
-        viewCart: "View Cart",
-        checkout: "Proceed to Checkout",
-        items: "item(s)",
-        item: "item"
-      }
+      ticker: ["OUR MISSION", "HEAL THE SOUL", "RESTORE THE BODY", "FREE THE SPIRIT", "Mary Queen of Mercy Center"]
     }
   }), []);
 
-  const currentLang = t[language];
+  const lang = t[language];
 
-  // Icônes du menu (mémoïsées car statiques)
-  const menuIcons = useMemo(() => ({
-    home: <Home className="w-5 h-5" />,
-    about: <Info className="w-5 h-5" />,
-    handicap: <Heart className="w-5 h-5" />,
-    approach: <BookOpen className="w-5 h-5" />,
-    pathologies: <Heart className="w-5 h-5" />,
-    journey: <ArrowRight className="w-5 h-5" />,
-    ritual: <Heart className="w-5 h-5" />,
-    testimonies: <MessageCircle className="w-5 h-5" />,
-    shop: <ShoppingBag className="w-5 h-5" />,
-    news: <Newspaper className="w-5 h-5" />,
-    contact: <Mail className="w-5 h-5" />
-  }), []);
-
-  // Menus principaux et secondaires (mémoïsés en fonction de la langue)
-  const mainMenuItems = useMemo(() => [
-    { label: currentLang.menu.home, href: "/", icon: "home" },
-    { label: currentLang.menu.about, href: "/mths", icon: "about" },
-    { label: currentLang.menu.handicap, href: "/handicap", icon: "handicap" }
-  ], [currentLang]);
-
-  const secondaryMenuItems = useMemo(() => [
-    { label: currentLang.menu.approach, href: "/approche", icon: "approach" },
-    { label: currentLang.menu.pathologies, href: "/pathologies", icon: "pathologies" },
-    { label: currentLang.menu.journey, href: "/parcours", icon: "journey" },
-    { label: currentLang.menu.ritual, href: "/rites", icon: "ritual" },
-    { label: currentLang.menu.testimonies, href: "/temoignages", icon: "testimonies" },
-    { label: currentLang.menu.shop, href: "/boutique", icon: "shop" },
-    { label: currentLang.menu.news, href: "/actualites", icon: "news" },
-    { label: currentLang.menu.contact, href: "/contact", icon: "contact" },
-  ], [currentLang]);
-
-  const formatPrice = (price) => {
-    return price.toLocaleString('fr-FR') + ' FCFA';
+  const icons = {
+    home: <Home className="w-4 h-4" />,
+    about: <Info className="w-4 h-4" />,
+    handicap: <Heart className="w-4 h-4" />,
+    approach: <BookOpen className="w-4 h-4" />,
+    pathologies: <Sparkles className="w-4 h-4" />,
+    journey: <ArrowRight className="w-4 h-4" />,
+    ritual: <Heart className="w-4 h-4" />,
+    testimonies: <MessageCircle className="w-4 h-4" />,
+    shop: <ShoppingBag className="w-4 h-4" />,
+    news: <Newspaper className="w-4 h-4" />,
+    contact: <Mail className="w-4 h-4" />,
   };
 
+  // Seulement Accueil et La MTHS dans la barre principale
+  const mainNav = lang.nav.slice(0, 2);
+  const moreNav = lang.nav.slice(2);
   const cartTotal = getCartTotal();
+  const cartCount = cart.reduce((s, i) => s + (i.quantity || 1), 0);
+
+  const fmt = (p) => p.toLocaleString("fr-FR") + " FCFA";
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+    <>
+      <header className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-gradient-to-b from-blue-900/95 to-blue-800/95 backdrop-blur-md shadow-xl border-b border-blue-700"
-          : "bg-gradient-to-b from-blue-50/98 to-white/98 backdrop-blur-sm"
-      }`}
-      ref={menuRef}
-    >
-      {/* Bandeau supérieur (urgence, langue) */}
-      <div className={`transition-all duration-300 ${
-        scrolled 
-          ? "bg-gradient-to-r from-blue-800 to-blue-900 border-b border-blue-700" 
-          : "bg-gradient-to-r from-blue-600 to-blue-700"
-      } text-white`}>
-        <div className="max-w-7xl mx-auto px-3 sm:px-4">
-          <div className="py-1.5 sm:py-2 flex items-center justify-between text-xs sm:text-sm">
-            <div className="flex items-center gap-2 sm:gap-4">
-              <Link 
-                to="/urgence" 
-                className="flex items-center gap-1.5 sm:gap-2 hover:text-blue-100 transition-colors font-medium whitespace-nowrap"
-              >
-                <Phone size={12} className="sm:w-3 sm:h-3" />
-                <span className="hidden xs:inline sm:inline">{currentLang.cta.emergency} :</span>
-                <span className="font-bold text-xs sm:text-sm">+237 693 21 54 31</span>
-              </Link>
-              <div className="hidden md:flex items-center gap-4">
-                <span className="w-1 h-1 bg-blue-300 rounded-full"></span>
-                <span className={`transition-colors ${scrolled ? "text-blue-200" : "text-blue-100"}`}>
-                  Centre d'Abili, Yaoundé
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-4">
-              <button 
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="hover:text-blue-100 transition-colors"
-                aria-label="Rechercher"
-              >
-                <Search size={14} className="sm:w-4 sm:h-4" />
-              </button>
-              <div className="hidden sm:flex items-center gap-1 sm:gap-2">
-                <Globe size={12} className="sm:w-3 sm:h-3" />
-                <button
-                  onClick={() => setLanguage('fr')}
-                  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs font-medium transition-all ${
-                    language === 'fr' 
-                      ? 'bg-white/20 text-white' 
-                      : scrolled ? 'text-blue-300 hover:text-white' : 'text-blue-100 hover:text-white'
-                  }`}
-                  aria-label="Français"
-                >
-                  FR
-                </button>
-                <span className={scrolled ? "text-blue-300" : "text-blue-200"}>|</span>
-                <button
-                  onClick={() => setLanguage('en')}
-                  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs font-medium transition-all ${
-                    language === 'en' 
-                      ? 'bg-white/20 text-white' 
-                      : scrolled ? 'text-blue-300 hover:text-white' : 'text-blue-100 hover:text-white'
-                  }`}
-                  aria-label="English"
-                >
-                  EN
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Barre de recherche */}
-      {isSearchOpen && (
-        <div className={`py-3 sm:py-4 animate-fadeIn ${scrolled ? "bg-blue-800 border-b border-blue-700" : "bg-white border-b border-blue-100"}`}>
-          <div className="max-w-3xl mx-auto px-3 sm:px-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder={`${currentLang.cta.search}...`}
-                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 pl-10 sm:pl-12 rounded-lg focus:outline-none focus:ring-2 transition-colors text-sm sm:text-base ${
-                  scrolled 
-                    ? "bg-blue-700/50 border border-blue-600 text-white placeholder-blue-300 focus:ring-blue-400 focus:border-transparent" 
-                    : "bg-blue-50 border border-blue-200 text-blue-900 placeholder-blue-400 focus:ring-blue-500 focus:border-transparent"
-                }`}
-                autoFocus
-              />
-              <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2" size={18} 
-                color={scrolled ? "#93c5fd" : "#60a5fa"}
-              />
-              <button 
-                onClick={() => setIsSearchOpen(false)}
-                className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2"
-                aria-label="Fermer la recherche"
-              >
-                <X size={18} color={scrolled ? "#93c5fd" : "#60a5fa"} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Bandeau défilant (annonce) */}
-      <div className={`bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200 transition-all duration-300 ${
-        scrolled ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100 h-auto'
+          ? "bg-blue-950/97 backdrop-blur-md shadow-2xl shadow-blue-950/40"
+          : "bg-white shadow-md shadow-blue-100/60"
       }`}>
-        <div className="max-w-7xl mx-auto">
-          <div className="py-1.5 sm:py-2 overflow-hidden">
-            <div className="animate-marquee flex whitespace-nowrap">
-              {[...Array(2)].map((_, i) => (
-                <div key={i} className="flex items-center gap-4 sm:gap-6 px-3 sm:px-4 flex-shrink-0">
-                  <span className="flex items-center gap-1.5 text-blue-800 text-xs sm:text-sm font-medium">
-                    <span className="text-blue-500">•</span>
-                    {currentLang.announcement.msg1}
-                  </span>
-                  <span className="flex items-center gap-1.5 text-blue-800 text-xs sm:text-sm font-medium">
-                    <span className="text-blue-500">•</span>
-                    {currentLang.announcement.msg2}
-                  </span>
-                  <span className="flex items-center gap-1.5 text-blue-800 text-xs sm:text-sm font-medium">
-                    <span className="text-blue-500">•</span>
-                    {currentLang.announcement.msg3}
-                  </span>
-                  <span className="flex items-center gap-1.5 text-blue-800 text-xs sm:text-sm font-medium">
-                    <span className="text-blue-500">•</span>
-                    {currentLang.announcement.msg4}
-                  </span>
+
+        {/* ── TOP BAR ── */}
+        <div className={`transition-all duration-300 ${scrolled ? "bg-blue-900" : "bg-gradient-to-r from-blue-700 to-blue-600"}`}>
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+            <div className="flex items-center justify-between h-8 sm:h-9 gap-2">
+
+              {/* Emergency */}
+              <Link to="/urgence" className="flex items-center gap-1.5 text-white hover:text-blue-200 transition-colors min-w-0 shrink-0">
+                <AlertCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-red-300 shrink-0 animate-pulse" />
+                <span className="text-[10px] sm:text-xs font-semibold whitespace-nowrap">
+                  <span className="hidden sm:inline">{lang.cta.emergency} : </span>
+                  <span className="font-bold">+237 693 21 54 31</span>
+                </span>
+              </Link>
+
+              {/* Ticker */}
+              <div className="hidden md:flex flex-1 overflow-hidden mx-4">
+                <div className="ticker-wrap flex items-center gap-8 animate-ticker whitespace-nowrap">
+                  {[...lang.ticker, ...lang.ticker].map((msg, i) => (
+                    <span key={i} className="flex items-center gap-2 text-[10px] sm:text-xs text-blue-200 font-medium">
+                      <span className="w-1 h-1 bg-blue-400 rounded-full shrink-0" />
+                      {msg}
+                    </span>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* Right actions */}
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                {/* Search toggle */}
+                <button
+                  onClick={() => setIsSearchOpen(!isSearchOpen)}
+                  className="p-1 sm:p-1.5 text-white/80 hover:text-white transition-colors rounded"
+                  aria-label="Rechercher"
+                >
+                  <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                </button>
+
+                {/* Language */}
+                <div className="flex items-center bg-white/10 rounded-md overflow-hidden border border-white/20">
+                  <button
+                    onClick={() => setLanguage("fr")}
+                    className={`px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs font-bold transition-all ${
+                      language === "fr" ? "bg-white text-blue-800" : "text-white/70 hover:text-white"
+                    }`}
+                  >FR</button>
+                  <div className="w-px h-3 bg-white/20" />
+                  <button
+                    onClick={() => setLanguage("en")}
+                    className={`px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs font-bold transition-all ${
+                      language === "en" ? "bg-white text-blue-800" : "text-white/70 hover:text-white"
+                    }`}
+                  >EN</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Navigation principale */}
-      <nav className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
-        <div className="flex items-center justify-between">
-          {/* Logo et titre */}
-          <Link to="/" className="flex items-center gap-2 sm:gap-3 group min-w-0 flex-1 sm:flex-none">
-            <div className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 flex-shrink-0">
-              <div className={`absolute inset-0 rounded-lg sm:rounded-xl p-1.5 sm:p-2 shadow-xl transition-all duration-300 transform group-hover:scale-[1.02] ${
-                scrolled 
-                  ? "bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 shadow-blue-900/30 group-hover:shadow-blue-800/40"
-                  : "bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 shadow-blue-500/30 group-hover:shadow-blue-600/40"
-              }`}>
-                <div className="w-full h-full bg-white rounded-md sm:rounded-lg overflow-hidden flex items-center justify-center p-1 sm:p-1.5 border border-white">
-                  <div className="relative w-full h-full rounded-sm sm:rounded-md overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
-                    <img 
-                      src="/images/logo.png" 
-                      alt="Logo MTHS" 
-                      className="w-full h-full object-contain p-0.5"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232963cc'/%3E%3Cstop offset='100%25' stop-color='%231e429f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23grad)'/%3E%3Ctext x='50' y='55' font-family='Arial, sans-serif' font-size='28' font-weight='bold' fill='white' text-anchor='middle' letter-spacing='1px'%3EMTHS%3C/text%3E%3Ctext x='50' y='75' font-family='Arial, sans-serif' font-size='14' fill='%23bfdbfe' text-anchor='middle'%3E/TMSH%3C/text%3E%3C/svg%3E";
-                      }}
-                    />
+        {/* ── SEARCH BAR ── */}
+        <div className={`overflow-hidden transition-all duration-300 ${isSearchOpen ? "max-h-16 opacity-100" : "max-h-0 opacity-0"}`}>
+          <div className={`px-3 sm:px-4 lg:px-6 py-2 border-b ${scrolled ? "bg-blue-900 border-blue-800" : "bg-blue-50 border-blue-100"}`}>
+            <div className="max-w-2xl mx-auto relative">
+              <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${scrolled ? "text-blue-300" : "text-blue-400"}`} />
+              <input
+                ref={searchRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={lang.cta.search}
+                className={`w-full pl-9 pr-9 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all ${
+                  scrolled
+                    ? "bg-blue-800 border-blue-700 text-white placeholder-blue-400"
+                    : "bg-white border-blue-200 text-blue-900 placeholder-blue-400"
+                }`}
+              />
+              <button onClick={() => { setIsSearchOpen(false); setSearchQuery(""); }}
+                className="absolute right-3 top-1/2 -translate-y-1/2"
+              >
+                <X className={`w-4 h-4 ${scrolled ? "text-blue-300" : "text-blue-400"}`} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ── MAIN NAV ── */}
+        <nav className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="flex items-center justify-between h-20 sm:h-24 gap-2 sm:gap-3">
+
+            {/* ── LOGO TRÈS GRAND, SANS CADRE ── */}
+            <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24">
+                <img
+                  src="/images/logo.png"
+                  alt="Logo MTHS"
+                  className="absolute inset-0 w-full h-full object-contain"
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                    e.target.parentNode.querySelector(".logo-fallback").style.display = "flex";
+                  }}
+                />
+                <div className="logo-fallback absolute inset-0 hidden items-center justify-center bg-blue-100 rounded-full">
+                  <span className={`text-3xl sm:text-4xl font-black ${scrolled ? "text-white" : "text-blue-700"}`}>M</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-baseline gap-1">
+                  <span className={`text-2xl sm:text-3xl font-black tracking-tight transition-colors leading-none ${
+                    scrolled ? "text-white" : "text-blue-900"
+                  }`}>MTHS</span>
+                  <span className={`text-sm sm:text-base font-semibold transition-colors ${
+                    scrolled ? "text-blue-400" : "text-blue-400"
+                  }`}>/TMSH</span>
+                </div>
+                <p className={`text-sm sm:text-base leading-tight font-medium truncate max-w-[200px] sm:max-w-[320px] lg:max-w-[400px] transition-colors ${
+                  scrolled ? "text-blue-300" : "text-blue-500"
+                }`}>
+                  {lang.tagline}
+                </p>
+              </div>
+            </Link>
+
+            {/* ── DESKTOP NAV LINKS ── */}
+            <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+              {mainNav.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                    scrolled
+                      ? "text-blue-200 hover:text-white hover:bg-blue-800"
+                      : "text-blue-700 hover:text-blue-900 hover:bg-blue-50"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+
+              {/* Dropdown "Plus" avec tous les autres liens */}
+              <div className="relative group">
+                <button className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  scrolled ? "text-blue-200 hover:text-white hover:bg-blue-800" : "text-blue-700 hover:text-blue-900 hover:bg-blue-50"
+                }`}>
+                  Plus
+                  <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
+                </button>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-white rounded-xl shadow-2xl shadow-blue-200/50 border border-blue-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
+                  <div className="p-1.5">
+                    {moreNav.map((item) => (
+                      <Link
+                        key={item.href}
+                        to={item.href}
+                        className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-blue-800 hover:bg-blue-50 hover:text-blue-900 rounded-lg transition-colors"
+                      >
+                        <span className="text-blue-500 shrink-0">{icons[item.icon]}</span>
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="border-t border-blue-100 p-3 bg-blue-50">
+                    <a href="tel:+237693215431" className="flex items-center gap-2 text-xs text-blue-600 font-semibold">
+                      <AlertCircle className="w-3.5 h-3.5 text-red-400" />
+                      Urgence : +237 693 21 54 31
+                    </a>
                   </div>
                 </div>
               </div>
             </div>
-            
-            <div className="flex flex-col min-w-0">
-              <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight truncate">
-                <span className={`transition-colors ${
-                  scrolled 
-                    ? "text-white" 
-                    : "bg-gradient-to-r from-blue-800 via-blue-700 to-blue-600 bg-clip-text text-transparent"
-                }`}>
-                  MTHS
-                </span>
-                <span className={`ml-0.5 text-base sm:text-lg md:text-xl transition-colors ${
-                  scrolled ? "text-blue-300" : "text-blue-500"
-                }`}>
-                  / TMSH
-                </span>
-              </h1>
-              <p className={`text-xs sm:text-sm leading-tight mt-0.5 font-medium max-w-[140px] xs:max-w-[160px] sm:max-w-[240px] md:max-w-[300px] truncate transition-colors ${
-                scrolled ? "text-blue-200" : "text-blue-600"
-              }`}>
-                {currentLang.tagline}
-              </p>
-            </div>
-          </Link>
 
-          {/* Menu desktop (visible à partir de lg) */}
-          <div className="hidden lg:flex items-center gap-1 ml-4">
-            {mainMenuItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.href}
-                className={`px-3 sm:px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 whitespace-nowrap border ${
-                  scrolled
-                    ? "text-white hover:text-blue-200 hover:bg-blue-700/50 border-transparent hover:border-blue-600"
-                    : "text-blue-800 hover:text-blue-600 hover:bg-blue-50 border-transparent hover:border-blue-200"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            
-            {/* Sous-menu "Plus" */}
-            <div className="relative group">
-              <button 
-                className={`flex items-center px-3 sm:px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 border ${
-                  scrolled
-                    ? "text-white hover:text-blue-200 hover:bg-blue-700/50 border-transparent hover:border-blue-600"
-                    : "text-blue-800 hover:text-blue-600 hover:bg-blue-50 border-transparent hover:border-blue-200"
-                }`}
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Plus <ChevronDown size={16} className="ml-1 group-hover:rotate-180 transition-transform" />
-              </button>
-              <div className="absolute right-0 mt-2 w-56 bg-white shadow-2xl rounded-xl border border-blue-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
-                <div className="p-2">
-                  {secondaryMenuItems.map((item) => (
-                    <Link
-                      key={item.label}
-                      to={item.href}
-                      className="flex items-center px-4 py-3 text-sm text-blue-800 hover:bg-blue-50 rounded-lg transition-colors mb-1 last:mb-0"
-                    >
-                      <span className="flex-1">{item.label}</span>
-                      <ChevronDown size={14} className="transform -rotate-90 text-blue-400" />
-                    </Link>
-                  ))}
-                </div>
-                
-                <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-t border-blue-200 p-3">
-                  <Link 
-                    to="/urgence" 
-                    className="flex items-center gap-2 text-blue-700 hover:text-blue-800 font-medium text-sm"
-                  >
-                    <Phone size={14} />
-                    <span>Urgence : +237 693 21 54 31</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
+            {/* ── RIGHT ACTIONS ── */}
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0" ref={cartRef}>
 
-          {/* Actions utilisateur (panier, langue mobile, login, register, menu hamburger) */}
-          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3" ref={cartRef}>
-            {/* Panier */}
-            <div className="relative">
-              <button
-                onClick={() => setIsCartOpen(!isCartOpen)}
-                className={`p-1.5 sm:p-2 rounded-lg transition-colors border relative ${
-                  scrolled
-                    ? "text-white hover:text-blue-200 border-transparent hover:border-blue-600 hover:bg-blue-700/50"
-                    : "text-blue-700 hover:text-blue-800 border-transparent hover:border-blue-200 hover:bg-blue-50"
-                }`}
-                aria-label="Panier"
-                aria-expanded={isCartOpen}
-                aria-controls="cart-dropdown"
-              >
-                <ShoppingCart size={18} className="sm:w-5 sm:h-5" />
-                {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center animate-pulse text-[10px] sm:text-xs">
-                    {cart.length}
-                  </span>
-                )}
-              </button>
-
-              {/* Dropdown panier */}
-              {isCartOpen && (
-                <div
-                  id="cart-dropdown"
-                  className="fixed sm:absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-80 md:w-96 bg-white shadow-2xl rounded-xl border border-blue-100 z-50 animate-fadeIn top-16 sm:top-auto"
+              {/* CART */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsCartOpen(!isCartOpen)}
+                  className={`relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl transition-all ${
+                    scrolled ? "text-white hover:bg-blue-800" : "text-blue-700 hover:bg-blue-50"
+                  }`}
+                  aria-label={lang.cart.title}
                 >
-                  <div className="p-3 sm:p-4">
-                    <div className="flex items-center justify-between mb-3 sm:mb-4">
-                      <h3 className="font-bold text-base sm:text-lg text-blue-900 flex items-center gap-2">
-                        <ShoppingCart size={18} className="sm:w-5 sm:h-5 text-blue-600" />
-                        {currentLang.menu.cart} ({cart.length})
-                      </h3>
+                  <ShoppingCart className="w-5 h-5" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center leading-none shadow">
+                      {cartCount > 9 ? "9+" : cartCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Cart Dropdown */}
+                {isCartOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl shadow-blue-200/60 border border-blue-100 z-50 overflow-hidden animate-dropdown">
+                    {/* Cart header */}
+                    <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-700 to-blue-600 text-white">
+                      <div className="flex items-center gap-2">
+                        <ShoppingCart className="w-4 h-4" />
+                        <span className="font-bold text-sm">{lang.cart.title}</span>
+                        <span className="bg-white/20 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">
+                          {cartCount}
+                        </span>
+                      </div>
                       {cart.length > 0 && (
-                        <button
-                          onClick={clearCart}
-                          className="text-xs text-red-500 hover:text-red-700 flex items-center gap-1"
-                          aria-label="Vider le panier"
-                        >
-                          <Trash2 size={12} className="sm:w-3 sm:h-3" />
-                          <span className="hidden sm:inline">Vider</span>
+                        <button onClick={clearCart} className="flex items-center gap-1 text-xs text-blue-200 hover:text-white transition-colors">
+                          <Trash2 className="w-3 h-3" />
+                          {lang.cart.clear}
                         </button>
                       )}
                     </div>
 
-                    {cart.length === 0 ? (
-                      <div className="text-center py-6 sm:py-8">
-                        <Package size={40} className="sm:w-12 sm:h-12 text-blue-200 mx-auto mb-3 sm:mb-4" />
-                        <p className="text-gray-500 mb-3 sm:mb-4 text-sm sm:text-base">{currentLang.cartItems.empty}</p>
-                        <Link
-                          to="/boutique"
-                          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium text-sm sm:text-base"
-                          onClick={() => setIsCartOpen(false)}
-                        >
-                          {currentLang.cartItems.continueShopping}
-                          <ArrowRight size={14} className="sm:w-4 sm:h-4" />
-                        </Link>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="max-h-48 sm:max-h-64 overflow-y-auto mb-3 sm:mb-4">
-                          {cart.map((item, index) => (
-                            <div key={`${item.id}-${index}`} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 hover:bg-blue-50 rounded-lg mb-2 last:mb-0">
-                              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg overflow-hidden flex-shrink-0">
-                                <img 
-                                  src={item.cover} 
-                                  alt={item.title}
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => {
-                                    e.target.onerror = null;
-                                    e.target.src = "https://via.placeholder.com/100x100?text=Produit";
-                                  }}
-                                />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <h4 className="font-medium text-xs sm:text-sm text-blue-900 truncate">{item.title}</h4>
-                                <p className="text-xs text-gray-500 truncate">{item.author}</p>
-                                <div className="flex items-center justify-between mt-1">
-                                  <span className="text-blue-700 font-bold text-xs sm:text-sm">
-                                    {formatPrice(item.price)}
-                                  </span>
-                                  <span className="text-xs text-blue-600 bg-blue-50 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded">
-                                    {item.format || "Physique"}
-                                  </span>
+                    <div className="p-3">
+                      {cart.length === 0 ? (
+                        <div className="text-center py-8">
+                          <Package className="w-12 h-12 text-blue-100 mx-auto mb-3" />
+                          <p className="text-gray-400 text-sm mb-4">{lang.cart.empty}</p>
+                          <Link to="/boutique" onClick={() => setIsCartOpen(false)}
+                            className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-semibold"
+                          >
+                            {lang.cart.continue} <ArrowRight className="w-4 h-4" />
+                          </Link>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="max-h-60 overflow-y-auto space-y-2 pr-1 custom-scroll">
+                            {cart.map((item, i) => (
+                              <div key={`${item.id}-${i}`} className="flex items-center gap-2 p-2 rounded-xl hover:bg-blue-50 transition-colors">
+                                <div className="w-12 h-12 rounded-lg overflow-hidden bg-blue-100 shrink-0">
+                                  <img src={item.cover} alt={item.title}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => { e.target.src = "https://via.placeholder.com/48x48?text=📚"; }}
+                                  />
                                 </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-semibold text-blue-900 truncate">{item.title}</p>
+                                  <p className="text-[10px] text-gray-400 truncate">{item.author}</p>
+                                  <div className="flex items-center gap-1 mt-0.5">
+                                    <span className="text-xs font-bold text-blue-700">{fmt(item.price)}</span>
+                                    {item.quantity > 1 && (
+                                      <span className="text-[10px] text-gray-400">×{item.quantity}</span>
+                                    )}
+                                  </div>
+                                </div>
+                                <button onClick={() => removeFromCart(item.id)}
+                                  className="text-red-300 hover:text-red-500 transition-colors p-1 shrink-0"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
                               </div>
-                              <button
-                                onClick={() => removeFromCart(item.id)}
-                                className="text-red-400 hover:text-red-600 p-1 flex-shrink-0"
-                                aria-label="Supprimer"
-                              >
-                                <Trash2 size={14} className="sm:w-4 sm:h-4" />
-                              </button>
+                            ))}
+                          </div>
+
+                          <div className="mt-3 pt-3 border-t border-blue-100">
+                            <div className="flex items-center justify-between mb-3">
+                              <span className="text-sm font-bold text-blue-900">{lang.cart.total}</span>
+                              <span className="text-base font-black text-blue-700">{fmt(cartTotal)}</span>
                             </div>
-                          ))}
-                        </div>
-
-                        <div className="border-t border-blue-100 pt-3 sm:pt-4">
-                          <div className="flex items-center justify-between mb-3 sm:mb-4">
-                            <span className="font-bold text-blue-900 text-sm sm:text-base">{currentLang.cartItems.total}</span>
-                            <span className="text-lg sm:text-xl font-bold text-blue-700">{formatPrice(cartTotal)}</span>
+                            <div className="flex gap-2">
+                              <Link to="/cart" onClick={() => setIsCartOpen(false)}
+                                className="flex-1 py-2.5 text-center text-sm font-semibold text-blue-700 border-2 border-blue-200 rounded-xl hover:bg-blue-50 transition-colors"
+                              >{lang.cart.view}</Link>
+                              <Link to="/checkout" onClick={() => setIsCartOpen(false)}
+                                className="flex-1 py-2.5 text-center text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg shadow-blue-500/30"
+                              >{lang.cart.checkout}</Link>
+                            </div>
                           </div>
-                          <div className="flex flex-col sm:flex-row gap-2">
-                            <Link
-                              to="/cart"
-                              className="flex-1 py-2 sm:py-3 text-center border-2 border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-50 rounded-lg font-medium transition-colors text-sm sm:text-base"
-                              onClick={() => setIsCartOpen(false)}
-                            >
-                              {currentLang.cartItems.viewCart}
-                            </Link>
-                            <Link
-                              to="/checkout"
-                              className="flex-1 py-2 sm:py-3 text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-colors text-sm sm:text-base shadow-md"
-                              onClick={() => setIsCartOpen(false)}
-                            >
-                              {currentLang.cartItems.checkout}
-                            </Link>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Sélecteur de langue mobile (visible uniquement en dessous de sm) */}
-            <div className={`flex sm:hidden items-center rounded-lg p-0.5 border transition-colors ${
-              scrolled
-                ? "bg-blue-800/50 border-blue-700"
-                : "bg-blue-100 border-blue-200"
-            }`}>
-              <button
-                onClick={() => setLanguage('fr')}
-                className={`px-1.5 py-0.5 sm:px-2 sm:py-1 rounded text-xs font-medium transition-all ${
-                  language === 'fr' 
-                    ? scrolled 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-blue-600 text-white'
-                    : scrolled 
-                      ? 'text-blue-300 hover:text-white hover:bg-blue-700/50' 
-                      : 'text-blue-700 hover:bg-blue-200'
-                }`}
-                aria-label="Français"
-              >
-                FR
-              </button>
-              <button
-                onClick={() => setLanguage('en')}
-                className={`px-1.5 py-0.5 sm:px-2 sm:py-1 rounded text-xs font-medium transition-all ${
-                  language === 'en' 
-                    ? scrolled 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-blue-600 text-white'
-                    : scrolled 
-                      ? 'text-blue-300 hover:text-white hover:bg-blue-700/50' 
-                      : 'text-blue-700 hover:bg-blue-200'
-                }`}
-                aria-label="English"
-              >
-                EN
-              </button>
-            </div>
-
-            {/* Lien connexion (caché en mobile) */}
-            <Link
-              to="/login"
-              className={`hidden md:flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors border ${
-                scrolled
-                  ? "text-white hover:text-blue-200 border-transparent hover:border-blue-600 hover:bg-blue-700/50"
-                  : "text-blue-700 hover:text-blue-800 border-transparent hover:border-blue-200 hover:bg-blue-50"
-              }`}
-            >
-              <User size={16} className="sm:w-4 sm:h-4" />
-              <span className="text-sm">{currentLang.cta.login}</span>
-            </Link>
-
-            {/* Lien inscription (caché en mobile) */}
-            <Link
-              to="/register"
-              className={`hidden sm:inline-flex px-3 sm:px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap transform hover:-translate-y-0.5 ${
-                scrolled
-                  ? "bg-gradient-to-r from-white to-blue-100 text-blue-900 hover:from-blue-100 hover:to-white shadow-blue-900/30"
-                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-blue-500/30"
-              }`}
-            >
-              {currentLang.cta.register}
-            </Link>
-
-            {/* Bouton menu hamburger (mobile) */}
-            <button
-              className={`lg:hidden p-1.5 sm:p-2 rounded-lg transition-colors border ${
-                scrolled
-                  ? "text-white hover:text-blue-200 border-transparent hover:border-blue-600 hover:bg-blue-700/50"
-                  : "text-blue-700 border-transparent hover:border-blue-200 hover:bg-blue-50"
-              }`}
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Menu principal"
-              aria-expanded={isMenuOpen}
-              aria-controls="mobile-menu"
-            >
-              {isMenuOpen ? <X size={20} className="sm:w-6 sm:h-6" /> : <Menu size={20} className="sm:w-6 sm:h-6" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Menu mobile (slide-in) */}
-        <div
-          id="mobile-menu"
-          aria-hidden={!isMenuOpen}
-          className={`lg:hidden fixed inset-x-0 top-0 h-full bg-white transform transition-transform duration-300 ease-in-out z-50 ${
-            isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-        >
-          <div className="h-full overflow-y-auto pb-20">
-            {/* En-tête du menu mobile */}
-            <div className="sticky top-0 bg-white border-b border-blue-100 p-3 sm:p-4 shadow-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg p-1 sm:p-1.5 shadow-md">
-                    <div className="w-full h-full bg-white rounded-md overflow-hidden">
-                      <img 
-                        src="/images/logo.png" 
-                        alt="Logo" 
-                        className="w-full h-full object-contain p-0.5"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232963cc'/%3E%3Cstop offset='100%25' stop-color='%231e429f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23grad)'/%3E%3Ctext x='50' y='55' font-family='Arial, sans-serif' font-size='28' font-weight='bold' fill='white' text-anchor='middle' letter-spacing='1px'%3EMTHS%3C/text%3E%3Ctext x='50' y='75' font-family='Arial, sans-serif' font-size='14' fill='%23bfdbfe' text-anchor='middle'%3E/TMSH%3C/text%3E%3C/svg%3E";
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-base sm:text-lg font-bold text-blue-800 truncate">MTHS/TMSH</div>
-                    <div className="text-xs text-blue-600 mt-0.5 truncate">{currentLang.tagline}</div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                  aria-label="Fermer le menu"
-                >
-                  <X size={20} className="sm:w-6 sm:h-6 text-blue-600" />
-                </button>
-              </div>
-            </div>
-
-            <div className="p-3 sm:p-4">
-              {/* Résumé du panier dans le menu mobile */}
-              <div className="mb-4 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg">
-                      <ShoppingCart size={18} className="sm:w-5 sm:h-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-blue-800 text-sm sm:text-base">{currentLang.menu.cart}</p>
-                      <p className="text-xs sm:text-sm text-blue-700">
-                        {cart.length} {cart.length === 1 ? currentLang.cartItems.item : currentLang.cartItems.items}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-blue-700 text-base sm:text-lg">{formatPrice(cartTotal)}</p>
-                    {cart.length > 0 && (
-                      <button
-                        onClick={clearCart}
-                        className="text-xs text-red-500 hover:text-red-700 flex items-center gap-1 mt-1"
-                        aria-label="Vider le panier"
-                      >
-                        <Trash2 size={10} className="sm:w-3 sm:h-3" />
-                        Vider
-                      </button>
-                    )}
-                  </div>
-                </div>
-                {cart.length === 0 ? (
-                  <p className="text-center text-gray-500 text-xs sm:text-sm">{currentLang.cartItems.empty}</p>
-                ) : (
-                  <div className="space-y-2">
-                    {cart.slice(0, 3).map((item, index) => (
-                      <div key={`${item.id}-${index}`} className="flex items-center gap-2 p-2 bg-white rounded-lg">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-50 rounded overflow-hidden flex-shrink-0">
-                          <img 
-                            src={item.cover} 
-                            alt={item.title}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs sm:text-sm font-medium text-blue-900 truncate">{item.title}</p>
-                          <p className="text-xs text-blue-600">{formatPrice(item.price)}</p>
-                        </div>
-                        <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-red-400 hover:text-red-600 p-1 flex-shrink-0"
-                          aria-label="Supprimer"
-                        >
-                          <Trash2 size={12} className="sm:w-4 sm:h-4" />
-                        </button>
-                      </div>
-                    ))}
-                    <div className="flex gap-2 pt-2">
-                      <Link
-                        to="/cart"
-                        className="flex-1 py-2 text-center border border-blue-300 text-blue-700 hover:bg-blue-50 rounded-lg text-xs sm:text-sm font-medium"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {currentLang.cartItems.viewCart}
-                      </Link>
-                      <Link
-                        to="/checkout"
-                        className="flex-1 py-2 text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-md"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {currentLang.cartItems.checkout}
-                      </Link>
+                        </>
+                      )}
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Sélecteur de langue dans le menu mobile */}
-              <div className="mb-6 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
-                <div className="flex items-center gap-2 mb-3">
-                  <Globe size={18} className="sm:w-5 sm:h-5 text-blue-600" />
-                  <span className="font-semibold text-blue-800 text-sm sm:text-base">Langue / Language</span>
+              {/* LOGIN - desktop only */}
+              <Link to="/login" className={`hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all ${
+                scrolled ? "text-blue-200 hover:text-white hover:bg-blue-800" : "text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+              }`}>
+                <User className="w-4 h-4" />
+                {lang.cta.login}
+              </Link>
+
+              {/* REGISTER - desktop only */}
+              <Link to="/register" className={`hidden sm:inline-flex items-center px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-lg whitespace-nowrap ${
+                scrolled
+                  ? "bg-white text-blue-900 hover:bg-blue-50 shadow-blue-950/40"
+                  : "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-blue-500/30"
+              }`}>
+                {lang.cta.register}
+              </Link>
+
+              {/* HAMBURGER */}
+              <button
+                onClick={() => setIsMenuOpen(true)}
+                className={`lg:hidden flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl transition-all ${
+                  scrolled ? "text-white hover:bg-blue-800" : "text-blue-700 hover:bg-blue-50"
+                }`}
+                aria-label="Ouvrir le menu"
+              >
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      {/* ═══════════════════════════════════════════════
+          MOBILE MENU — Full screen slide-in
+      ═══════════════════════════════════════════════ */}
+      {/* Overlay */}
+      <div
+        className={`fixed inset-0 z-[60] bg-blue-950/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+          isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsMenuOpen(false)}
+      />
+
+      {/* Drawer */}
+      <div className={`fixed inset-y-0 right-0 z-[70] w-[85vw] max-w-sm bg-white flex flex-col transition-transform duration-300 ease-out lg:hidden shadow-2xl ${
+        isMenuOpen ? "translate-x-0" : "translate-x-full"
+      }`}>
+
+        {/* Drawer Header */}
+        <div className="shrink-0 bg-gradient-to-r from-blue-800 to-blue-700 px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-12 h-12 rounded-lg bg-white/10 border border-white/20 overflow-hidden flex items-center justify-center shrink-0">
+              <img src="/images/logo.png" alt="Logo" className="w-full h-full object-contain p-1"
+                onError={(e) => { e.target.style.display = "none"; }}
+              />
+            </div>
+            <div>
+              <p className="text-white font-black text-base leading-none">MTHS/TMSH</p>
+              <p className="text-blue-300 text-[10px] leading-tight mt-0.5 max-w-[170px] truncate">{lang.tagline}</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-white"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Drawer Body — scrollable */}
+        <div className="flex-1 overflow-y-auto overscroll-contain">
+
+          {/* Language switcher */}
+          <div className="px-4 pt-4 pb-3 border-b border-blue-50">
+            <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+              <Globe className="w-3 h-3" /> Langue / Language
+            </p>
+            <div className="flex gap-2">
+              {["fr", "en"].map((l) => (
+                <button key={l} onClick={() => setLanguage(l)}
+                  className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${
+                    language === l
+                      ? "bg-blue-700 text-white shadow-lg shadow-blue-500/30"
+                      : "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                  }`}
+                >
+                  {l === "fr" ? "🇫🇷 Français" : "🇬🇧 English"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Search */}
+          <div className="px-4 py-3 border-b border-blue-50">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-400" />
+              <input
+                type="text"
+                placeholder={lang.cta.search}
+                className="w-full pl-9 pr-4 py-2.5 bg-blue-50 border border-blue-100 rounded-xl text-sm text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+          </div>
+
+          {/* Cart summary */}
+          <div className="px-4 py-3 border-b border-blue-50">
+            <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+              <ShoppingCart className="w-3 h-3" /> {lang.cart.title} ({cartCount})
+            </p>
+            {cart.length === 0 ? (
+              <p className="text-sm text-gray-400 text-center py-2">{lang.cart.empty}</p>
+            ) : (
+              <>
+                <div className="space-y-1.5 max-h-36 overflow-y-auto mb-2.5">
+                  {cart.slice(0, 4).map((item, i) => (
+                    <div key={i} className="flex items-center gap-2 bg-blue-50 rounded-xl p-2">
+                      <div className="w-10 h-10 rounded-lg overflow-hidden bg-blue-100 shrink-0">
+                        <img src={item.cover} alt={item.title} className="w-full h-full object-cover"
+                          onError={(e) => { e.target.src = "https://via.placeholder.com/40?text=📚"; }}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-blue-900 truncate">{item.title}</p>
+                        <p className="text-[10px] text-blue-600 font-bold">{fmt(item.price)}</p>
+                      </div>
+                      <button onClick={() => removeFromCart(item.id)} className="text-red-400 hover:text-red-600 p-0.5 shrink-0">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                  {cart.length > 4 && (
+                    <p className="text-xs text-blue-400 text-center">+{cart.length - 4} autre(s) article(s)</p>
+                  )}
+                </div>
+                <div className="flex items-center justify-between mb-2.5 bg-blue-50 rounded-xl px-3 py-2">
+                  <span className="text-sm font-bold text-blue-900">{lang.cart.total}</span>
+                  <span className="text-sm font-black text-blue-700">{fmt(cartTotal)}</span>
                 </div>
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => setLanguage('fr')}
-                    className={`flex-1 py-2 sm:py-3 rounded-lg text-center font-medium transition-all text-sm sm:text-base ${
-                      language === 'fr' 
-                        ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md' 
-                        : 'bg-white text-blue-700 border border-blue-200 hover:bg-blue-50'
-                    }`}
-                  >
-                    Français
-                  </button>
-                  <button
-                    onClick={() => setLanguage('en')}
-                    className={`flex-1 py-2 sm:py-3 rounded-lg text-center font-medium transition-all text-sm sm:text-base ${
-                      language === 'en' 
-                        ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md' 
-                        : 'bg-white text-blue-700 border border-blue-200 hover:bg-blue-50'
-                    }`}
-                  >
-                    English
-                  </button>
+                  <Link to="/cart" onClick={() => setIsMenuOpen(false)}
+                    className="flex-1 py-2 text-center text-sm font-semibold text-blue-700 border-2 border-blue-200 rounded-xl hover:bg-blue-50 transition-colors"
+                  >{lang.cart.view}</Link>
+                  <Link to="/checkout" onClick={() => setIsMenuOpen(false)}
+                    className="flex-1 py-2 text-center text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg shadow-blue-500/25"
+                  >{lang.cart.checkout}</Link>
                 </div>
-              </div>
+              </>
+            )}
+          </div>
 
-              {/* Liens du menu mobile */}
-              <div className="space-y-1">
-                <div className="text-xs font-semibold text-blue-500 uppercase tracking-wider px-2 py-1">
-                  Navigation Principale
-                </div>
-                {mainMenuItems.map((item) => (
-                  <Link
-                    key={item.label}
-                    to={item.href}
-                    className="flex items-center justify-between px-3 sm:px-4 py-3 text-blue-800 hover:bg-blue-50 rounded-xl transition-colors font-medium border border-transparent hover:border-blue-200"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="text-blue-600">
-                        {menuIcons[item.icon]}
-                      </div>
-                      <span className="text-sm sm:text-base">{item.label}</span>
-                    </div>
-                    <ChevronDown size={16} className="transform -rotate-90 text-blue-400" />
-                  </Link>
-                ))}
-                
-                <div className="text-xs font-semibold text-blue-500 uppercase tracking-wider px-2 py-1 mt-3">
-                  Autres Sections
-                </div>
-                {secondaryMenuItems.map((item) => (
-                  <Link
-                    key={item.label}
-                    to={item.href}
-                    className="flex items-center justify-between px-3 sm:px-4 py-3 text-blue-700 hover:bg-blue-50 rounded-xl transition-colors font-medium border border-transparent hover:border-blue-200"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="text-blue-600">
-                        {menuIcons[item.icon]}
-                      </div>
-                      <span className="text-sm sm:text-base">{item.label}</span>
-                    </div>
-                    <ChevronDown size={14} className="transform -rotate-90 text-blue-400" />
-                  </Link>
-                ))}
-              </div>
-
-              {/* Boutons Connexion / Inscription dans le menu mobile */}
-              <div className="mt-6 space-y-2">
+          {/* Navigation links */}
+          <div className="px-4 py-3">
+            <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">Navigation</p>
+            <div className="space-y-0.5">
+              {lang.nav.map((item) => (
                 <Link
-                  to="/login"
-                  className="flex items-center justify-center gap-2 w-full py-3 border-2 border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-50 rounded-xl font-semibold transition-colors text-sm sm:text-base"
+                  key={item.href}
+                  to={item.href}
                   onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-3 px-3 py-3 rounded-xl text-blue-800 hover:bg-blue-50 hover:text-blue-900 transition-all group"
                 >
-                  <User size={18} className="sm:w-5 sm:h-5" />
-                  {currentLang.cta.login}
+                  <span className="w-7 h-7 flex items-center justify-center bg-blue-100 group-hover:bg-blue-200 rounded-lg text-blue-600 shrink-0 transition-colors">
+                    {icons[item.icon]}
+                  </span>
+                  <span className="flex-1 text-sm font-semibold">{item.label}</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-blue-300 group-hover:text-blue-500 transition-colors" />
                 </Link>
-                
-                <Link
-                  to="/register"
-                  className="block w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-center rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {currentLang.cta.register}
-                </Link>
-              </div>
+              ))}
+            </div>
+          </div>
 
-              {/* Coordonnées d'urgence */}
-              <div className="mt-6 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
-                <div className="flex items-center gap-2 sm:gap-3 mb-3">
-                  <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg">
-                    <Phone size={18} className="sm:w-5 sm:h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-blue-800 text-sm sm:text-base">{currentLang.cta.emergency}</p>
-                    <p className="text-xs sm:text-sm text-blue-700 font-semibold">+237 693 21 54 31</p>
-                  </div>
-                </div>
-                <div className="text-xs sm:text-sm text-blue-700 space-y-1.5">
-                  <p className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                    Centre d'Abili, Yaoundé
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                    Lundi - Samedi: 8h - 18h
-                  </p>
-                </div>
+          {/* Auth buttons */}
+          <div className="px-4 pb-3 border-t border-blue-50 pt-3">
+            <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">Mon compte</p>
+            <div className="flex gap-2">
+              <Link to="/login" onClick={() => setIsMenuOpen(false)}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 border-2 border-blue-200 text-blue-700 hover:bg-blue-50 rounded-xl font-semibold text-sm transition-all"
+              >
+                <User className="w-4 h-4" />
+                {lang.cta.login}
+              </Link>
+              <Link to="/register" onClick={() => setIsMenuOpen(false)}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-500/30"
+              >
+                {lang.cta.register}
+              </Link>
+            </div>
+          </div>
+
+          {/* Emergency */}
+          <div className="mx-4 mb-4 p-3 bg-gradient-to-r from-red-50 to-orange-50 border border-red-100 rounded-2xl">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 bg-red-100 rounded-xl flex items-center justify-center shrink-0">
+                <AlertCircle className="w-5 h-5 text-red-500 animate-pulse" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-black text-red-700 uppercase tracking-wide">
+                  {lang.cta.emergency} Spirituelle
+                </p>
+                <a href="tel:+237693215431" className="text-sm font-black text-red-600 hover:text-red-800">
+                  +237 693 21 54 31
+                </a>
+                <p className="text-[10px] text-red-400 mt-0.5">Centre d'Abili, Yaoundé · Lun–Sam 8h–18h</p>
               </div>
             </div>
           </div>
         </div>
-      </nav>
+      </div>
 
-      {/* Overlay sombre quand le menu mobile est ouvert */}
-      {isMenuOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-          onClick={() => setIsMenuOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Styles CSS pour les animations */}
-      <style jsx>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
+      {/* ── STYLES ── */}
+      <style>{`
+        @keyframes ticker {
+          0%   { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        
-        .animate-marquee {
-          animation: marquee 35s linear infinite;
+        .animate-ticker {
+          animation: ticker 30s linear infinite;
+          display: inline-flex;
+          will-change: transform;
         }
-        
-        @media (max-width: 640px) {
-          .animate-marquee {
-            animation-duration: 45s;
-          }
+        .animate-ticker:hover { animation-play-state: paused; }
+
+        @keyframes dropdown {
+          from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        
-        .animate-marquee:hover {
-          animation-play-state: paused;
+        .animate-dropdown {
+          animation: dropdown 0.18s ease-out;
         }
 
-        @keyframes fadeIn {
-          from { 
-            opacity: 0; 
-            transform: translateY(-8px); 
-          }
-          to { 
-            opacity: 1; 
-            transform: translateY(0); 
-          }
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.2s ease-out;
-        }
+        .custom-scroll::-webkit-scrollbar { width: 3px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #bfdbfe; border-radius: 99px; }
       `}</style>
-    </header>
+    </>
   );
 }
 

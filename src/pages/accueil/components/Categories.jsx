@@ -272,21 +272,7 @@ const WhyChooseUs = () => {
       datePublication: "2023",
       langue: "Français"
     },
-    {
-      id: 11,
-      titre: "Chretien africain face a la maladi",
-      auteur: "Centre MTHS",
-      desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre11/livre11_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    },
+   
     {
       id: 12,
       titre: "Religion Chinoise face à la Sorcellerie",
@@ -429,6 +415,21 @@ const WhyChooseUs = () => {
       desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
       prixFCFA: 6500,
       image: "/images/livre21/livre21_1.png",
+      format: ["Papier", "PDF"],
+      pages: 310,
+      stock: 20,
+      type: "Livre",
+      isbn: "978-2-954-12353-1",
+      datePublication: "2023",
+      langue: "Français"
+    },
+    {
+      id: 22,
+      titre: "Comment obtenir ta Délivrance et ta Victoire contre le Diable, les Démons et les Sorciers ",
+      auteur: "Centre MTHS",
+      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
+      prixFCFA: 6500,
+      image: "/images/livre22/livre22_1.png",
       format: ["Papier", "PDF"],
       pages: 310,
       stock: 20,

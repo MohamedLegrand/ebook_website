@@ -33,128 +33,274 @@ function Hero() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const slides = [
+  // ─────────────────────────────────────────────
+  // Données complètes de tous les produits MTHS
+  // ─────────────────────────────────────────────
+  const allProducts = [
     {
       id: 1,
       titre: "Chrétien africain face à la sorcellerie",
-      description: "Manuel complet de la Médecine Traditionnelle des Handicapés Spirituels. Fondements doctrinaux et pratiques.",
-      image: "/images/livre1/livre1_1.png",
-      bgColor: "from-blue-600 to-indigo-700",
-      gradient: "bg-gradient-to-r from-blue-600 to-indigo-700",
-      icon: <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />,
-      cta: "Découvrir",
-      auteur: "Centre MTHS",
-      type: "Livre doctrinal",
+      auteur: "NGA Marie Constantin & SIDA ABENA Jean Paul Sylvain",
+      desc: "Manuel de référence sur la confrontation chrétienne aux phénomènes de sorcellerie en Afrique.",
       prixFCFA: 6500,
+      image: "/images/livre1/livre1_1.png",
+      type: "Livre doctrinal",
       pages: 320,
       stock: 50
     },
     {
       id: 2,
       titre: "Comment reconnaître à vue d'œil un sorcier",
-      description: "Étude approfondie du rite SO'O dans sa version christianisée. Guide pratique pour le discernement spirituel.",
-      image: "/images/livre2/livre2_1.png",
-      bgColor: "from-purple-600 to-violet-700",
-      gradient: "bg-gradient-to-r from-purple-600 to-violet-700",
-      icon: <Headphones className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />,
-      cta: "Écouter",
-      auteur: "Centre MTHS",
-      type: "Manuel clinique",
+      auteur: "SIDA ABENA Jean Paul Sylvain",
+      desc: "Guide d'observation et de discernement des personnes impliquées dans les pratiques occultes.",
       prixFCFA: 6500,
+      image: "/images/livre2/livre2_1.png",
+      type: "Manuel clinique",
       pages: 240,
       stock: 35
     },
     {
       id: 3,
       titre: "Comment se soigner des persécutions spirituelles",
-      description: "Guide des remèdes traditionnels améliorés et leur intégration dans une approche chrétienne.",
-      image: "/images/livre3/livre3_1.png",
-      bgColor: "from-amber-600 to-orange-600",
-      gradient: "bg-gradient-to-r from-amber-600 to-orange-600",
-      icon: <Shield className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />,
-      cta: "Protection",
-      auteur: "Centre MTHS",
-      type: "Guide thérapeutique",
+      auteur: "SIDA ABENA Jean Paul Sylvain",
+      desc: "Guide thérapeutique intégrant remèdes naturels, prières et rites de délivrance.",
       prixFCFA: 6500,
+      image: "/images/livre3/livre3_1.png",
+      type: "Guide thérapeutique",
       pages: 280,
       stock: 40
     },
     {
       id: 4,
       titre: "À la rencontre de JPSSA",
-      description: "Méthodologie du diagnostic des handicaps spirituels selon le révélateur de la MTHS.",
-      image: "/images/livre4/livre4_1.png",
-      bgColor: "from-emerald-600 to-teal-700",
-      gradient: "bg-gradient-to-r from-emerald-600 to-teal-700",
-      icon: <User className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />,
-      cta: "Biographie",
       auteur: "Centre MTHS",
-      type: "E-book biographique",
+      desc: "Biographie spirituelle et doctrinale du fondateur de la Médecine Traditionnelle des Handicapés Spirituels.",
       prixFCFA: 6500,
+      image: "/images/livre4/livre4_1.png",
+      type: "E-book biographique",
       pages: 180,
       stock: 60
     },
     {
       id: 5,
       titre: "Le musulman face à la sorcellerie",
-      description: "Premier ouvrage adaptant les principes MTHS au contexte islamique africain.",
-      image: "/images/livre5/livre5_1.png",
-      bgColor: "from-rose-600 to-pink-700",
-      gradient: "bg-gradient-to-r from-rose-600 to-pink-700",
-      icon: <Star className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />,
-      cta: "Interreligieux",
       auteur: "Centre MTHS",
-      type: "Livre interreligieux",
+      desc: "Première approche interreligieuse adaptant les principes MTHS au contexte islamique africain.",
       prixFCFA: 6500,
+      image: "/images/livre5/livre5_1.png",
+      type: "Livre interreligieux",
       pages: 210,
       stock: 45
     },
     {
       id: 6,
-      titre: "Les dix commandements de satan",
-      description: "Étude théologique audacieuse décrivant les principes spirituels inversés.",
-      image: "/images/livre6/livre6_1.png",
-      bgColor: "from-red-600 to-rose-700",
-      gradient: "bg-gradient-to-r from-red-600 to-rose-700",
-      icon: <Award className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />,
-      cta: "Théologie",
-      auteur: "Centre MTHS",
-      type: "Ouvrage théologique",
+      titre: "Les dix commandements de Satan",
+      auteur: "SIDA ABENA Jean Paul Sylvain",
+      desc: "Étude théologique des principes spirituels inversés qui gouvernent les dynamiques occultes en Afrique.",
       prixFCFA: 6500,
+      image: "/images/livre6/livre6_1.png",
+      type: "Ouvrage théologique",
       pages: 290,
       stock: 30
     },
     {
       id: 7,
-      titre: "La transmission de la sorcellerie",
-      description: "Analyse des mécanismes héréditaires et psychologiques de transmission des patterns spirituels négatifs.",
-      image: "/images/livre7/livre7_1.png",
-      bgColor: "from-indigo-600 to-purple-700",
-      gradient: "bg-gradient-to-r from-indigo-600 to-purple-700",
-      icon: <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />,
-      cta: "Transgénérationnel",
-      auteur: "Centre MTHS",
-      type: "Analyse familiale",
+      titre: "La transmission de la sorcellerie au sein d'une famille",
+      auteur: "NGA Marie Constantin & SIDA ABENA Jean Paul Sylvain",
+      desc: "Analyse des mécanismes héréditaires et transgénérationnels de transmission des liens occultes dans les lignées africaines.",
       prixFCFA: 6500,
+      image: "/images/livre7/livre7_1.png",
+      type: "Analyse familiale",
       pages: 350,
       stock: 25
     },
     {
       id: 8,
-      titre: "Protocole thérapeutique MTHS",
-      description: "Interface entre psychologie moderne et spiritualité africaine. Méthodologies standardisées.",
-      image: "/images/livre9/livre9_1.png",
-      bgColor: "from-cyan-600 to-blue-700",
-      gradient: "bg-gradient-to-r from-cyan-600 to-blue-700",
-      icon: <Download className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />,
-      cta: "Télécharger",
-      auteur: "Centre MTHS",
-      type: "E-book technique",
+      titre: "La vie spirituelle du sorcier — Univers astral de la sorcellerie",
+      auteur: "SIDA ABENA Jean Paul Sylvain",
+      desc: "Exploration cartographique des dimensions spirituelles parallèles selon les traditions africaines et la révélation MTHS.",
       prixFCFA: 6500,
+      image: "/images/livre8/livre8_1.png",
+      type: "Étude ésotérique",
+      pages: 230,
+      stock: 40
+    },
+    {
+      id: 9,
+      titre: "Protocole thérapeutique MTHS",
+      auteur: "Centre MTHS — Équipe clinique",
+      desc: "Manuel technique standardisé des douze protocoles thérapeutiques de la Médecine Traditionnelle des Handicapés Spirituels.",
+      prixFCFA: 6500,
+      image: "/images/livre9/livre9_1.png",
+      type: "E-book technique",
       pages: 260,
       stock: 35
+    },
+    {
+      id: 10,
+      titre: "La guerre des spiritualités en Afrique",
+      auteur: "NGA Marie Constantin",
+      desc: "Analyse géopolitique et théologique des conflits spirituels contemporains sur le continent africain.",
+      prixFCFA: 6500,
+      image: "/images/livre10/livre10_1.png",
+      type: "Essai",
+      pages: 200,
+      stock: 50
+    },
+    {
+      id: 12,
+      titre: "Religion chinoise face à la sorcellerie",
+      auteur: "Centre MTHS",
+      desc: "Étude comparée des traditions spirituelles chinoises et africaines face aux phénomènes occultes — un dialogue interculturel inédit.",
+      prixFCFA: 6500,
+      image: "/images/livre12/livre12_1.png",
+      type: "Étude comparée",
+      pages: 310,
+      stock: 20
+    },
+    {
+      id: 13,
+      titre: "La vie après la mort",
+      auteur: "Centre MTHS",
+      desc: "Enquête théologique et anthropologique sur les conceptions africaines de l'au-delà et leur dialogue avec la foi chrétienne.",
+      prixFCFA: 6500,
+      image: "/images/livre13/livre13_1.png",
+      type: "Théologie",
+      pages: 310,
+      stock: 20
+    },
+    {
+      id: 14,
+      titre: "Ange ou Démon",
+      auteur: "Centre MTHS",
+      desc: "Manuel pratique du discernement des esprits dans la tradition chrétienne africaine.",
+      prixFCFA: 6500,
+      image: "/images/livre14/livre14_1.png",
+      type: "Manuel spirituel",
+      pages: 310,
+      stock: 20
+    },
+    {
+      id: 15,
+      titre: "Chrétien africain et la maladie",
+      auteur: "Centre MTHS",
+      desc: "Guide holistique de compréhension et de guérison des maladies selon une approche intégrant foi chrétienne, médecine moderne et thérapies africaines.",
+      prixFCFA: 6500,
+      image: "/images/livre15/livre15_1.png",
+      type: "Guide santé",
+      pages: 310,
+      stock: 20
+    },
+    {
+      id: 16,
+      titre: "Comment vivre ensemble avec les sorciers",
+      auteur: "Centre MTHS",
+      desc: "Stratégies pratiques de coexistence, de protection et de réconciliation dans des communautés marquées par la sorcellerie.",
+      prixFCFA: 6500,
+      image: "/images/livre16/livre16_1.png",
+      type: "Médiation",
+      pages: 310,
+      stock: 20
+    },
+    {
+      id: 17,
+      titre: "Le Satanisme et la dérive du monde",
+      auteur: "Centre MTHS",
+      desc: "Analyse théologique et sociale du satanisme contemporain et de ses infiltrations dans la société africaine et mondiale.",
+      prixFCFA: 6500,
+      image: "/images/livre17/livre17_1.png",
+      type: "Sociologie",
+      pages: 310,
+      stock: 20
+    },
+    {
+      id: 18,
+      titre: "Tradition africaine et christianisme",
+      auteur: "Centre MTHS",
+      desc: "Dialogue approfondi entre les traditions ancestrales africaines et la foi chrétienne — vers une synthèse authentique et libératrice.",
+      prixFCFA: 6500,
+      image: "/images/livre18/livre18_1.png",
+      type: "Inculturation",
+      pages: 310,
+      stock: 20
+    },
+    {
+      id: 19,
+      titre: "Le bouddhisme face à la sorcellerie et au Satanisme",
+      auteur: "Centre MTHS",
+      desc: "Étude comparative entre la philosophie bouddhiste et les phénomènes de sorcellerie et de satanisme.",
+      prixFCFA: 6500,
+      image: "/images/livre19/livre19_1.png",
+      type: "Religions comparées",
+      pages: 310,
+      stock: 20
+    },
+    {
+      id: 20,
+      titre: "Sectes et sociétés secrètes africaines",
+      auteur: "Centre MTHS",
+      desc: "Enquête documentée sur les organisations occultes et secrètes qui structurent les rapports de pouvoir en Afrique.",
+      prixFCFA: 6500,
+      image: "/images/livre20/livre20_1.png",
+      type: "Enquête",
+      pages: 310,
+      stock: 20
+    },
+    {
+      id: 21,
+      titre: "Comment comprendre et interpréter le Rêve",
+      auteur: "Centre MTHS",
+      desc: "Guide complet pour comprendre le langage des rêves selon la tradition africaine, la psychologie et la spiritualité chrétienne.",
+      prixFCFA: 6500,
+      image: "/images/livre21/livre21_1.png",
+      type: "Onirologie",
+      pages: 310,
+      stock: 20
+    },
+    {
+      id: 22,
+      titre: "Comment obtenir ta Délivrance et ta Victoire contre le Diable, les Démons et les Sorciers ",
+      auteur: "Centre MTHS",
+      desc: "Guide complet pour comprendre le langage des rêves selon la tradition africaine, la psychologie et la spiritualité chrétienne.",
+      prixFCFA: 6500,
+      image: "/images/livre22/livre22_1.png",
+      type: "Onirologie",
+      pages: 310,
+      stock: 20
     }
   ];
+
+  // Palette de couleurs et icônes pour varier l'affichage
+  const colorPalette = [
+    { bgColor: "from-blue-600 to-indigo-700", gradient: "bg-gradient-to-r from-blue-600 to-indigo-700", icon: <BookOpen /> },
+    { bgColor: "from-purple-600 to-violet-700", gradient: "bg-gradient-to-r from-purple-600 to-violet-700", icon: <Headphones /> },
+    { bgColor: "from-amber-600 to-orange-600", gradient: "bg-gradient-to-r from-amber-600 to-orange-600", icon: <Shield /> },
+    { bgColor: "from-emerald-600 to-teal-700", gradient: "bg-gradient-to-r from-emerald-600 to-teal-700", icon: <User /> },
+    { bgColor: "from-rose-600 to-pink-700", gradient: "bg-gradient-to-r from-rose-600 to-pink-700", icon: <Star /> },
+    { bgColor: "from-red-600 to-rose-700", gradient: "bg-gradient-to-r from-red-600 to-rose-700", icon: <Award /> },
+    { bgColor: "from-indigo-600 to-purple-700", gradient: "bg-gradient-to-r from-indigo-600 to-purple-700", icon: <Sparkles /> },
+    { bgColor: "from-cyan-600 to-blue-700", gradient: "bg-gradient-to-r from-cyan-600 to-blue-700", icon: <Download /> }
+  ];
+
+  // Construction du tableau des slides en associant chaque produit à une couleur/icône
+  const slides = allProducts.map((product, index) => {
+    const colorStyle = colorPalette[index % colorPalette.length];
+    return {
+      id: product.id,
+      titre: product.titre,
+      description: product.desc,
+      image: product.image,
+      bgColor: colorStyle.bgColor,
+      gradient: colorStyle.gradient,
+      icon: colorStyle.icon,
+      cta: "Découvrir",
+      auteur: product.auteur,
+      type: product.type,
+      prixFCFA: product.prixFCFA,
+      pages: product.pages,
+      stock: product.stock
+    };
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -484,7 +630,7 @@ function Hero() {
       {/* Mobile Navigation Hint */}
       <div className="lg:hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
         <div className="text-xs text-gray-500 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-200">
-          Swipe pour naviguer
+          Glissez pour naviguer
         </div>
       </div>
 

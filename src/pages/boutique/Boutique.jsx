@@ -305,21 +305,7 @@ function Boutique() {
           datePublication: "2023",
           langue: "Français"
         },
-        {
-          id: 11,
-          titre: "Chretien africain face a la maladi",
-          auteur: "Centre MTHS",
-          desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
-          prixFCFA: 6500,
-          image: "/images/livre11/livre11_1.png",
-          format: ["Papier", "PDF"],
-          pages: 310,
-          stock: 20,
-          type: "Livre",
-          isbn: "978-2-954-12353-1",
-          datePublication: "2023",
-          langue: "Français"
-        },
+     
         // Nouveaux livres 12 à 16
         {
           id: 12,
@@ -463,6 +449,21 @@ function Boutique() {
           desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
           prixFCFA: 6500,
           image: "/images/livre21/livre21_1.png",
+          format: ["Papier", "PDF"],
+          pages: 310,
+          stock: 20,
+          type: "Livre",
+          isbn: "978-2-954-12358-6",
+          datePublication: "2023",
+          langue: "Français"
+        },
+        {
+          id: 22,
+          titre: "Comment obtenir ta Délivrance et ta Victoire contre le Diable, les Démons et les Sorciers ",
+          auteur: "Centre MTHS",
+          desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
+          prixFCFA: 6500,
+          image: "/images/livre22/livre22_1.png",
           format: ["Papier", "PDF"],
           pages: 310,
           stock: 20,
