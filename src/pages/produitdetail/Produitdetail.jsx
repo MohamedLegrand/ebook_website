@@ -93,8 +93,9 @@ const ALL_PRODUCTS = [
     prixFCFA: 6500,
     images: [
       "/images/livre1/livre1_1.png",
-      "/images/livre1/livre1_3.png",
-      "/images/livre1/livre1_2.png"
+      "/images/livre1/livre1_3.png", // quatrieme de couverture
+      "/images/livre1/livre1_2.png",
+      "/images/livre1/livre1_4.png"
     ],
     format: ["Papier", "PDF"],
     pages: 320,
@@ -130,8 +131,9 @@ Ce livre ne vous fera pas peur. Il vous donnera des armes. Et après l'avoir lu,
     prixFCFA: 6500,
     images: [
       "/images/livre2/livre2_1.png",
-      "/images/livre2/livre2_3.png",
-      "/images/livre2/livre2_2.png"
+      "/images/livre2/livre2_3.png", // quatrieme de couverture
+      "/images/livre2/livre2_2.png",
+      "/images/livre2/livre2_4.png"
     ],
     format: ["Papier", "PDF", "EPUB"],
     pages: 240,
@@ -204,8 +206,11 @@ Si vous souffrez ou si vous accompagnez quelqu'un qui souffre, ce livre peut cha
     prixFCFA: 6500,
     images: [
       "/images/livre4/livre4_1.png",
-      "/images/livre4/livre4_3.png",
-      "/images/livre4/livre4_2.png"
+      "/images/livre4/livre4_3.png", // quatrieme de couverture
+      "/images/livre4/livre4_2.png",
+      "/images/livre4/livre4_4.png",
+      "/images/livre4/livre4_5.png",
+      "/images/livre4/livre4_6.png"
     ],
     format: ["PDF", "EPUB"],
     pages: 180,
@@ -317,6 +322,7 @@ Ce livre est dérangeant. Il est éclairant. Il est libérateur. Il est réserv�
     images: [
       "/images/livre7/livre7_1.png",
       "/images/livre7/livre7_3.png",
+      "/images/livre7/livre7_2.png",
       "/images/livre7/livre7_2.png"
     ],
     format: ["Papier", "PDF"],
@@ -464,8 +470,9 @@ Un livre nécessaire. Un livre urgent. Un livre que l'Afrique attendait.`
     prixFCFA: 6500,
     images: [
       "/images/livre12/livre12_1.png",
-      "/images/livre12/livre12_3.png",
-      "/images/livre12/livre12_2.png"
+      "/images/livre12/livre12_3.png", // quatrieme de couverture
+      "/images/livre12/livre12_2.png",
+      "/images/livre12/livre12_4.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -651,8 +658,9 @@ Parce que la coexistence n'est pas la capitulation. C'est la sagesse la plus hau
     prixFCFA: 6500,
     images: [
       "/images/livre17/livre17_1.png",
-      "/images/livre17/livre17_3.png",
-      "/images/livre17/livre17_2.png"
+      "/images/livre17/livre17_3.png", // quatrieme de couverture
+      "/images/livre17/livre17_2.png",
+      "/images/livre17/livre17_4.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -725,8 +733,9 @@ Vous n'aurez plus jamais à choisir.`
     prixFCFA: 6500,
     images: [
       "/images/livre19/livre19_1.png",
-      "/images/livre19/livre19_3.png",
-      "/images/livre19/livre19_2.png"
+      "/images/livre19/livre19_3.png", // quatrieme de couverture
+      "/images/livre19/livre19_2.png",
+      "/images/livre19/livre19_4.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -762,8 +771,9 @@ Que vous soyez croyant, chercheur ou simplement curieux de comprendre comment l'
     prixFCFA: 6500,
     images: [
       "/images/livre20/livre20_1.png",
-      "/images/livre20/livre20_3.png",
-      "/images/livre20/livre20_2.png"
+      "/images/livre20/livre20_3.png", // quatrieme de couverture
+      "/images/livre20/livre20_2.png",
+      "/images/livre20/livre20_4.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -799,8 +809,9 @@ Ce que vous ne savez pas peut vous contrôler. Ce que vous savez peut vous libé
     prixFCFA: 6500,
     images: [
       "/images/livre21/livre21_1.png",
-      "/images/livre21/livre21_3.png",
-      "/images/livre21/livre21_2.png"
+      "/images/livre21/livre21_3.png", // quatrieme de couverture
+      "/images/livre21/livre21_2.png",
+      "/images/livre21/livre21_4.png"
     ],
     format: ["Papier", "PDF"],
     pages: 310,
@@ -838,8 +849,9 @@ La nuit vous parle. Il est temps d'apprendre à l'écouter.`
   prixFCFA: 6500,
   images: [
     "/images/livre22/livre22_1.png",
-    "/images/livre22/livre22_3.png",
-    "/images/livre22/livre22_2.png"
+    "/images/livre22/livre22_3.png", // quatrieme de couverture
+    "/images/livre22/livre22_2.png",
+    "/images/livre22/livre22_4.png"
   ],
   format: ["Papier", "PDF"],
   pages: 310,

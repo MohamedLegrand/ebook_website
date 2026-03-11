@@ -21,14 +21,11 @@ function useOnClickOutside(ref, handler) {
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [language, setLanguage] = useState("fr");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeSection, setActiveSection] = useState(null);
 
-  const menuRef = useRef(null);
   const cartRef = useRef(null);
   const searchRef = useRef(null);
 
@@ -41,16 +38,9 @@ function Header() {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
-      setActiveSection(null);
     }
     return () => { document.body.style.overflow = "unset"; };
   }, [isMenuOpen]);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     if (isSearchOpen && searchRef.current) {
@@ -133,22 +123,23 @@ function Header() {
 
   const fmt = (p) => p.toLocaleString("fr-FR") + " FCFA";
 
+  // Fonction pour remonter en haut de page
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <>
-      <header className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-blue-950/97 backdrop-blur-md shadow-2xl shadow-blue-950/40"
-          : "bg-white shadow-md shadow-blue-100/60"
-      }`}>
+      <header className="sticky top-0 z-50 bg-white shadow-md shadow-blue-100/60 transition-all duration-300">
 
         {/* ── TOP BAR ── */}
-        <div className={`transition-all duration-300 ${scrolled ? "bg-blue-900" : "bg-gradient-to-r from-blue-700 to-blue-600"}`}>
+        <div className="bg-blue-50 border-b border-blue-100">
           <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
             <div className="flex items-center justify-between h-8 sm:h-9 gap-2">
 
               {/* Emergency */}
-              <Link to="/urgence" className="flex items-center gap-1.5 text-white hover:text-blue-200 transition-colors min-w-0 shrink-0">
-                <AlertCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-red-300 shrink-0 animate-pulse" />
+              <Link to="/urgence" className="flex items-center gap-1.5 text-blue-800 hover:text-blue-600 transition-colors min-w-0 shrink-0">
+                <AlertCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-red-500 shrink-0 animate-pulse" />
                 <span className="text-[10px] sm:text-xs font-semibold whitespace-nowrap">
                   <span className="hidden sm:inline">{lang.cta.emergency} : </span>
                   <span className="font-bold">+237 693 21 54 31</span>
@@ -159,7 +150,7 @@ function Header() {
               <div className="hidden md:flex flex-1 overflow-hidden mx-4">
                 <div className="ticker-wrap flex items-center gap-8 animate-ticker whitespace-nowrap">
                   {[...lang.ticker, ...lang.ticker].map((msg, i) => (
-                    <span key={i} className="flex items-center gap-2 text-[10px] sm:text-xs text-blue-200 font-medium">
+                    <span key={i} className="flex items-center gap-2 text-[10px] sm:text-xs text-blue-600 font-medium">
                       <span className="w-1 h-1 bg-blue-400 rounded-full shrink-0" />
                       {msg}
                     </span>
@@ -172,25 +163,25 @@ function Header() {
                 {/* Search toggle */}
                 <button
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
-                  className="p-1 sm:p-1.5 text-white/80 hover:text-white transition-colors rounded"
+                  className="p-1 sm:p-1.5 text-blue-600 hover:text-blue-800 transition-colors rounded"
                   aria-label="Rechercher"
                 >
                   <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
 
                 {/* Language */}
-                <div className="flex items-center bg-white/10 rounded-md overflow-hidden border border-white/20">
+                <div className="flex items-center bg-blue-100 rounded-md overflow-hidden border border-blue-200">
                   <button
                     onClick={() => setLanguage("fr")}
                     className={`px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs font-bold transition-all ${
-                      language === "fr" ? "bg-white text-blue-800" : "text-white/70 hover:text-white"
+                      language === "fr" ? "bg-blue-700 text-white" : "text-blue-700 hover:bg-blue-200"
                     }`}
                   >FR</button>
-                  <div className="w-px h-3 bg-white/20" />
+                  <div className="w-px h-3 bg-blue-200" />
                   <button
                     onClick={() => setLanguage("en")}
                     className={`px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs font-bold transition-all ${
-                      language === "en" ? "bg-white text-blue-800" : "text-white/70 hover:text-white"
+                      language === "en" ? "bg-blue-700 text-white" : "text-blue-700 hover:bg-blue-200"
                     }`}
                   >EN</button>
                 </div>
@@ -201,25 +192,21 @@ function Header() {
 
         {/* ── SEARCH BAR ── */}
         <div className={`overflow-hidden transition-all duration-300 ${isSearchOpen ? "max-h-16 opacity-100" : "max-h-0 opacity-0"}`}>
-          <div className={`px-3 sm:px-4 lg:px-6 py-2 border-b ${scrolled ? "bg-blue-900 border-blue-800" : "bg-blue-50 border-blue-100"}`}>
+          <div className="px-3 sm:px-4 lg:px-6 py-2 border-b bg-white border-blue-100">
             <div className="max-w-2xl mx-auto relative">
-              <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${scrolled ? "text-blue-300" : "text-blue-400"}`} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-400" />
               <input
                 ref={searchRef}
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={lang.cta.search}
-                className={`w-full pl-9 pr-9 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all ${
-                  scrolled
-                    ? "bg-blue-800 border-blue-700 text-white placeholder-blue-400"
-                    : "bg-white border-blue-200 text-blue-900 placeholder-blue-400"
-                }`}
+                className="w-full pl-9 pr-9 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all bg-white border-blue-200 text-blue-900 placeholder-blue-400"
               />
               <button onClick={() => { setIsSearchOpen(false); setSearchQuery(""); }}
                 className="absolute right-3 top-1/2 -translate-y-1/2"
               >
-                <X className={`w-4 h-4 ${scrolled ? "text-blue-300" : "text-blue-400"}`} />
+                <X className="w-4 h-4 text-blue-400" />
               </button>
             </div>
           </div>
@@ -230,7 +217,7 @@ function Header() {
           <div className="flex items-center justify-between h-20 sm:h-24 gap-2 sm:gap-3">
 
             {/* ── LOGO TRÈS GRAND, SANS CADRE ── */}
-            <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
+            <Link to="/" onClick={scrollToTop} className="flex items-center gap-2 sm:gap-3 group shrink-0">
               <div className="relative w-20 h-20 sm:w-24 sm:h-24">
                 <img
                   src="/images/logo.png"
@@ -242,22 +229,16 @@ function Header() {
                   }}
                 />
                 <div className="logo-fallback absolute inset-0 hidden items-center justify-center bg-blue-100 rounded-full">
-                  <span className={`text-3xl sm:text-4xl font-black ${scrolled ? "text-white" : "text-blue-700"}`}>M</span>
+                  <span className="text-3xl sm:text-4xl font-black text-blue-700">M</span>
                 </div>
               </div>
 
               <div className="flex flex-col min-w-0">
                 <div className="flex items-baseline gap-1">
-                  <span className={`text-2xl sm:text-3xl font-black tracking-tight transition-colors leading-none ${
-                    scrolled ? "text-white" : "text-blue-900"
-                  }`}>MTHS</span>
-                  <span className={`text-sm sm:text-base font-semibold transition-colors ${
-                    scrolled ? "text-blue-400" : "text-blue-400"
-                  }`}>/TMSH</span>
+                  <span className="text-2xl sm:text-3xl font-black tracking-tight leading-none text-blue-900">MTHS</span>
+                  <span className="text-sm sm:text-base font-semibold text-blue-500">/TMSH</span>
                 </div>
-                <p className={`text-sm sm:text-base leading-tight font-medium truncate max-w-[200px] sm:max-w-[320px] lg:max-w-[400px] transition-colors ${
-                  scrolled ? "text-blue-300" : "text-blue-500"
-                }`}>
+                <p className="text-sm sm:text-base leading-tight font-medium truncate max-w-[200px] sm:max-w-[320px] lg:max-w-[400px] text-blue-600">
                   {lang.tagline}
                 </p>
               </div>
@@ -269,11 +250,8 @@ function Header() {
                 <Link
                   key={item.href}
                   to={item.href}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-                    scrolled
-                      ? "text-blue-200 hover:text-white hover:bg-blue-800"
-                      : "text-blue-700 hover:text-blue-900 hover:bg-blue-50"
-                  }`}
+                  onClick={item.href === "/" ? scrollToTop : undefined}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap text-blue-700 hover:text-blue-900 hover:bg-blue-50"
                 >
                   {item.label}
                 </Link>
@@ -281,9 +259,7 @@ function Header() {
 
               {/* Dropdown "Plus" avec tous les autres liens */}
               <div className="relative group">
-                <button className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                  scrolled ? "text-blue-200 hover:text-white hover:bg-blue-800" : "text-blue-700 hover:text-blue-900 hover:bg-blue-50"
-                }`}>
+                <button className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all text-blue-700 hover:text-blue-900 hover:bg-blue-50">
                   Plus
                   <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
                 </button>
@@ -293,6 +269,7 @@ function Header() {
                       <Link
                         key={item.href}
                         to={item.href}
+                        onClick={item.href === "/" ? scrollToTop : undefined}
                         className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-blue-800 hover:bg-blue-50 hover:text-blue-900 rounded-lg transition-colors"
                       >
                         <span className="text-blue-500 shrink-0">{icons[item.icon]}</span>
@@ -317,9 +294,7 @@ function Header() {
               <div className="relative">
                 <button
                   onClick={() => setIsCartOpen(!isCartOpen)}
-                  className={`relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl transition-all ${
-                    scrolled ? "text-white hover:bg-blue-800" : "text-blue-700 hover:bg-blue-50"
-                  }`}
+                  className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl transition-all text-blue-700 hover:bg-blue-50"
                   aria-label={lang.cart.title}
                 >
                   <ShoppingCart className="w-5 h-5" />
@@ -333,7 +308,6 @@ function Header() {
                 {/* Cart Dropdown */}
                 {isCartOpen && (
                   <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl shadow-blue-200/60 border border-blue-100 z-50 overflow-hidden animate-dropdown">
-                    {/* Cart header */}
                     <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-700 to-blue-600 text-white">
                       <div className="flex items-center gap-2">
                         <ShoppingCart className="w-4 h-4" />
@@ -413,28 +387,20 @@ function Header() {
               </div>
 
               {/* LOGIN - desktop only */}
-              <Link to="/login" className={`hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all ${
-                scrolled ? "text-blue-200 hover:text-white hover:bg-blue-800" : "text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-              }`}>
+              <Link to="/login" className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all text-blue-600 hover:text-blue-800 hover:bg-blue-50">
                 <User className="w-4 h-4" />
                 {lang.cta.login}
               </Link>
 
               {/* REGISTER - desktop only */}
-              <Link to="/register" className={`hidden sm:inline-flex items-center px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-lg whitespace-nowrap ${
-                scrolled
-                  ? "bg-white text-blue-900 hover:bg-blue-50 shadow-blue-950/40"
-                  : "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-blue-500/30"
-              }`}>
+              <Link to="/register" className="hidden sm:inline-flex items-center px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-lg whitespace-nowrap bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-blue-500/30">
                 {lang.cta.register}
               </Link>
 
               {/* HAMBURGER */}
               <button
                 onClick={() => setIsMenuOpen(true)}
-                className={`lg:hidden flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl transition-all ${
-                  scrolled ? "text-white hover:bg-blue-800" : "text-blue-700 hover:bg-blue-50"
-                }`}
+                className="lg:hidden flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl transition-all text-blue-700 hover:bg-blue-50"
                 aria-label="Ouvrir le menu"
               >
                 <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -444,23 +410,16 @@ function Header() {
         </nav>
       </header>
 
-      {/* ═══════════════════════════════════════════════
-          MOBILE MENU — Full screen slide-in
-      ═══════════════════════════════════════════════ */}
-      {/* Overlay */}
+      {/* MOBILE MENU (inchangé) */}
       <div
         className={`fixed inset-0 z-[60] bg-blue-950/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
           isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setIsMenuOpen(false)}
       />
-
-      {/* Drawer */}
       <div className={`fixed inset-y-0 right-0 z-[70] w-[85vw] max-w-sm bg-white flex flex-col transition-transform duration-300 ease-out lg:hidden shadow-2xl ${
         isMenuOpen ? "translate-x-0" : "translate-x-full"
       }`}>
-
-        {/* Drawer Header */}
         <div className="shrink-0 bg-gradient-to-r from-blue-800 to-blue-700 px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-12 h-12 rounded-lg bg-white/10 border border-white/20 overflow-hidden flex items-center justify-center shrink-0">
@@ -481,9 +440,7 @@ function Header() {
           </button>
         </div>
 
-        {/* Drawer Body — scrollable */}
         <div className="flex-1 overflow-y-auto overscroll-contain">
-
           {/* Language switcher */}
           <div className="px-4 pt-4 pb-3 border-b border-blue-50">
             <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
@@ -570,7 +527,10 @@ function Header() {
                 <Link
                   key={item.href}
                   to={item.href}
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    if (item.href === "/") scrollToTop();
+                  }}
                   className="flex items-center gap-3 px-3 py-3 rounded-xl text-blue-800 hover:bg-blue-50 hover:text-blue-900 transition-all group"
                 >
                   <span className="w-7 h-7 flex items-center justify-center bg-blue-100 group-hover:bg-blue-200 rounded-lg text-blue-600 shrink-0 transition-colors">
@@ -621,7 +581,6 @@ function Header() {
         </div>
       </div>
 
-      {/* ── STYLES ── */}
       <style>{`
         @keyframes ticker {
           0%   { transform: translateX(0); }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
 import {
@@ -12,669 +12,563 @@ import {
   Package,
   FileText,
   Clock,
-  DollarSign,
-  Euro,
-  Coins,
-  ChevronDown
+  X,
 } from 'lucide-react';
 
+/* ─────────────────────────────────────────────
+   Currency config
+───────────────────────────────────────────── */
+const CURRENCIES = {
+  FCFA: { label: 'FCFA', symbol: 'FCFA', rate: 1,        flag: '🇨🇲', decimals: 0 },
+  USD:  { label: 'USD',  symbol: '$',    rate: 0.00165,  flag: '🇺🇸', decimals: 2 },
+  EUR:  { label: 'EUR',  symbol: '€',    rate: 0.00152,  flag: '🇪🇺', decimals: 2 },
+};
+
+function formatPrice(priceFCFA, currencyKey) {
+  const c = CURRENCIES[currencyKey];
+  const val = priceFCFA * c.rate;
+  if (currencyKey === 'FCFA') return `${val.toLocaleString('fr-FR')} FCFA`;
+  if (currencyKey === 'USD')  return `$${val.toFixed(2)}`;
+  if (currencyKey === 'EUR')  return `€${val.toFixed(2)}`;
+  return `${val.toLocaleString('fr-FR')} ${c.label}`;
+}
+
+/* ─────────────────────────────────────────────
+   Currency Switcher — pill tabs
+───────────────────────────────────────────── */
+function CurrencySwitcher({ currency, onChange }) {
+  return (
+    <div style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      background: '#f1f5f9',
+      borderRadius: '100px',
+      padding: '4px',
+      gap: '2px',
+      border: '1px solid #e2e8f0',
+    }}>
+      {Object.entries(CURRENCIES).map(([key, c]) => {
+        const active = key === currency;
+        return (
+          <button
+            key={key}
+            onClick={() => onChange(key)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '7px 16px',
+              borderRadius: '100px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '13px',
+              fontWeight: active ? 700 : 500,
+              color: active ? '#fff' : '#64748b',
+              background: active ? '#2563eb' : 'transparent',
+              boxShadow: active ? '0 2px 8px rgba(37,99,235,0.25)' : 'none',
+              transition: 'all 0.2s ease',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <span style={{ fontSize: '14px' }}>{c.flag}</span>
+            {c.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Book Card
+───────────────────────────────────────────── */
+function BookCard({ livre, currency, onAddToCart, onViewDetails, inCart, justAdded }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: inCart ? '#f0fdf4' : '#ffffff',
+        border: `1.5px solid ${inCart ? '#86efac' : hovered ? '#93c5fd' : '#e2e8f0'}`,
+        borderRadius: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        transition: 'border-color 0.2s, box-shadow 0.2s, transform 0.2s',
+        boxShadow: hovered
+          ? '0 8px 32px rgba(37,99,235,0.12)'
+          : '0 2px 8px rgba(0,0,0,0.05)',
+        transform: hovered ? 'translateY(-3px)' : 'none',
+        position: 'relative',
+        height: '100%',
+      }}
+    >
+      {/* Added confirmation badge */}
+      {justAdded && (
+        <div style={{
+          position: 'absolute', top: 10, right: 10, zIndex: 10,
+          background: '#22c55e', color: '#fff',
+          width: 28, height: 28, borderRadius: '50%',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(34,197,94,0.4)',
+          animation: 'popIn 0.3s ease',
+        }}>
+          <Check size={14} />
+        </div>
+      )}
+
+      {/* Cover image */}
+      <div style={{
+        position: 'relative',
+        height: '200px',
+        background: 'linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%)',
+        overflow: 'hidden',
+        flexShrink: 0,
+      }}>
+        <img
+          src={livre.image}
+          alt={livre.titre}
+          onError={(e) => { e.target.src = '/images/default-book.jpg'; }}
+          style={{
+            width: '100%', height: '100%', objectFit: 'cover',
+            transition: 'transform 0.5s ease',
+            transform: hovered ? 'scale(1.06)' : 'scale(1)',
+          }}
+        />
+        {/* Gradient overlay */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to top, rgba(15,23,42,0.35) 0%, transparent 50%)',
+        }} />
+        {/* Type badge */}
+        <div style={{
+          position: 'absolute', top: 10, left: 10,
+          background: 'rgba(255,255,255,0.92)',
+          backdropFilter: 'blur(8px)',
+          padding: '3px 10px',
+          borderRadius: '100px',
+          fontSize: '11px', fontWeight: 700,
+          color: '#1d4ed8', letterSpacing: '0.04em',
+        }}>
+          {livre.type}
+        </div>
+        {/* Stock badge */}
+        <div style={{
+          position: 'absolute', bottom: 10, right: 10,
+          background: livre.stock > 30
+            ? 'rgba(240,253,244,0.92)'
+            : 'rgba(254,249,195,0.92)',
+          backdropFilter: 'blur(8px)',
+          padding: '3px 9px',
+          borderRadius: '100px',
+          fontSize: '11px', fontWeight: 600,
+          color: livre.stock > 30 ? '#15803d' : '#92400e',
+          display: 'flex', alignItems: 'center', gap: 4,
+        }}>
+          <Package size={10} />
+          {livre.stock} restant{livre.stock > 1 ? 's' : ''}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div style={{ flex: 1, padding: '16px 18px 0', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+
+        {/* Title */}
+        <h3 style={{
+          margin: 0,
+          fontSize: '14.5px', fontWeight: 700,
+          color: '#0f172a', lineHeight: 1.35,
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          minHeight: '40px',
+        }}>
+          {livre.titre}
+        </h3>
+
+        {/* Author */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{
+            width: 22, height: 22, borderRadius: '50%',
+            background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <User size={12} color="#2563eb" />
+          </div>
+          <span style={{ fontSize: '12.5px', color: '#64748b', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {livre.auteur}
+          </span>
+        </div>
+
+        {/* Desc */}
+        <p style={{
+          margin: 0, fontSize: '12.5px', color: '#94a3b8', lineHeight: 1.6,
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>
+          {livre.desc}
+        </p>
+
+        {/* Meta chips */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          {livre.format?.map(f => (
+            <span key={f} style={{
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              background: '#eff6ff', color: '#1d4ed8',
+              fontSize: '11px', fontWeight: 600,
+              padding: '3px 9px', borderRadius: '100px',
+              border: '1px solid #bfdbfe',
+            }}>
+              <FileText size={10} />
+              {f}
+            </span>
+          ))}
+          {livre.pages && (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              background: '#f8fafc', color: '#64748b',
+              fontSize: '11px', fontWeight: 600,
+              padding: '3px 9px', borderRadius: '100px',
+              border: '1px solid #e2e8f0',
+            }}>
+              <Clock size={10} />
+              {livre.pages} p.
+            </span>
+          )}
+        </div>
+
+        {/* Price */}
+        <div style={{ marginTop: 'auto', paddingTop: 4 }}>
+          <div style={{ fontSize: '20px', fontWeight: 800, color: '#2563eb', lineHeight: 1 }}>
+            {formatPrice(livre.prixFCFA, currency)}
+          </div>
+          {currency !== 'FCFA' && (
+            <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: 3 }}>
+              ≈ {livre.prixFCFA.toLocaleString('fr-FR')} FCFA
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Action buttons */}
+      <div style={{ padding: '14px 18px 18px', display: 'flex', gap: 8 }}>
+        <button
+          onClick={() => onViewDetails(livre)}
+          style={{
+            flex: 1,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+            padding: '10px 14px',
+            borderRadius: '10px',
+            border: '1.5px solid #bfdbfe',
+            background: '#fff',
+            color: '#1d4ed8',
+            fontSize: '13px', fontWeight: 600,
+            cursor: 'pointer',
+            transition: 'background 0.15s, border-color 0.15s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#eff6ff'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; }}
+        >
+          <Eye size={14} />
+          Détails
+          <ArrowRight size={13} />
+        </button>
+
+        <button
+          onClick={() => onAddToCart(livre)}
+          style={{
+            flex: 1,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+            padding: '10px 14px',
+            borderRadius: '10px',
+            border: 'none',
+            background: inCart ? '#dcfce7' : 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+            color: inCart ? '#15803d' : '#fff',
+            fontSize: '13px', fontWeight: 600,
+            cursor: 'pointer',
+            transition: 'opacity 0.15s, transform 0.15s',
+            boxShadow: inCart ? 'none' : '0 3px 10px rgba(37,99,235,0.3)',
+          }}
+          onMouseEnter={e => { if (!inCart) e.currentTarget.style.opacity = '0.88'; }}
+          onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+        >
+          {inCart ? <Check size={14} /> : <ShoppingCart size={14} />}
+          {inCart ? 'Ajouté' : 'Panier'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Main component
+───────────────────────────────────────────── */
 const WhyChooseUs = () => {
   const navigate = useNavigate();
   const { addToCart, cart: globalCart } = useCart();
-  
-  const [currency, setCurrency] = useState("FCFA");
-  const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
+
+  const [currency, setCurrency] = useState('FCFA');
   const [addedProducts, setAddedProducts] = useState({});
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const exchangeRates = {
-    "FCFA": 1,
-    "USD": 0.00165,
-    "EUR": 0.00152
-  };
+  const livres = [
+    { id: 1,  titre: "Chretien africain face a la sorcellerie", auteur: "Centre MTHS", desc: "Manuel complet de la Médecine Traditionnelle des Handicapés Spirituels.", prixFCFA: 6500, image: "/images/livre1/livre1_1.png",   format: ["Papier", "PDF"],       pages: 320, stock: 50, type: "Livre",  isbn: "978-2-954-12345-6", datePublication: "2023", langue: "Français" },
+    { id: 2,  titre: "Comment reconnaitre a vue d'oeil un sorcier", auteur: "Centre MTHS", desc: "Étude approfondie du rite SO'O dans sa version christianisée.", prixFCFA: 6500, image: "/images/livre2/livre2_1.png",   format: ["Papier", "PDF", "EPUB"], pages: 240, stock: 35, type: "Livre",  isbn: "978-2-954-12346-3", datePublication: "2023", langue: "Français" },
+    { id: 3,  titre: "Comment se soigner des persecutions spirituelles", auteur: "Centre MTHS", desc: "Guide des remèdes traditionnels améliorés et leur intégration.", prixFCFA: 6500, image: "/images/livre3/livre3_1.png",   format: ["Papier"],               pages: 280, stock: 40, type: "Livre",  isbn: "978-2-954-12347-0", datePublication: "2023", langue: "Français" },
+    { id: 4,  titre: "A la rencontre de JPSSA", auteur: "Centre MTHS", desc: "Méthodologie du diagnostic des handicaps spirituels.", prixFCFA: 6500, image: "/images/livre4/livre4_1.png",   format: ["PDF", "EPUB"],          pages: 180, stock: 60, type: "E-book", datePublication: "2023", langue: "Français" },
+    { id: 5,  titre: "Le musulman face a la sorcellerie", auteur: "Centre MTHS", desc: "Guide pratique des rites de purification selon la tradition Béti.", prixFCFA: 6500, image: "/images/livre5/livre5_1.png",   format: ["Papier", "PDF"],        pages: 210, stock: 45, type: "Livre",  isbn: "978-2-954-12348-7", datePublication: "2023", langue: "Français" },
+    { id: 6,  titre: "Les dix commandements de satan", auteur: "Centre MTHS", desc: "Fondements théologiques de l'intégration culturelle africaine.", prixFCFA: 6500, image: "/images/livre6/livre6_1.png",   format: ["Papier"],               pages: 290, stock: 30, type: "Livre",  isbn: "978-2-954-12349-4", datePublication: "2023", langue: "Français" },
+    { id: 7,  titre: "La transmission de la sorcellerie au sein d'une famille", auteur: "Centre MTHS", desc: "Approche intégrative de la guérison selon la révélation de 1979.", prixFCFA: 6500, image: "/images/livre7/livre7_1.png",   format: ["Papier", "PDF"],        pages: 350, stock: 25, type: "Livre",  isbn: "978-2-954-12350-0", datePublication: "2023", langue: "Français" },
+    { id: 8,  titre: "La vie spirituelle du sorcier — Univers astral", auteur: "Centre MTHS", desc: "Analyse et solutions pour briser les chaînes familiales.", prixFCFA: 6500, image: "/images/livre8/livre8_1.png",   format: ["Papier"],               pages: 230, stock: 40, type: "Livre",  isbn: "978-2-954-12351-7", datePublication: "2023", langue: "Français" },
+    { id: 9,  titre: "Protocole therapeutique MTHS", auteur: "Centre MTHS", desc: "Interface entre psychologie moderne et spiritualité africaine.", prixFCFA: 6500, image: "/images/livre9/livre9_1.png",   format: ["PDF", "EPUB"],          pages: 260, stock: 35, type: "E-book", datePublication: "2023", langue: "Français" },
+    { id: 10, titre: "La guerre des spiritualités en Afrique", auteur: "Centre MTHS", desc: "Rites de passage christianisés pour les étapes de la vie.", prixFCFA: 6500, image: "/images/livre10/livre10_1.png", format: ["Papier"],               pages: 200, stock: 50, type: "Livre",  isbn: "978-2-954-12352-4", datePublication: "2023", langue: "Français" },
+    { id: 12, titre: "Religion Chinoise face à la Sorcellerie", auteur: "Centre MTHS", desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.", prixFCFA: 6500, image: "/images/livre12/livre12_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    { id: 13, titre: "La vie apres la Mort", auteur: "Centre MTHS", desc: "Enquête sur les conceptions africaines de l'au-delà.", prixFCFA: 6500, image: "/images/livre13/livre13_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    { id: 14, titre: "Ange ou Demon", auteur: "Centre MTHS", desc: "Discernement des esprits dans la tradition chrétienne africaine.", prixFCFA: 6500, image: "/images/livre14/livre14_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    { id: 15, titre: "Chretien africain et la maladie", auteur: "Centre MTHS", desc: "Guide holistique de guérison selon foi chrétienne et thérapies africaines.", prixFCFA: 6500, image: "/images/livre15/livre15_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    { id: 16, titre: "Comment vivre ensemble avec les sorciers", auteur: "Centre MTHS", desc: "Stratégies de coexistence, protection et réconciliation communautaire.", prixFCFA: 6500, image: "/images/livre16/livre16_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    { id: 17, titre: "Le Satanisme et la dérive du monde", auteur: "Centre MTHS", desc: "Analyse du satanisme contemporain et de ses infiltrations dans la société.", prixFCFA: 6500, image: "/images/livre17/livre17_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    { id: 18, titre: "Tradition africaine et christianisme", auteur: "Centre MTHS", desc: "Dialogue entre traditions ancestrales africaines et foi chrétienne.", prixFCFA: 6500, image: "/images/livre18/livre18_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    { id: 19, titre: "Le bouddhisme face à la sorcellerie", auteur: "Centre MTHS", desc: "Étude comparative entre philosophie bouddhiste et phénomènes occultes.", prixFCFA: 6500, image: "/images/livre19/livre19_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    { id: 20, titre: "Sectes et sociétés secrètes africaines", auteur: "Centre MTHS", desc: "Enquête sur les organisations occultes qui structurent le pouvoir en Afrique.", prixFCFA: 6500, image: "/images/livre20/livre20_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    { id: 21, titre: "Comment comprendre et interpreter le Rêve", auteur: "Centre MTHS", desc: "Guide pour comprendre le langage des rêves selon tradition africaine et chrétienne.", prixFCFA: 6500, image: "/images/livre21/livre21_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    { id: 22, titre: "Comment obtenir ta Délivrance et ta Victoire", auteur: "Centre MTHS", desc: "Guide complet pour la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre22/livre22_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+  ];
 
-  const currencyIcons = {
-    "FCFA": <Coins className="w-4 h-4" />,
-    "USD": <DollarSign className="w-4 h-4" />,
-    "EUR": <Euro className="w-4 h-4" />
-  };
-
-  const currencyNames = {
-    "FCFA": "Franc CFA",
-    "USD": "Dollar US",
-    "EUR": "Euro"
-  };
-
-  const formatPrice = (priceFCFA, currencyType) => {
-    const convertedPrice = priceFCFA * exchangeRates[currencyType];
-    
-    switch(currencyType) {
-      case "FCFA":
-        return `${convertedPrice.toLocaleString('fr-FR')} FCFA`;
-      case "USD":
-        return `$${convertedPrice.toFixed(2)}`;
-      case "EUR":
-        return `€${convertedPrice.toFixed(2)}`;
-      default:
-        return `${convertedPrice.toLocaleString('fr-FR')} FCFA`;
-    }
-  };
+  const filtered = livres.filter(l =>
+    l.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    l.auteur.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    l.desc.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleAddToCart = (product) => {
     addToCart({
-      id: product.id,
-      type: 'mths-product',
-      title: product.titre,
-      author: product.auteur || "Centre MTHS",
-      price: product.prixFCFA,
-      cover: product.image,
-      category: "Livres MTHS",
-      format: product.format?.[0] || "Physique",
-      pages: product.pages,
-      stock: product.stock
+      id: product.id, type: 'mths-product',
+      title: product.titre, author: product.auteur || 'Centre MTHS',
+      price: product.prixFCFA, cover: product.image,
+      category: 'Livres MTHS', format: product.format?.[0] || 'Physique',
+      pages: product.pages, stock: product.stock,
     });
-    
-    setAddedProducts(prev => ({
-      ...prev,
-      [product.id]: true
-    }));
-    
-    setTimeout(() => {
-      setAddedProducts(prev => ({
-        ...prev,
-        [product.id]: false
-      }));
-    }, 2000);
+    setAddedProducts(p => ({ ...p, [product.id]: true }));
+    setTimeout(() => setAddedProducts(p => ({ ...p, [product.id]: false })), 2000);
   };
 
-  const isInCart = (productId) => {
-    return globalCart.some(item => item.id === productId && item.type === 'mths-product');
-  };
+  const isInCart = (id) => globalCart.some(i => i.id === id && i.type === 'mths-product');
 
   const handleViewDetails = (product) => {
-    const productImages = [
-      `/images/livre${product.id}/livre${product.id}_1.png`,
-      `/images/livre${product.id}/livre${product.id}_2.png`,
-      `/images/livre${product.id}/livre${product.id}_3.png`
-    ];
-    
-    const cleanProduct = {
-      id: product.id,
-      titre: product.titre,
-      auteur: product.auteur,
-      desc: product.desc,
-      prixFCFA: product.prixFCFA,
-      image: product.image,
-      images: productImages,
-      format: product.format,
-      pages: product.pages,
-      stock: product.stock,
-      type: product.type,
-      isbn: product.isbn,
-      datePublication: product.datePublication,
-      langue: product.langue
-    };
-    
+    const productImages = [1,2,3].map(n => `/images/livre${product.id}/livre${product.id}_${n}.png`);
     navigate(`/produit/${product.id}`, {
-      state: { 
-        product: cleanProduct,
-        currency: currency
-      }
+      state: {
+        product: { ...product, images: productImages },
+        currency,
+      },
     });
   };
 
-  const livres = [
-    {
-      id: 1,
-      titre: "Chretien africain face a la sorcellerie",
-      auteur: "Centre MTHS",
-      desc: "Manuel complet de la Médecine Traditionnelle des Handicapés Spirituels.",
-      prixFCFA: 6500,
-      image: "/images/livre1/livre1_1.png",
-      format: ["Papier", "PDF"],
-      pages: 320,
-      stock: 50,
-      type: "Livre",
-      isbn: "978-2-954-12345-6",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 2,
-      titre: "Comment reconnaitre a vur d'oeil un sorcier",
-      auteur: "Centre MTHS",
-      desc: "Étude approfondie du rite SO'O dans sa version christianisée.",
-      prixFCFA: 6500,
-      image: "/images/livre2/livre2_1.png",
-      format: ["Papier", "PDF", "EPUB"],
-      pages: 240,
-      stock: 35,
-      type: "Livre",
-      isbn: "978-2-954-12346-3",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 3,
-      titre: "Comment se soigner des persecutions spirituelles",
-      auteur: "Centre MTHS",
-      desc: "Guide des remèdes traditionnels améliorés et leur intégration.",
-      prixFCFA: 6500,
-      image: "/images/livre3/livre3_1.png",
-      format: ["Papier"],
-      pages: 280,
-      stock: 40,
-      type: "Livre",
-      isbn: "978-2-954-12347-0",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 4,
-      titre: "A la rencontre de JPSSA",
-      auteur: "Centre MTHS",
-      desc: "Méthodologie du diagnostic des handicaps spirituels.",
-      prixFCFA: 6500,
-      image: "/images/livre4/livre4_1.png",
-      format: ["PDF", "EPUB"],
-      pages: 180,
-      stock: 60,
-      type: "E-book",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 5,
-      titre: "Le musulman face a la sorcellerie",
-      auteur: "Centre MTHS",
-      desc: "Guide pratique des rites de purification selon la tradition Béti.",
-      prixFCFA: 6500,
-      image: "/images/livre5/livre5_1.png",
-      format: ["Papier", "PDF"],
-      pages: 210,
-      stock: 45,
-      type: "Livre",
-      isbn: "978-2-954-12348-7",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 6,
-      titre: "Les dix commendements de satan",
-      auteur: "Centre MTHS",
-      desc: "Fondements théologiques de l'intégration culturelle africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre6/livre6_1.png",
-      format: ["Papier"],
-      pages: 290,
-      stock: 30,
-      type: "Livre",
-      isbn: "978-2-954-12349-4",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 7,
-      titre: "La transmission de le sorcellerie au sein d'une famille",
-      auteur: "Centre MTHS",
-      desc: "Approche intégrative de la guérison selon la révélation de 1979.",
-      prixFCFA: 6500,
-      image: "/images/livre7/livre7_1.png",
-      format: ["Papier", "PDF"],
-      pages: 350,
-      stock: 25,
-      type: "Livre",
-      isbn: "978-2-954-12350-0",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 8,
-      titre: "La vie spirituel du sorcier-univer astral de la sorcelerie",
-      auteur: "Centre MTHS",
-      desc: "Analyse et solutions pour briser les chaînes familiales.",
-      prixFCFA: 6500,
-      image: "/images/livre8/livre8_1.png",
-      format: ["Papier"],
-      pages: 230,
-      stock: 40,
-      type: "Livre",
-      isbn: "978-2-954-12351-7",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 9,
-      titre: "Protocole therapeutique MTHS",
-      auteur: "Centre MTHS",
-      desc: "Interface entre psychologie moderne et spiritualité africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre9/livre9_1.png",
-      format: ["PDF", "EPUB"],
-      pages: 260,
-      stock: 35,
-      type: "E-book",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 10,
-      titre: "La guerre des spiritualités en Afrique",
-      auteur: "Centre MTHS",
-      desc: "Rites de passage christianisés pour les étapes de la vie.",
-      prixFCFA: 6500,
-      image: "/images/livre10/livre10_1.png",
-      format: ["Papier"],
-      pages: 200,
-      stock: 50,
-      type: "Livre",
-      isbn: "978-2-954-12352-4",
-      datePublication: "2023",
-      langue: "Français"
-    },
-   
-    {
-      id: 12,
-      titre: "Religion Chinoise face à la Sorcellerie",
-      auteur: "Centre MTHS",
-      desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre12/livre12_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 13,
-      titre: "La vie apres la Mort",
-      auteur: "Centre MTHS",
-      desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre13/livre13_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 14,
-      titre: "Ange ou Demon",
-      auteur: "Centre MTHS",
-      desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre14/livre14_1.png", 
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 15,
-      titre: "Chretien africian et la maladie", 
-      auteur: "Centre MTHS",
-      desc: "Protocoles d'exorcisme selon la tradition chrétienne africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre15/livre15_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 16,
-      titre: "Comment vivre ensemble avec les sorciers",
-      auteur: "Centre MTHS",
-      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
-      prixFCFA: 6500,
-      image: "/images/livre16/livre16_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 17,
-      titre: "LE SATANISME ET LA DERIVE DU MONDE",
-      auteur: "Centre MTHS",
-      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
-      prixFCFA: 6500,
-      image: "/images/livre17/livre17_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 18,
-      titre: "Tradition africaine et christianisme",
-      auteur: "Centre MTHS",
-      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
-      prixFCFA: 6500,
-      image: "/images/livre18/livre18_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 19,
-      titre: "Le bhoudisme face à la sorcellerie et au Satanisme",
-      auteur: "Centre MTHS",
-      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
-      prixFCFA: 6500,
-      image: "/images/livre19/livre19_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 20,
-      titre: "Secte et sociétés secrtes africaine",
-      auteur: "Centre MTHS",
-      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
-      prixFCFA: 6500,
-      image: "/images/livre20/livre20_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 21,
-      titre: "Comment Comprendre et interpreter le Rêve",
-      auteur: "Centre MTHS",
-      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
-      prixFCFA: 6500,
-      image: "/images/livre21/livre21_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    },
-    {
-      id: 22,
-      titre: "Comment obtenir ta Délivrance et ta Victoire contre le Diable, les Démons et les Sorciers ",
-      auteur: "Centre MTHS",
-      desc: "j'ai faim jusquaaaa ce n'est meme plus bon",
-      prixFCFA: 6500,
-      image: "/images/livre22/livre22_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12353-1",
-      datePublication: "2023",
-      langue: "Français"
-    }
-    
-    
-  ];
-
-  const filteredLivres = livres.filter(livre =>
-    livre.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    livre.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    livre.auteur.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
-    <section className="py-8 sm:py-12 md:py-16 bg-gradient-to-b from-blue-50 via-white to-blue-50">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-8 sm:mb-10 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-blue-900 mb-2 sm:mb-3 md:mb-4">
-            Collection <span className="text-blue-600">MTHS</span>
-          </h2>
-          <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto mb-6">
-            Découvrez notre collection complète d'ouvrages sur la Médecine Traditionnelle des Handicapés Spirituels
-          </p>
-
-          {/* Search Bar and Currency Selector */}
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-center mb-8">
-            <div className="relative w-full max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Rechercher un livre..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-blue-200 focus:border-blue-400 focus:outline-none text-sm bg-blue-50"
-              />
-            </div>
-
-            {/* Currency Selector */}
-            <div className="relative">
-              <button
-                onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
-                className="flex items-center space-x-2 px-4 py-2.5 bg-blue-50 border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
-              >
-                <div className="text-blue-600">
-                  {currencyIcons[currency]}
-                </div>
-                <span className="font-medium text-blue-900">{currencyNames[currency]}</span>
-                <ChevronDown className={`w-4 h-4 text-blue-500 transition-transform ${isCurrencyOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {isCurrencyOpen && (
-                <>
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-blue-200 rounded-lg shadow-lg z-50">
-                    {Object.entries(currencyNames).map(([key, name]) => (
-                      <button
-                        key={key}
-                        onClick={() => {
-                          setCurrency(key);
-                          setIsCurrencyOpen(false);
-                        }}
-                        className={`w-full flex items-center space-x-3 p-3 hover:bg-blue-50 transition-colors ${
-                          currency === key ? 'bg-blue-100 text-blue-600' : 'text-gray-700'
-                        }`}
-                      >
-                        <div className={currency === key ? 'text-blue-600' : 'text-blue-500'}>
-                          {currencyIcons[key]}
-                        </div>
-                        <span className="font-medium">{name}</span>
-                      </button>
-                    ))}
-                  </div>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setIsCurrencyOpen(false)}
-                  />
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Books Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-          {filteredLivres.map((livre) => (
-            <div
-              key={livre.id}
-              className={`
-                relative bg-white rounded-lg sm:rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border flex flex-col h-full
-                ${isInCart(livre.id) 
-                  ? 'border-green-400 bg-green-50/30' 
-                  : 'border-blue-100 hover:border-blue-300'
-                }
-                group hover:scale-[1.02]
-              `}
-            >
-              {/* Animation de confirmation */}
-              {addedProducts[livre.id] && (
-                <div className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10 animate-bounce">
-                  <div className="bg-green-500 text-white p-1 sm:p-1.5 rounded-full shadow-lg">
-                    <Check className="w-3 h-3 sm:w-4 sm:h-4" />
-                  </div>
-                </div>
-              )}
-
-              {/* Book Image */}
-              <div className="relative h-40 sm:h-48 bg-gradient-to-br from-blue-100 to-blue-50 rounded-t-lg sm:rounded-t-xl overflow-hidden">
-                <img
-                  src={livre.image}
-                  alt={livre.titre}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  onError={(e) => {
-                    e.target.src = "/images/default-book.jpg";
-                  }}
-                />
-                
-                {/* Type badge */}
-                <div className="absolute top-2 left-2">
-                  <span className="bg-white/90 backdrop-blur-sm text-blue-700 text-xs font-medium px-2 py-1 sm:px-3 sm:py-1.5 rounded-full">
-                    {livre.type}
-                  </span>
-                </div>
-                
-                {/* Stock badge */}
-                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm text-blue-700 text-xs font-medium px-2 py-1 sm:px-2 sm:py-1.5 rounded-full">
-                  <div className="flex items-center gap-1">
-                    <Package className="w-3 h-3" />
-                    <span>{livre.stock} restant{livre.stock > 1 ? 's' : ''}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Book Info */}
-              <div className="flex-1 p-3 sm:p-4 md:p-5">
-                <h3 className="font-bold text-blue-900 text-sm sm:text-base md:text-lg mb-2 sm:mb-3 line-clamp-2 h-10 sm:h-14">
-                  {livre.titre}
-                </h3>
-                
-                {/* Author */}
-                <div className="flex items-center gap-2 text-blue-600 mb-2 sm:mb-4">
-                  <User className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                  <span className="text-xs sm:text-sm truncate">{livre.auteur}</span>
-                </div>
-                
-                {/* Description */}
-                <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2 h-8 sm:h-10">
-                  {livre.desc}
-                </p>
-                
-                {/* Format et pages */}
-                <div className="flex flex-wrap gap-1 sm:gap-2 mb-3 sm:mb-4">
-                  <div className="flex items-center gap-1 bg-blue-50 text-blue-700 text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg">
-                    <FileText className="w-3 h-3" />
-                    {livre.format?.join(", ")}
-                  </div>
-                  {livre.pages && (
-                    <div className="flex items-center gap-1 bg-gray-100 text-gray-700 text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg">
-                      <Clock className="w-3 h-3" />
-                      {livre.pages} pages
-                    </div>
-                  )}
-                </div>
-
-                {/* Price */}
-                <div className="mt-2">
-                  <div className="text-base sm:text-lg md:text-xl font-bold text-blue-700">
-                    {formatPrice(livre.prixFCFA, currency)}
-                  </div>
-                  {currency !== "FCFA" && (
-                    <div className="text-xs text-gray-500 mt-1">
-                      ≈ {livre.prixFCFA.toLocaleString('fr-FR')} FCFA
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="p-3 sm:p-4 md:p-5 pt-0">
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                  {/* View Details Button */}
-                  <button
-                    onClick={() => handleViewDetails(livre)}
-                    className="flex items-center justify-center gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-3 rounded-lg font-medium border-2 border-blue-500 text-blue-600 hover:bg-blue-50 transition-colors flex-1 group/btn"
-                  >
-                    <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span>Voir détail</span>
-                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                  </button>
-                  
-                  {/* Add to Cart Button */}
-                  <button
-                    onClick={() => handleAddToCart(livre)}
-                    className={`
-                      flex items-center justify-center gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-3 rounded-lg font-medium transition-all duration-300 flex-1
-                      ${isInCart(livre.id)
-                        ? 'bg-green-100 text-green-700 border-2 border-green-300 hover:bg-green-200'
-                        : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white hover:scale-105'
-                      }
-                    `}
-                  >
-                    {isInCart(livre.id) ? (
-                      <>
-                        <Check className="w-3 h-3 sm:w-4 sm:h-4" />
-                        <span>Ajouté</span>
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
-                        <span>Panier</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Message si pas de livres */}
-        {filteredLivres.length === 0 && (
-          <div className="text-center py-16 sm:py-20">
-            <BookOpen className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 text-blue-200 mx-auto mb-4" />
-            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-900 mb-2">Aucun livre trouvé</h3>
-            <p className="text-gray-600 max-w-md mx-auto text-sm sm:text-base">
-              Aucun livre ne correspond à votre recherche. Essayez d'autres termes.
-            </p>
-          </div>
-        )}
-      </div>
-
-      <style jsx>{`
-        @keyframes bounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
+    <>
+      <style>{`
+        @keyframes popIn {
+          0%   { transform: scale(0.5); opacity: 0; }
+          70%  { transform: scale(1.15); }
+          100% { transform: scale(1);   opacity: 1; }
         }
-        .animate-bounce {
-          animation: bounce 0.5s ease-in-out 2;
+        .wcu-section {
+          background: linear-gradient(160deg, #f8faff 0%, #ffffff 50%, #f0f7ff 100%);
+          padding: 64px 0 80px;
+        }
+        .wcu-container {
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 0 32px;
+        }
+        /* Header */
+        .wcu-header {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 40px;
+          text-align: center;
+        }
+        .wcu-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #eff6ff;
+          border: 1.5px solid #bfdbfe;
+          color: #1d4ed8;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 5px 14px;
+          border-radius: 100px;
+        }
+        .wcu-title {
+          font-size: clamp(1.6rem, 3vw, 2.4rem);
+          font-weight: 800;
+          color: #0f172a;
+          letter-spacing: -0.03em;
+          margin: 0;
+          line-height: 1.15;
+        }
+        .wcu-title span { color: #2563eb; }
+        .wcu-subtitle {
+          font-size: 15px;
+          color: #64748b;
+          max-width: 520px;
+          line-height: 1.7;
+          margin: 0;
+        }
+        /* Toolbar */
+        .wcu-toolbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          margin-bottom: 32px;
+          flex-wrap: wrap;
+        }
+        .wcu-search-wrap {
+          position: relative;
+          flex: 1;
+          max-width: 400px;
+          min-width: 200px;
+        }
+        .wcu-search-icon {
+          position: absolute;
+          left: 14px; top: 50%;
+          transform: translateY(-50%);
+          color: #94a3b8;
+          pointer-events: none;
+          display: flex;
+        }
+        .wcu-search-input {
+          width: 100%;
+          padding: 11px 36px 11px 42px;
+          border-radius: 12px;
+          border: 1.5px solid #e2e8f0;
+          background: #fff;
+          font-size: 14px;
+          color: #0f172a;
+          outline: none;
+          transition: border-color 0.2s, box-shadow 0.2s;
+          box-sizing: border-box;
+        }
+        .wcu-search-input:focus {
+          border-color: #93c5fd;
+          box-shadow: 0 0 0 3px rgba(147,197,253,0.25);
+        }
+        .wcu-search-clear {
+          position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+          background: #e2e8f0; border: none; border-radius: 50%;
+          width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+          cursor: pointer; color: #64748b;
+        }
+        .wcu-count {
+          font-size: 13px; font-weight: 600; color: #94a3b8; white-space: nowrap;
+        }
+        .wcu-count b { color: #0f172a; }
+        /* Grid */
+        .wcu-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+        }
+        /* Empty state */
+        .wcu-empty {
+          grid-column: 1 / -1;
+          text-align: center;
+          padding: 80px 0;
+        }
+        /* Responsive */
+        @media (max-width: 1100px) { .wcu-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 820px)  { .wcu-grid { grid-template-columns: repeat(2, 1fr); } .wcu-container { padding: 0 20px; } }
+        @media (max-width: 500px)  {
+          .wcu-grid { grid-template-columns: 1fr; gap: 16px; }
+          .wcu-toolbar { flex-direction: column; align-items: stretch; }
+          .wcu-search-wrap { max-width: 100%; }
+          .wcu-container { padding: 0 16px; }
+          .wcu-section { padding: 40px 0 60px; }
         }
       `}</style>
-    </section>
+
+      <section className="wcu-section">
+        <div className="wcu-container">
+
+          {/* ── Header ── */}
+          <div className="wcu-header">
+            <div className="wcu-eyebrow">
+              <BookOpen size={12} />
+              Bibliothèque MTHS
+            </div>
+            <h2 className="wcu-title">
+              Collection <span>MTHS</span>
+            </h2>
+            <p className="wcu-subtitle">
+              Découvrez notre collection complète d'ouvrages sur la Médecine Traditionnelle des Handicapés Spirituels.
+            </p>
+          </div>
+
+          {/* ── Toolbar ── */}
+          <div className="wcu-toolbar">
+            {/* Search */}
+            <div className="wcu-search-wrap">
+              <span className="wcu-search-icon"><Search size={16} /></span>
+              <input
+                className="wcu-search-input"
+                type="text"
+                placeholder="Rechercher un livre, auteur…"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
+              {searchTerm && (
+                <button className="wcu-search-clear" onClick={() => setSearchTerm('')}>
+                  <X size={12} />
+                </button>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+              {/* Currency switcher */}
+              <CurrencySwitcher currency={currency} onChange={setCurrency} />
+              {/* Count */}
+              <span className="wcu-count">
+                <b>{filtered.length}</b> livre{filtered.length !== 1 ? 's' : ''}
+              </span>
+            </div>
+          </div>
+
+          {/* ── Grid ── */}
+          <div className="wcu-grid">
+            {filtered.length > 0 ? (
+              filtered.map(livre => (
+                <BookCard
+                  key={livre.id}
+                  livre={livre}
+                  currency={currency}
+                  onAddToCart={handleAddToCart}
+                  onViewDetails={handleViewDetails}
+                  inCart={isInCart(livre.id)}
+                  justAdded={!!addedProducts[livre.id]}
+                />
+              ))
+            ) : (
+              <div className="wcu-empty">
+                <BookOpen size={56} color="#bfdbfe" style={{ marginBottom: 16 }} />
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>
+                  Aucun résultat
+                </h3>
+                <p style={{ color: '#64748b', fontSize: '14px' }}>
+                  Aucun livre ne correspond à « {searchTerm} ». Essayez d'autres termes.
+                </p>
+              </div>
+            )}
+          </div>
+
+        </div>
+      </section>
+    </>
   );
 };
 
