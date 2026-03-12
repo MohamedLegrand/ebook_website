@@ -4,7 +4,7 @@ import { MapPin, Phone, Mail, Clock, AlertTriangle, HelpCircle, FileText, Shield
 
 function Footer() {
   const currentYear = new Date().getFullYear();
-  const [language, setLanguage] = useState('fr');
+  const language = 'fr'; // Langue fixe pour le moment
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
 
@@ -27,7 +27,7 @@ function Footer() {
           { label: "Approche Thérapeutique", href: "/approche" },
           { label: "Les 5 Piliers de la MTHS", href: "/piliers" },
           { label: "Parcours d'Accompagnement", href: "/parcours" },
-          { label: "Rite SO'O Inculturé", href: "/rite-soo" },
+          { label: "Rite SO'O Inculturé", href: "/rites" },
           { label: "Pathologies Traitées", href: "/pathologies" },
           { label: "Témoignages", href: "/temoignages" }
         ]
@@ -36,10 +36,6 @@ function Footer() {
         title: "Ressources & Publications",
         links: [
           { label: "Boutique du Centre", href: "/boutique" },
-          { label: "Livres Doctrinaux", href: "/livres" },
-          { label: 'Revue "Le Monde Parallèle"', href: "/revue" },
-          { label: "Remèdes Traditionnels Améliorés", href: "/rta" },
-          { label: "Supports Audio", href: "/audio" },
           { label: "Actualités & Veillées", href: "/actualites" }
         ]
       },
@@ -49,12 +45,7 @@ function Footer() {
           { label: "FAQ - Questions Fréquentes", href: "/faq", icon: "❓" },
           { label: "Conditions d'Utilisation", href: "/conditions", icon: "📝" },
           { label: "Politique de Confidentialité", href: "/confidentialite", icon: "🛡️" },
-          { label: "Mentions Légales", href: "/mentions-legales", icon: "⚖️" },
-          { label: "Charte Éthique", href: "/ethique", icon: "✨" },
-          { label: "Protection des Données (RGPD)", href: "/rgpd", icon: "🔒" },
-          { label: "Loi Camerounaise 2024", href: "/loi-2024", icon: "📜" },
           { label: "Contact & Orientation", href: "/contact", icon: "📞" },
-          { label: "Urgence Spirituelle", href: "/urgence", icon: "🚨" }
         ]
       },
       contact: {
@@ -120,10 +111,6 @@ function Footer() {
         title: "Resources & Publications",
         links: [
           { label: "Center Shop", href: "/boutique" },
-          { label: "Doctrinal Books", href: "/livres" },
-          { label: '"The Parallel World" Review', href: "/revue" },
-          { label: "Improved Traditional Remedies", href: "/rta" },
-          { label: "Audio Supports", href: "/audio" },
           { label: "News & Vigils", href: "/actualites" }
         ]
       },
@@ -133,12 +120,7 @@ function Footer() {
           { label: "FAQ - Frequently Asked Questions", href: "/faq", icon: "❓" },
           { label: "Terms of Use", href: "/conditions", icon: "📝" },
           { label: "Privacy Policy", href: "/confidentialite", icon: "🛡️" },
-          { label: "Legal Notice", href: "/mentions-legales", icon: "⚖️" },    
-          { label: "Ethical Charter", href: "/ethique", icon: "✨" },
-          { label: "Data Protection (GDPR)", href: "/rgpd", icon: "🔒" },
-          { label: "Cameroonian Law 2024", href: "/loi-2024", icon: "📜" },
           { label: "Contact & Guidance", href: "/contact", icon: "📞" },
-          { label: "Spiritual Emergency", href: "/urgence", icon: "🚨" }
         ]
       },
       contact: {
@@ -364,33 +346,6 @@ function Footer() {
                 </div>
               </div>
             </div>
-
-            <div>
-              <h5 className="text-amber-400 font-semibold text-sm mb-3">
-                {currentLang.payment.title}
-              </h5>
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                <div className="bg-white p-2 rounded-lg shadow flex items-center justify-center">
-                  <span className="text-orange-600 font-bold text-xs">ORANGE MONEY</span>
-                </div>
-                <div className="bg-yellow-400 p-2 rounded-lg shadow flex items-center justify-center">
-                  <span className="text-blue-900 font-bold text-xs">MTN MOMO</span>
-                </div>
-                <div className="bg-white p-2 rounded-lg shadow flex items-center justify-center">
-                  <span className="text-blue-900 font-bold text-xs">VISA</span>
-                </div>
-                <div className="bg-white p-2 rounded-lg shadow flex items-center justify-center">
-                  <span className="text-red-600 font-bold text-xs">MASTERCARD</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 text-green-400 text-xs">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-                </svg>
-                <span className="font-semibold">{currentLang.payment.secure}</span>
-              </div>
-            </div>
-
             <div>
               <h5 className="text-amber-400 font-semibold text-sm mb-1">
                 {currentLang.newsletter.title}

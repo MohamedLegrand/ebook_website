@@ -23,14 +23,16 @@ import Rites from "./pages/rites/Rites";
 import Temoignages from "./pages/temoignages/Temoignages";
 import Boutique from "./pages/boutique/Boutique";
 import Actualites from "./pages/actualites/Actualites";
-
 import Produitdetail from "./pages/produitdetail/Produitdetail"; 
+import Piliers from "./pages/piliers/Piliers";
 
+import ScrollToTop from './components/scrolltotop/ScrollToTop';
 
 function App() {
   return (
     <BrowserRouter>
-      <CartProvider> {/* Enveloppez toutes les routes avec CartProvider */}
+      <ScrollToTop /> 
+      <CartProvider> 
         <Routes>
           <Route path="/" element={<Accueil />} />
           <Route path="/categories" element={<Categories />} />
@@ -44,8 +46,6 @@ function App() {
           <Route path="/confidentialite" element={<Confidentialite />} />
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart />} />
-
-
           <Route path="/mths" element={<Mths />} />
           <Route path="/handicap" element={<Handicap />} />
           <Route path="/approche" element={<Approche />} />
@@ -56,6 +56,7 @@ function App() {
           <Route path="/boutique" element={<Boutique />} />
           <Route path="/actualites" element={<Actualites />} />
           <Route path="/produit/:id" element={<Produitdetail />} />
+          <Route path="/piliers" element={<Piliers />} />
         </Routes>
       </CartProvider>
     </BrowserRouter> 

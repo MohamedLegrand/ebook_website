@@ -103,14 +103,12 @@ function Hero() {
           flex-direction: column;
         }
 
-        /* Soft background orbs */
         .h-orb { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(70px); transition: background 0.9s ease; }
         .h-orb-1 { width: 500px; height: 500px; top: -15%; right: -10%; opacity: 0.10; }
         .h-orb-2 { width: 350px; height: 350px; bottom: -10%; left: -8%; opacity: 0.09; }
         .h-orb-3 { width: 200px; height: 200px; top: 50%; left: 40%; opacity: 0.07; background: #bfdbfe; }
 
         /* ─── SIDE ARROWS ─── */
-        /* Always fixed on left/right edges of the section, vertically centered */
         .h-arrow {
           position: absolute;
           top: 50%;
@@ -125,7 +123,6 @@ function Hero() {
           color: #475569;
           box-shadow: 0 4px 16px rgba(0,0,0,0.12);
           transition: border-color 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
-          /* No transform scale on hover to avoid fighting translateY */
         }
         .h-arrow:hover {
           border-color: #93c5fd;
@@ -137,25 +134,21 @@ function Hero() {
         .h-arrow-right { right: 16px; }
 
         /* ─── MAIN LAYOUT ─── */
-        /* Always side-by-side: left=text, right=book
-           We use a flex row that never wraps.
-           Padding leaves room for the fixed arrows. */
         .h-body {
           position: relative;
           z-index: 2;
           flex: 1;
           display: flex;
-          flex-direction: row;         /* NEVER column */
+          flex-direction: row;
           align-items: stretch;
           width: 100%;
-          /* Reserve space for arrows on both sides */
           padding: 0 72px;
         }
 
         /* ─── LEFT (TEXT) ─── */
         .h-left {
           flex: 1 1 0;
-          min-width: 0;               /* allow shrinking */
+          min-width: 0;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -168,7 +161,6 @@ function Hero() {
         .h-slide.active   { opacity: 1; transform: translateY(0); position: relative; }
         .h-slide.inactive { opacity: 0; transform: translateY(8px); position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; }
 
-        /* Badge */
         .h-badge {
           display: inline-flex; align-items: center; gap: 7px;
           padding: 4px 13px 4px 7px;
@@ -179,15 +171,12 @@ function Hero() {
         .h-badge-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; transition: background 0.7s; }
         .h-badge-text { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; transition: color 0.7s; }
 
-        /* Title */
         .h-title {
           font-weight: 800; line-height: 1.18; color: #0f172a;
           margin: 0 0 12px; letter-spacing: -0.022em;
-          /* Fluid font: large on desktop, smaller on mobile */
           font-size: clamp(1.05rem, 2.8vw, 2.5rem);
         }
 
-        /* Author */
         .h-author { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 14px; }
         .h-author-icon {
           width: 24px; height: 24px; border-radius: 50%;
@@ -196,7 +185,6 @@ function Hero() {
         }
         .h-author-name { font-size: clamp(11px, 1.5vw, 13.5px); font-weight: 500; color: #475569; line-height: 1.5; }
 
-        /* Price + stock */
         .h-price-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
         .h-price-chip { display: inline-flex; align-items: baseline; gap: 4px; padding: 6px 16px; border-radius: 100px; transition: background 0.7s; }
         .h-price-num { font-size: clamp(14px, 2vw, 21px); font-weight: 800; line-height: 1; transition: color 0.7s; }
@@ -215,10 +203,8 @@ function Hero() {
 
         .h-sep { height: 1px; background: #e2e8f0; margin: 2px 0 16px; }
 
-        /* Description — hidden on very small screens to save space */
         .h-desc { font-size: clamp(12px, 1.6vw, 14.5px); line-height: 1.72; color: #64748b; margin: 0 0 20px; }
 
-        /* Stats */
         .h-stats { display: flex; gap: 16px; padding-top: 18px; border-top: 1px solid #e2e8f0; flex-wrap: wrap; }
         .h-stat { display: flex; align-items: center; gap: 8px; }
         .h-stat-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.7s; }
@@ -228,7 +214,7 @@ function Hero() {
         /* ─── RIGHT (BOOK) ─── */
         .h-right {
           flex: 0 0 auto;
-          width: clamp(130px, 38%, 380px);  /* shrinks on small screens but stays on right */
+          width: clamp(130px, 38%, 380px);
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -251,7 +237,6 @@ function Hero() {
 
         .h-book {
           position: relative; width: 100%; aspect-ratio: 3/4;
-          /* Max height adapts: large on desktop, compact on mobile */
           max-height: clamp(180px, 55vw, 480px);
           border-radius: 4px 14px 14px 4px; overflow: hidden;
           box-shadow: -6px 4px 20px rgba(0,0,0,0.11), 0 16px 48px rgba(0,0,0,0.13), 0 0 0 1px rgba(0,0,0,0.03);
@@ -276,7 +261,7 @@ function Hero() {
         .h-book-curl { position: absolute; top:8px; right:8px; width:26px; height:26px; z-index:5; }
         .h-book-curl::before { content:''; position:absolute; inset:0; background: linear-gradient(135deg, #fff 0%, #f1f5f9 100%); clip-path: polygon(0 0, 100% 100%, 0 100%); border-radius: 0 0 0 5px; box-shadow: -2px 2px 4px rgba(0,0,0,0.09); }
 
-        /* Info cards under book */
+        /* Info cards — non cliquables */
         .h-cards { display: flex; gap: 6px; margin-top: 12px; justify-content: center; flex-wrap: wrap; }
         .h-card {
           background: #fff; border: 1.5px solid #e8edf3; border-radius: 11px;
@@ -284,8 +269,13 @@ function Hero() {
           box-shadow: 0 2px 8px rgba(0,0,0,0.05);
           transition: transform 0.2s, box-shadow 0.2s;
           min-width: 0; flex: 1 1 auto;
+          /* pas de cursor: pointer */
         }
-        .h-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.09); }
+        .h-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 14px rgba(0,0,0,0.09);
+          border-color: #bfdbfe;
+        }
         .h-card-icon { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.7s; }
         .h-card-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8; white-space: nowrap; }
         .h-card-value { font-size: clamp(11px, 1.4vw, 13.5px); font-weight: 800; color: #0f172a; white-space: nowrap; }
@@ -308,40 +298,34 @@ function Hero() {
         .h-counter b { color: #1e293b; }
 
         /* ─── RESPONSIVE BREAKPOINTS ─── */
-        /* The layout stays side-by-side at ALL sizes.
-           We only tune sizes / spacing / visibility of non-essential elements. */
-
-        /* ≤ 900px: moderate tablet */
         @media (max-width: 900px) {
-          .h-body { padding: 0 58px; }         /* arrows take 58px each side */
+          .h-body { padding: 0 58px; }
           .h-left { padding: 28px 16px 28px 0; }
           .h-right { width: clamp(120px, 36%, 280px); }
           .h-stats { gap: 12px; }
-          .h-stat-icon { display: none; }       /* save space */
+          .h-stat-icon { display: none; }
         }
 
-        /* ≤ 640px: large phone */
         @media (max-width: 640px) {
           .h-body { padding: 0 50px; }
           .h-left { padding: 20px 12px 20px 0; }
           .h-right { width: clamp(110px, 38%, 220px); }
-          .h-desc { display: none; }            /* drop description to save space */
-          .h-cards { display: none; }           /* drop cards */
+          .h-desc { display: none; }
+          .h-cards { display: none; }
           .h-stats { gap: 10px; flex-wrap: nowrap; overflow: hidden; }
-          .h-stat:nth-child(3) { display: none; } /* keep only 2 stats */
+          .h-stat:nth-child(3) { display: none; }
           .h-arrow { width: 38px; height: 38px; }
           .h-arrow-left  { left: 8px; }
           .h-arrow-right { right: 8px; }
           .h-book { max-height: clamp(160px, 50vw, 260px); }
         }
 
-        /* ≤ 380px: very small phone */
         @media (max-width: 380px) {
           .h-body { padding: 0 44px; }
           .h-right { width: clamp(100px, 40%, 170px); }
           .h-title { font-size: 0.95rem; }
           .h-price-row { gap: 6px; }
-          .h-stock-chip { display: none; }      /* show only price */
+          .h-stock-chip { display: none; }
           .h-stats { display: none; }
           .h-arrow { width: 32px; height: 32px; }
           .h-arrow-left  { left: 6px; }
@@ -350,12 +334,10 @@ function Hero() {
       `}</style>
 
       <section className="h-section">
-        {/* Bg orbs */}
         <div className="h-orb h-orb-1" style={{ background: slide.solid }} />
         <div className="h-orb h-orb-2" style={{ background: slide.solid }} />
         <div className="h-orb h-orb-3" />
 
-        {/* Fixed side arrows */}
         <button className="h-arrow h-arrow-left" onClick={prevSlide} aria-label="Précédent">
           <ChevronLeft size={20} />
         </button>
@@ -363,15 +345,12 @@ function Hero() {
           <ChevronRight size={20} />
         </button>
 
-        {/* Always side-by-side body */}
         <div className="h-body">
-
-          {/* ── LEFT: text ── */}
+          {/* LEFT - TEXT */}
           <div className="h-left">
             <div className="h-slides-wrap">
               {slides.map((s, i) => (
                 <div key={s.id} className={`h-slide ${i === currentSlide ? "active" : "inactive"}`}>
-
                   <div className="h-badge" style={{ background: slide.light, borderColor: slide.solid + "35" }}>
                     <div className="h-badge-dot" style={{ background: slide.solid }} />
                     <span className="h-badge-text" style={{ color: slide.solid }}>{s.type}</span>
@@ -437,13 +416,14 @@ function Hero() {
             </div>
           </div>
 
-          {/* ── RIGHT: book ── */}
+          {/* RIGHT - BOOK */}
           <div className="h-right">
             <div className="h-book-stage">
               {slides.map((s, i) => (
                 <div key={s.id} className={`h-book-slide ${i === currentSlide ? "active" : "inactive"}`}>
                   <div className="h-book-glow" style={{ background: slide.solid }} />
 
+                  {/* Le livre est cliquable (image uniquement) */}
                   <div className="h-book" onClick={() => goToProduct(s)}>
                     <div className="h-book-spine" style={{ background: `linear-gradient(180deg, ${slide.solid}dd 0%, ${slide.solid}88 100%)` }}>
                       <span className="h-book-spine-text">MTHS</span>
@@ -457,7 +437,7 @@ function Hero() {
                     <div className="h-book-curl" />
                   </div>
 
-                  {/* Info cards */}
+                  {/* Cartes d'information — non cliquables (pas de onClick) */}
                   <div className="h-cards">
                     <div className="h-card">
                       <div className="h-card-icon" style={{ background: slide.light }}>
@@ -493,7 +473,6 @@ function Hero() {
           </div>
         </div>
 
-        {/* Bottom nav: dots + counter */}
         <div className="h-nav">
           <div className="h-dots">
             {slides.map((_, i) => (
@@ -514,7 +493,6 @@ function Hero() {
           </div>
         </div>
 
-        {/* Touch swipe */}
         <div
           style={{ position: "absolute", inset: 0, zIndex: 0 }}
           onTouchStart={(e) => setTouchStartX(e.touches[0].clientX)}
