@@ -26,22 +26,13 @@ import Actualites from "./pages/actualites/Actualites";
 import Produitdetail from "./pages/produitdetail/Produitdetail"; 
 import Piliers from "./pages/piliers/Piliers";
 
-<<<<<<< HEAD
-import ScrollToTop from "./components/scrolltotop/ScrollToTop"; // Import du composant ScrollToTop
-=======
-import ScrollToTop from './components/scrolltotop/ScrollToTop';
->>>>>>> b3977b8949790d795161846fa8c2c481dcd8cb85
+import ScrollToTop from "./components/scrolltotop/ScrollToTop";
 
 function App() {
   return (
     <BrowserRouter>
-<<<<<<< HEAD
+      <ScrollToTop />
       <CartProvider>
-        <ScrollToTop /> {/* ← Ajout ici : remonte en haut à chaque changement de route */}
-=======
-      <ScrollToTop /> 
-      <CartProvider> 
->>>>>>> b3977b8949790d795161846fa8c2c481dcd8cb85
         <Routes>
           <Route path="/" element={<Accueil />} />
           <Route path="/categories" element={<Categories />} />

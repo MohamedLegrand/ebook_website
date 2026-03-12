@@ -490,7 +490,7 @@ const WhyChooseUs = () => {
           .wcu-search-wrap { max-width: 100%; }
           .wcu-container { padding: 0 16px; }
           .wcu-section { padding: 40px 0 60px; }
-        }
+        }     
       `}</style>
 
       <section className="wcu-section">
