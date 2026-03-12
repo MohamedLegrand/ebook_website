@@ -24,14 +24,24 @@ import Temoignages from "./pages/temoignages/Temoignages";
 import Boutique from "./pages/boutique/Boutique";
 import Actualites from "./pages/actualites/Actualites";
 import Produitdetail from "./pages/produitdetail/Produitdetail"; 
+import Piliers from "./pages/piliers/Piliers";
 
+<<<<<<< HEAD
 import ScrollToTop from "./components/scrolltotop/ScrollToTop"; // Import du composant ScrollToTop
+=======
+import ScrollToTop from './components/scrolltotop/ScrollToTop';
+>>>>>>> b3977b8949790d795161846fa8c2c481dcd8cb85
 
 function App() {
   return (
     <BrowserRouter>
+<<<<<<< HEAD
       <CartProvider>
         <ScrollToTop /> {/* ← Ajout ici : remonte en haut à chaque changement de route */}
+=======
+      <ScrollToTop /> 
+      <CartProvider> 
+>>>>>>> b3977b8949790d795161846fa8c2c481dcd8cb85
         <Routes>
           <Route path="/" element={<Accueil />} />
           <Route path="/categories" element={<Categories />} />
@@ -55,6 +65,7 @@ function App() {
           <Route path="/boutique" element={<Boutique />} />
           <Route path="/actualites" element={<Actualites />} />
           <Route path="/produit/:id" element={<Produitdetail />} />
+          <Route path="/piliers" element={<Piliers />} />
         </Routes>
       </CartProvider>
     </BrowserRouter> 
