@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { CartProvider } from "./context/CartContext"; // Import du CartProvider
+import { CartProvider } from "./context/CartContext";
 
 import Accueil from "./pages/accueil/Accueil";
 import Categories from "./pages/categories/Categories";
@@ -23,14 +23,15 @@ import Rites from "./pages/rites/Rites";
 import Temoignages from "./pages/temoignages/Temoignages";
 import Boutique from "./pages/boutique/Boutique";
 import Actualites from "./pages/actualites/Actualites";
-
 import Produitdetail from "./pages/produitdetail/Produitdetail"; 
 
+import ScrollToTop from "./components/scrolltotop/ScrollToTop"; // Import du composant ScrollToTop
 
 function App() {
   return (
     <BrowserRouter>
-      <CartProvider> {/* Enveloppez toutes les routes avec CartProvider */}
+      <CartProvider>
+        <ScrollToTop /> {/* ← Ajout ici : remonte en haut à chaque changement de route */}
         <Routes>
           <Route path="/" element={<Accueil />} />
           <Route path="/categories" element={<Categories />} />
@@ -44,8 +45,6 @@ function App() {
           <Route path="/confidentialite" element={<Confidentialite />} />
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart />} />
-
-
           <Route path="/mths" element={<Mths />} />
           <Route path="/handicap" element={<Handicap />} />
           <Route path="/approche" element={<Approche />} />
