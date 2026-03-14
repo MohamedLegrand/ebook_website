@@ -173,7 +173,9 @@ function Header() {
         }
       `}</style>
 
-      <header className="sticky top-0 z-50 bg-white shadow-md shadow-blue-100/50">
+      {/* ✅ FIX : overflow-visible sur le header pour que les dropdowns ne soient pas coupés */}
+      <header className="sticky top-0 z-50 bg-white shadow-md shadow-blue-100/50 overflow-visible">
+
         {/* ===== TOP BAR ===== */}
         <div className="h-9 bg-blue-50 border-b border-blue-100 flex items-center overflow-hidden">
           <div className="w-full max-w-7xl mx-auto px-3 flex items-center justify-between gap-2">
@@ -259,7 +261,9 @@ function Header() {
         </div>
 
         {/* ===== NAVBAR PRINCIPALE ===== */}
-        <nav className="h-[72px] w-full max-w-7xl mx-auto px-3 flex items-center justify-between gap-3 overflow-hidden">
+        {/* ✅ FIX : "overflow-hidden" retiré — il coupait les dropdowns positionnés en absolute */}
+        <nav className="h-[72px] w-full max-w-7xl mx-auto px-3 flex items-center justify-between gap-3">
+
           {/* Logo */}
           <Link to="/" onClick={scrollToTop} className="flex items-center gap-2.5 shrink-0 group">
             <div className="w-14 h-14 relative flex-shrink-0">
@@ -281,7 +285,8 @@ function Header() {
                 <span className="text-[22px] font-black leading-none text-blue-900 whitespace-nowrap">MTHS</span>
                 <span className="text-[11px] font-semibold text-blue-600 whitespace-nowrap">/TMSH</span>
               </div>
-              <span className="logo-tagline text-[11px] font-medium text-blue-500 truncate max-w-[180px] sm:max-w-[260px] lg:max-w-[360px]">
+              {/* ✅ max-w réduit légèrement pour compenser l'absence de overflow-hidden sur la nav */}
+              <span className="logo-tagline text-[11px] font-medium text-blue-500 truncate max-w-[160px] sm:max-w-[220px] lg:max-w-[320px]">
                 {lang.tagline}
               </span>
             </div>
@@ -306,6 +311,7 @@ function Header() {
                 Plus
                 <ChevronDown className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" />
               </button>
+              {/* ✅ Le dropdown est maintenant visible car plus aucun parent n'a overflow-hidden */}
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-white rounded-xl shadow-2xl shadow-blue-200/50 border border-blue-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-animate">
                 <div className="p-1.5">
                   {moreNav.map((item) => (
@@ -319,7 +325,7 @@ function Header() {
                     </Link>
                   ))}
                 </div>
-                <div className="border-t border-blue-100 p-3 bg-blue-50">
+                <div className="border-t border-blue-100 p-3 bg-blue-50 rounded-b-xl">
                   <a href="tel:+237693215431" className="flex items-center gap-2 text-xs text-blue-600 font-semibold">
                     <AlertCircle className="w-3.5 h-3.5 text-red-400" />
                     Urgence : +237 693 21 54 31
