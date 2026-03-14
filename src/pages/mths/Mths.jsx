@@ -371,36 +371,36 @@ function Mths() {
             {[
               {
                 number: "01",
-                title: "Spiritualité Chrétienne Inculturée",
-                description: "Intégration de la foi chrétienne dans le contexte africain, respectant les traditions ancestrales purifiées par l'Évangile.",
+                title: "Diagnostic spirituel et psychosomatique",
+                description: "Identification des causes profondes des souffrances à travers l'analyse des dimensions spirituelle, psychologique et relationnelle, en tenant compte de l'histoire personnelle et familiale.",
                 icon: "✝️",
                 color: "from-amber-500 to-orange-600"
               },
               {
                 number: "02",
-                title: "Pharmacopée Traditionnelle Validée",
-                description: "Utilisation scientifique des plantes médicinales africaines, étudiées et validées par la recherche moderne.",
+                title: "Naruropathie et remède traditionnel ameliorer",
+                description: "Utilisation de plantes médicinales locales, de bains thérapeutiques et de compléments naturels, préparés selon les méthodes traditionnelles enrichies par la révélation divine.",
                 icon: "🌿",
                 color: "from-emerald-500 to-green-600"
               },
               {
                 number: "03",
-                title: "Psychologie Communautaire Africaine",
-                description: "Approche thérapeutique qui considère l'individu dans son contexte familial et communautaire.",
+                title: "Rituel de purification (rites SO'O inculturé",
+                description: "Cérémonies de purification inspirées des rites ancestraux, réinterprétées dans la foi chrétienne pour libérer des souillures spirituelles et restaurer l'harmonie intérieure.",
                 icon: "👥",
                 color: "from-blue-500 to-cyan-600"
               },
               {
                 number: "04",
-                title: "Rituels de Purification Sacrés",
-                description: "Pratiques rituelles transformées à la lumière du Christ pour la délivrance et la guérison.",
+                title: "Délivrance et desanvoutement ",
+                description: "Prières de délivrance, imposition des mains et sacrements pour briser les liens occultes, les malédictions générationnelles et les influences maléfiques.",
                 icon: "🔥",
                 color: "from-purple-500 to-pink-600"
               },
               {
                 number: "05",
-                title: "Éthique de Solidarité Africaine",
-                description: "Système de soins basé sur l'entraide communautaire et la responsabilité partagée.",
+                title: "Rééducation morale et réinsertion sociale",
+                description: "Accompagnement psychologique, enseignement des valeurs morales et soutien à la réintégration familiale et communautaire pour une vie nouvelle.",
                 icon: "🤝",
                 color: "from-red-500 to-yellow-600"
               }
