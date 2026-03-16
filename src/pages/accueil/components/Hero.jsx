@@ -41,6 +41,8 @@ function Hero() {
     { id: 20, titre: "Sectes et sociétés secrètes africaines", auteur: "Centre MTHS", desc: "Enquête documentée sur les organisations occultes et secrètes qui structurent le pouvoir en Afrique.", prixFCFA: 6500, image: "/images/livre20/livre20_1.png", type: "Enquête", pages: 310, stock: 20 },
     { id: 21, titre: "Comment comprendre et interpréter le Rêve", auteur: "Centre MTHS", desc: "Guide complet pour comprendre le langage des rêves selon la tradition africaine et chrétienne.", prixFCFA: 6500, image: "/images/livre21/livre21_1.png", type: "Onirologie", pages: 310, stock: 20 },
     { id: 22, titre: "Comment obtenir ta Délivrance et ta Victoire", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre22/livre22_1.png", type: "Délivrance", pages: 310, stock: 20 },
+    { id: 23, titre: "Le Remède Traditionnel Amélioré", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre23/livre23_1.png", type: "Délivrance", pages: 310, stock: 20 },
+    { id: 24, titre: "CULTURE DE LA PAIX ET LUTTE CONTRE LA DÉVIANCE SPIRITUELLE ", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre24/livre24_1.png", type: "Délivrance", pages: 310, stock: 20 },
   ];
 
   const colorPalette = [

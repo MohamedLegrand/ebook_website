@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
@@ -22,10 +22,14 @@ import {
   Heart,
   Share2,
   Eye,
-  Bookmark
+  Bookmark,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  Maximize2
 } from "lucide-react";
 
-// Composant image robuste avec fallback garanti
+// ─── Composant image robuste avec fallback ───────────────────────────────────
 const SafeImage = ({ src, alt, className, fallbackSrc = null, style }) => {
   const [imgSrc, setImgSrc] = useState(null);
   const [failed, setFailed] = useState(false);
@@ -79,7 +83,551 @@ const SafeImage = ({ src, alt, className, fallbackSrc = null, style }) => {
   );
 };
 
-// Base de données complète des produits MTHS
+// ─── Visionneuse avec zoom, pan et plein écran ───────────────────────────────
+const ImageViewer = ({ images, labels, productTitle }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [scale, setScale] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const dragStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
+  const containerRef = useRef(null);
+  const lastTouchDist = useRef(null);
+
+  const MIN_SCALE = 0.5;
+  const MAX_SCALE = 5;
+  const STEP = 0.25;
+
+  const clampScale = (s) =>
+    Math.min(MAX_SCALE, Math.max(MIN_SCALE, parseFloat(s.toFixed(2))));
+
+  const resetView = useCallback(() => {
+    setScale(1);
+    setPan({ x: 0, y: 0 });
+  }, []);
+
+  const changeImage = useCallback(
+    (idx) => {
+      setCurrentIndex(idx);
+      resetView();
+    },
+    [resetView]
+  );
+
+  const prev = () =>
+    changeImage((currentIndex - 1 + images.length) % images.length);
+  const next = () =>
+    changeImage((currentIndex + 1) % images.length);
+
+  const zoomIn = () => setScale((s) => clampScale(s + STEP));
+  const zoomOut = () => {
+    setScale((s) => {
+      const next = clampScale(s - STEP);
+      if (next <= 1) setPan({ x: 0, y: 0 });
+      return next;
+    });
+  };
+
+  // Wheel zoom
+  const handleWheel = useCallback(
+    (e) => {
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? STEP : -STEP;
+      setScale((s) => {
+        const next = clampScale(s + delta);
+        if (next <= 1) setPan({ x: 0, y: 0 });
+        return next;
+      });
+    },
+    []
+  );
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [handleWheel]);
+
+  // Mouse drag
+  const onMouseDown = (e) => {
+    if (scale <= 1) return;
+    setIsDragging(true);
+    dragStart.current = { x: e.clientX, y: e.clientY, panX: pan.x, panY: pan.y };
+  };
+  const onMouseMove = useCallback(
+    (e) => {
+      if (!isDragging) return;
+      setPan({
+        x: dragStart.current.panX + (e.clientX - dragStart.current.x),
+        y: dragStart.current.panY + (e.clientY - dragStart.current.y),
+      });
+    },
+    [isDragging]
+  );
+  const onMouseUp = () => setIsDragging(false);
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("mouseup", onMouseUp);
+    }
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, [isDragging, onMouseMove]);
+
+  // Touch pinch & drag
+  const onTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      lastTouchDist.current = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+    } else if (e.touches.length === 1 && scale > 1) {
+      setIsDragging(true);
+      dragStart.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+        panX: pan.x,
+        panY: pan.y,
+      };
+    }
+  };
+  const onTouchMove = (e) => {
+    if (e.touches.length === 2 && lastTouchDist.current) {
+      e.preventDefault();
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      setScale((s) => {
+        const next = clampScale(s * (dist / lastTouchDist.current));
+        if (next <= 1) setPan({ x: 0, y: 0 });
+        return next;
+      });
+      lastTouchDist.current = dist;
+    } else if (e.touches.length === 1 && isDragging) {
+      setPan({
+        x: dragStart.current.panX + (e.touches[0].clientX - dragStart.current.x),
+        y: dragStart.current.panY + (e.touches[0].clientY - dragStart.current.y),
+      });
+    }
+  };
+  const onTouchEnd = () => {
+    setIsDragging(false);
+    lastTouchDist.current = null;
+  };
+
+  const LABELS = labels || ["Première de couverture", "Quatrième de couverture", "Pages intérieures"];
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+      if (e.key === "Escape") {
+        if (isFullscreen) setIsFullscreen(false);
+        else resetView();
+      }
+      if (e.key === "+") zoomIn();
+      if (e.key === "-") zoomOut();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [currentIndex, isFullscreen]);
+
+  const containerStyle = isFullscreen
+    ? {
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        background: "rgba(0,0,0,0.97)",
+        borderRadius: 0,
+        height: "100dvh",
+      }
+    : {
+        position: "relative",
+        background: "#f0f4f8",
+        borderRadius: "16px",
+        border: "1px solid #dbeafe",
+        height: "420px",
+        overflow: "hidden",
+      };
+
+  return (
+    <div className="space-y-4">
+      {/* ── Conteneur principal ── */}
+      <div
+        ref={containerRef}
+        style={containerStyle}
+        onMouseDown={onMouseDown}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        className={isDragging ? "cursor-grabbing" : scale > 1 ? "cursor-grab" : "cursor-default"}
+      >
+        {/* Image */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
+            transformOrigin: "center center",
+            transition: isDragging ? "none" : "transform 0.15s ease",
+            willChange: "transform",
+          }}
+        >
+          <SafeImage
+            src={images[currentIndex]}
+            alt={`${productTitle} — ${LABELS[currentIndex] || `Vue ${currentIndex + 1}`}`}
+            style={{
+              maxWidth: "100%",
+              maxHeight: isFullscreen ? "90vh" : "400px",
+              objectFit: "contain",
+              pointerEvents: "none",
+              borderRadius: "6px",
+              userSelect: "none",
+            }}
+          />
+        </div>
+
+        {/* Badges */}
+        <div
+          style={{
+            position: "absolute",
+            top: 12,
+            left: 14,
+            background: "rgba(24,95,165,0.88)",
+            color: "#fff",
+            fontSize: "12px",
+            padding: "3px 12px",
+            borderRadius: "20px",
+            fontWeight: 500,
+            backdropFilter: "blur(4px)",
+            zIndex: 10,
+          }}
+        >
+          {currentIndex + 1} / {images.length}
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            top: 12,
+            right: 50,
+            background: "rgba(24,95,165,0.88)",
+            color: "#fff",
+            fontSize: "11px",
+            padding: "3px 12px",
+            borderRadius: "20px",
+            backdropFilter: "blur(4px)",
+            zIndex: 10,
+            maxWidth: "180px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {LABELS[currentIndex] || `Vue ${currentIndex + 1}`}
+        </div>
+
+        {/* Bouton plein écran */}
+        <button
+          onClick={() => { setIsFullscreen(!isFullscreen); resetView(); }}
+          style={{
+            position: "absolute",
+            top: 10,
+            right: 12,
+            background: "rgba(255,255,255,0.92)",
+            border: "1px solid #dbeafe",
+            borderRadius: "8px",
+            width: "32px",
+            height: "32px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            zIndex: 11,
+          }}
+          title={isFullscreen ? "Quitter le plein écran" : "Plein écran"}
+        >
+          <Maximize2 size={15} color="#185FA5" />
+        </button>
+
+        {/* Flèche gauche */}
+        {images.length > 1 && (
+          <button
+            onClick={(e) => { e.stopPropagation(); prev(); }}
+            style={{
+              position: "absolute",
+              left: 10,
+              top: "50%",
+              transform: "translateY(-50%)",
+              background: "rgba(255,255,255,0.92)",
+              border: "1px solid #dbeafe",
+              borderRadius: "50%",
+              width: 40,
+              height: 40,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              zIndex: 10,
+              backdropFilter: "blur(4px)",
+            }}
+            aria-label="Image précédente"
+          >
+            <ChevronLeft size={22} color="#185FA5" />
+          </button>
+        )}
+
+        {/* Flèche droite */}
+        {images.length > 1 && (
+          <button
+            onClick={(e) => { e.stopPropagation(); next(); }}
+            style={{
+              position: "absolute",
+              right: 10,
+              top: "50%",
+              transform: "translateY(-50%)",
+              background: "rgba(255,255,255,0.92)",
+              border: "1px solid #dbeafe",
+              borderRadius: "50%",
+              width: 40,
+              height: 40,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              zIndex: 10,
+              backdropFilter: "blur(4px)",
+            }}
+            aria-label="Image suivante"
+          >
+            <ChevronRight size={22} color="#185FA5" />
+          </button>
+        )}
+
+        {/* Indicateurs (points) */}
+        {images.length > 1 && (
+          <div
+            style={{
+              position: "absolute",
+              bottom: 12,
+              left: "50%",
+              transform: "translateX(-50%)",
+              display: "flex",
+              gap: "6px",
+              zIndex: 10,
+            }}
+          >
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={(e) => { e.stopPropagation(); changeImage(idx); }}
+                style={{
+                  width: idx === currentIndex ? 20 : 8,
+                  height: 8,
+                  borderRadius: "20px",
+                  background: idx === currentIndex ? "#185FA5" : "rgba(255,255,255,0.65)",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                  transition: "all 0.2s",
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Overlay aide zoom (visible seulement si scale > 1) */}
+        {scale > 1 && (
+          <div
+            style={{
+              position: "absolute",
+              bottom: 40,
+              left: "50%",
+              transform: "translateX(-50%)",
+              background: "rgba(0,0,0,0.55)",
+              color: "#fff",
+              fontSize: "11px",
+              padding: "4px 12px",
+              borderRadius: "20px",
+              pointerEvents: "none",
+              zIndex: 10,
+              whiteSpace: "nowrap",
+            }}
+          >
+            Glissez pour vous déplacer
+          </div>
+        )}
+      </div>
+
+      {/* ── Barre de zoom ── */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "12px",
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            background: "#fff",
+            border: "1px solid #dbeafe",
+            borderRadius: "10px",
+            padding: "6px 10px",
+          }}
+        >
+          <button
+            onClick={zoomOut}
+            disabled={scale <= MIN_SCALE}
+            title="Dézoomer (−)"
+            style={{
+              background: "transparent",
+              border: "1px solid #dbeafe",
+              borderRadius: "6px",
+              width: "32px",
+              height: "32px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: scale <= MIN_SCALE ? "not-allowed" : "pointer",
+              opacity: scale <= MIN_SCALE ? 0.35 : 1,
+              transition: "background 0.15s",
+            }}
+          >
+            <ZoomOut size={15} color="#185FA5" />
+          </button>
+
+          <span
+            style={{
+              fontSize: "13px",
+              fontWeight: 600,
+              minWidth: "46px",
+              textAlign: "center",
+              color: "#1e3a5f",
+            }}
+          >
+            {Math.round(scale * 100)}%
+          </span>
+
+          <button
+            onClick={zoomIn}
+            disabled={scale >= MAX_SCALE}
+            title="Zoomer (+)"
+            style={{
+              background: "transparent",
+              border: "1px solid #dbeafe",
+              borderRadius: "6px",
+              width: "32px",
+              height: "32px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: scale >= MAX_SCALE ? "not-allowed" : "pointer",
+              opacity: scale >= MAX_SCALE ? 0.35 : 1,
+              transition: "background 0.15s",
+            }}
+          >
+            <ZoomIn size={15} color="#185FA5" />
+          </button>
+
+          <div style={{ width: "1px", height: "20px", background: "#dbeafe", margin: "0 4px" }} />
+
+          <button
+            onClick={resetView}
+            title="Réinitialiser (Échap)"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              background: "transparent",
+              border: "1px solid #dbeafe",
+              borderRadius: "6px",
+              padding: "4px 10px",
+              cursor: "pointer",
+              fontSize: "12px",
+              color: "#185FA5",
+              fontWeight: 500,
+            }}
+          >
+            <RotateCcw size={13} />
+            Reset
+          </button>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#6b7280" }}>
+          <Eye size={14} />
+          <span>Molette ou boutons pour zoomer · Glissez pour naviguer</span>
+        </div>
+      </div>
+
+      {/* ── Miniatures ── */}
+      {images.length > 1 && (
+        <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(images.length, 4)}, 1fr)`, gap: "10px" }}>
+          {images.map((img, idx) => (
+            <button
+              key={idx}
+              onClick={() => changeImage(idx)}
+              style={{
+                background: "#fff",
+                border: `2px solid ${idx === currentIndex ? "#185FA5" : "#dbeafe"}`,
+                borderRadius: "10px",
+                overflow: "hidden",
+                cursor: "pointer",
+                padding: 0,
+                transition: "all 0.2s",
+                boxShadow: idx === currentIndex ? "0 0 0 3px rgba(24,95,165,0.15)" : "none",
+              }}
+            >
+              <SafeImage
+                src={img}
+                alt={LABELS[idx] || `Vue ${idx + 1}`}
+                style={{
+                  width: "100%",
+                  height: "80px",
+                  objectFit: "contain",
+                  display: "block",
+                  padding: "6px",
+                  background: "#f0f4f8",
+                }}
+              />
+              <div
+                style={{
+                  background: idx === currentIndex ? "#185FA5" : "#f0f4f8",
+                  color: idx === currentIndex ? "#fff" : "#374151",
+                  fontSize: "10px",
+                  textAlign: "center",
+                  padding: "4px 6px",
+                  fontWeight: idx === currentIndex ? 600 : 400,
+                  transition: "all 0.2s",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {LABELS[idx] || `Vue ${idx + 1}`}
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── Base de données produits ────────────────────────────────────────────────
 const ALL_PRODUCTS = [
   {
     id: 1,
@@ -318,8 +866,7 @@ Ce livre est dérangeant. Il est éclairant. Il est libérateur. Il est réserv�
     images: [
       "/images/livre7/livre7_1.png",
       "/images/livre7/livre7_3.png",
-      "/images/livre7/livre7_2.png",
-      
+      "/images/livre7/livre7_2.png"
     ],
     format: ["Papier", "PDF"],
     pages: 350,
@@ -461,7 +1008,7 @@ Un livre nécessaire. Un livre urgent. Un livre que l'Afrique attendait.`
     id: 12,
     titre: "Religion chinoise face à la sorcellerie",
     auteur: "Centre MTHS",
-    desc: "Étude comparée des traditions spirituelles chinoises et africaines face aux phénomènes occultes — un dialogue interculturel inédit.",
+    desc: "Étude comparée des traditions spirituelles chinoises et africaines face aux phénomènes occultes.",
     prixFCFA: 6500,
     images: [
       "/images/livre12/livre12_1.png",
@@ -483,17 +1030,7 @@ Un livre nécessaire. Un livre urgent. Un livre que l'Afrique attendait.`
       "Cadre d'intégration pour accompagnateurs interculturels"
     ],
     publicCible: ["Chercheurs en religions comparées", "Communautés sino-africaines", "Anthropologues"],
-    resume: `Deux civilisations. Deux continents. Des millénaires et des océans de distance. Et pourtant — une compréhension presque identique des forces invisibles qui affectent la vie humaine.
-
-Comment est-ce possible ? Ce livre vous le révèle, et la réponse va vous stupéfier.
-
-L'auteur compare avec une érudition remarquable les systèmes spirituels taoïste et chamanique chinois avec les traditions africaines telles que la MTHS les a cartographiées. Les parallèles sont saisissants : le Qi négatif et l'Évu obéissent à des logiques quasi identiques. Les rituels d'exorcisme taoïste et les rites de délivrance africains partagent une même compréhension de la frontière entre monde visible et invisible. Les méthodes de protection, de purification, de guérison — étrangement semblables.
-
-Des témoignages bouleversants de membres des communautés chinoises d'Afrique centrale — confrontées à la rencontre entre leurs propres traditions et les réalités spirituelles africaines — donnent à ce livre une dimension humaine et poignante. Certains témoignent de guérisons obtenues par des approches hybrides intégrant les deux traditions.
-
-Ce livre pose une question radicale : et si la compréhension spirituelle profonde était universelle ? Et si toutes les grandes traditions humaines, depuis toujours, avaient capté quelque chose de vrai sur la nature de l'invisible ?
-
-Un livre d'une originalité absolue — qui élargit l'horizon de tout ce que vous croyiez savoir.`
+    resume: `Deux civilisations. Deux continents. Des millénaires et des océans de distance. Et pourtant — une compréhension presque identique des forces invisibles qui affectent la vie humaine.`
   },
   {
     id: 13,
@@ -501,11 +1038,7 @@ Un livre d'une originalité absolue — qui élargit l'horizon de tout ce que vo
     auteur: "Centre MTHS",
     desc: "Enquête théologique et anthropologique sur les conceptions africaines de l'au-delà et leur dialogue avec la foi chrétienne.",
     prixFCFA: 6500,
-    images: [
-      "/images/livre13/livre13_1.png",
-      "/images/livre13/livre13_3.png",
-      "/images/livre13/livre13_2.png"
-    ],
+    images: ["/images/livre13/livre13_1.png", "/images/livre13/livre13_3.png", "/images/livre13/livre13_2.png"],
     format: ["Papier", "PDF"],
     pages: 310,
     stock: 20,
@@ -513,36 +1046,17 @@ Un livre d'une originalité absolue — qui élargit l'horizon de tout ce que vo
     isbn: "978-2-9541234-3-0",
     datePublication: "2023",
     langue: "Français",
-    pointsCles: [
-      "Cartographie africaine des mondes après la mort",
-      "Le rôle des ancêtres dans la vie des vivants",
-      "Dialogue entre eschatologie africaine et doctrine chrétienne",
-      "Récits d'expériences de mort imminente en contexte africain"
-    ],
+    pointsCles: ["Cartographie africaine des mondes après la mort", "Le rôle des ancêtres dans la vie des vivants", "Dialogue entre eschatologie africaine et doctrine chrétienne", "Récits d'expériences de mort imminente en contexte africain"],
     publicCible: ["Chrétiens africains en deuil", "Théologiens", "Personnes cherchant un sens à la mort"],
-    resume: `Que se passe-t-il vraiment après la mort ? Pas ce que vous espérez. Pas ce que vous craignez. Ce qui se passe réellement — selon les anciens d'Afrique, selon la révélation chrétienne, selon les témoignages de ceux qui en sont revenus.
-
-Ce livre ose aller là où peu d'ouvrages ont le courage de s'aventurer.
-
-L'auteur dresse une cartographie détaillée et fascinante des conceptions africaines de l'au-delà : le voyage de l'âme après la mort, les différents plans d'existence post-mortelle, le monde des ancêtres et leur relation réelle avec les vivants, les conditions d'un repos paisible ou d'une errance tourmentée. Ces croyances ne sont pas de simples superstitions — elles forment un système cohérent et sophistiqué, élaboré sur des millénaires.
-
-Face à ces traditions, l'auteur convoque la théologie chrétienne dans toute sa richesse — et les dialogues révèlent des convergences profondes qui éclairent la foi des chrétiens africains d'une lumière nouvelle.
-
-Des récits d'expériences de mort imminente vécues par des Africains, et des témoignages de personnes ayant eu des contacts avec des défunts dans le cadre de la MTHS, donnent à ce livre une dimension bouleversante que vous n'oublierez pas.
-
-Si vous avez perdu quelqu'un. Si vous craignez la mort. Si vous cherchez à comprendre ce que les ancêtres savent et que les vivants ont oublié — ce livre est pour vous.`
+    resume: "Que se passe-t-il vraiment après la mort ? Ce livre ose aller là où peu d'ouvrages ont le courage de s'aventurer."
   },
   {
     id: 14,
     titre: "Ange ou Démon",
     auteur: "Centre MTHS",
-    desc: "Manuel pratique du discernement des esprits dans la tradition chrétienne africaine — distinguer les manifestations bénéfiques des influences maléfiques.",
+    desc: "Manuel pratique du discernement des esprits dans la tradition chrétienne africaine.",
     prixFCFA: 6500,
-    images: [
-      "/images/livre14/livre14_1.png",
-      "/images/livre14/livre14_3.png",
-      "/images/livre14/livre14_2.png"
-    ],
+    images: ["/images/livre14/livre14_1.png", "/images/livre14/livre14_3.png", "/images/livre14/livre14_2.png"],
     format: ["Papier", "PDF"],
     pages: 310,
     stock: 20,
@@ -550,38 +1064,17 @@ Si vous avez perdu quelqu'un. Si vous craignez la mort. Si vous cherchez à comp
     isbn: "978-2-9541234-4-7",
     datePublication: "2023",
     langue: "Français",
-    pointsCles: [
-      "Critères théologiques et pratiques du discernement des esprits",
-      "Catalogue des manifestations angéliques et démoniaques",
-      "Protocoles d'évaluation pour les accompagnateurs",
-      "Cas concrets d'interventions spirituelles ambiguës"
-    ],
+    pointsCles: ["Critères théologiques et pratiques du discernement des esprits", "Catalogue des manifestations angéliques et démoniaques", "Protocoles d'évaluation pour les accompagnateurs", "Cas concrets d'interventions spirituelles ambiguës"],
     publicCible: ["Accompagnateurs spirituels", "Pasteurs et prêtres", "Personnes vivant des expériences mystiques"],
-    resume: `Quelqu'un vous raconte une vision. Un rêve extraordinaire. Une voix qui lui parle la nuit. Une guérison subite et inexpliquée. Et vous, l'accompagnateur, le pasteur, le proche — vous devez répondre à la question la plus difficile qui soit : est-ce de Dieu ou non ?
-
-Une erreur dans un sens peut briser une vocation. Une erreur dans l'autre peut livrer une âme à l'illusion ou au danger.
-
-Ce manuel pratique vous donne les outils pour ne jamais errer seul dans ces eaux troubles.
-
-S'appuyant sur la grande tradition du discernement des esprits héritée de l'Église — Ignace de Loyola, Jean de la Croix, les Pères du désert — enrichie par les catégories propres à l'anthropologie spirituelle africaine telles qu'elles ont été affinées au Centre MTHS, l'auteur propose une grille d'évaluation progressive, rigoureuse et maniable.
-
-Un catalogue illustré des principales manifestations — angéliques et démoniaques — avec leurs caractéristiques distinctives, leurs fruits observables et les réponses pastorales appropriées, constitue le cœur de l'ouvrage.
-
-Des cas concrets — certains simples, d'autres vertigineux dans leur ambiguïté — vous permettent d'exercer votre jugement avant de vous retrouver en situation réelle.
-
-Ce livre ne vous rendra pas infaillible. Mais il vous rendra infiniment plus sage. Et parfois, dans l'accompagnement spirituel, c'est la sagesse qui fait la différence entre la libération et le naufrage.`
+    resume: "Quelqu'un vous raconte une vision. Un rêve extraordinaire. Une voix qui lui parle la nuit. Et vous devez répondre à la question la plus difficile qui soit : est-ce de Dieu ou non ?"
   },
   {
     id: 15,
     titre: "Chrétien africain et la maladie",
     auteur: "Centre MTHS",
-    desc: "Guide holistique de compréhension et de guérison des maladies selon une approche intégrant foi chrétienne, médecine moderne et thérapies africaines.",
+    desc: "Guide holistique de compréhension et de guérison des maladies selon une approche intégrative.",
     prixFCFA: 6500,
-    images: [
-      "/images/livre15/livre15_1.png",
-      "/images/livre15/livre15_3.png",
-      "/images/livre15/livre15_2.png"
-    ],
+    images: ["/images/livre15/livre15_1.png", "/images/livre15/livre15_3.png", "/images/livre15/livre15_2.png"],
     format: ["Papier", "PDF"],
     pages: 310,
     stock: 20,
@@ -589,24 +1082,9 @@ Ce livre ne vous rendra pas infaillible. Mais il vous rendra infiniment plus sag
     isbn: "978-2-9541234-5-4",
     datePublication: "2023",
     langue: "Français",
-    pointsCles: [
-      "Les causes profondes des maladies selon l'anthropologie africaine",
-      "Méthodes de guérison intégratives : prière, plantes, rites, médecine",
-      "Accompagnement des malades dans leur parcours de foi",
-      "Témoignages de guérisons documentées"
-    ],
+    pointsCles: ["Les causes profondes des maladies selon l'anthropologie africaine", "Méthodes de guérison intégratives", "Accompagnement des malades dans leur parcours de foi", "Témoignages de guérisons documentées"],
     publicCible: ["Malades et leurs familles", "Agents de santé chrétiens", "Communautés ecclésiales"],
-    resume: `Tomber malade en Afrique, ce n'est pas la même chose que tomber malade ailleurs. En Afrique, quand quelqu'un est malade, toute la famille est malade. Toute la communauté se mobilise — ou se divise. Les questions qu'on ne pose jamais à voix haute se mettent à résonner partout : Pourquoi lui ? Pourquoi maintenant ? Qui est derrière ça ?
-
-Ce guide comprend ces questions. Et il y répond avec douceur, profondeur et efficacité pratique.
-
-Plus accessible que son grand frère académique, ce livre s'adresse directement au malade et à ceux qui l'entourent. Il part d'un constat simple et profond : en Afrique, la guérison est toujours collective, spirituelle et culturelle autant que biologique. Ignorer l'une de ces dimensions, c'est soigner à moitié.
-
-L'auteur vous explique comment identifier la nature profonde d'une maladie — biologique, psychosomatique ou spirituelle — et quelles ressources mobiliser dans chaque cas. Des prières concrètes. Des plantes médicinales éprouvées. Des rites symboliques accessibles à tous. Un accompagnement communautaire structuré.
-
-Des témoignages émouvants de personnes ayant vécu des guérisons remarquables grâce à cette approche intégrative vous attendent dans ces pages. Des histoires réelles. Des noms. Des visages. Des vies retrouvées.
-
-Ce livre vous restitue quelque chose de précieux : votre dignité de malade africain, avec toutes vos ressources spirituelles et culturelles intactes.`
+    resume: "Tomber malade en Afrique, ce n'est pas la même chose que tomber malade ailleurs. Ce guide comprend ces questions — et il y répond."
   },
   {
     id: 16,
@@ -614,11 +1092,7 @@ Ce livre vous restitue quelque chose de précieux : votre dignité de malade afr
     auteur: "Centre MTHS",
     desc: "Stratégies pratiques de coexistence, de protection et de réconciliation dans des communautés marquées par la sorcellerie.",
     prixFCFA: 6500,
-    images: [
-      "/images/livre16/livre16_1.png",
-      "/images/livre16/livre16_3.png",
-      "/images/livre16/livre16_2.png"
-    ],
+    images: ["/images/livre16/livre16_1.png", "/images/livre16/livre16_3.png", "/images/livre16/livre16_2.png"],
     format: ["Papier", "PDF"],
     pages: 310,
     stock: 20,
@@ -626,24 +1100,9 @@ Ce livre vous restitue quelque chose de précieux : votre dignité de malade afr
     isbn: "978-2-9541234-6-1",
     datePublication: "2023",
     langue: "Français",
-    pointsCles: [
-      "Stratégies de protection sans confrontation violente",
-      "Gestion des dynamiques sociales autour des accusations",
-      "Techniques de réconciliation et de restauration du lien",
-      "Le pouvoir de l'amour comme désarmement spirituel ultime"
-    ],
+    pointsCles: ["Stratégies de protection sans confrontation violente", "Gestion des dynamiques sociales autour des accusations", "Techniques de réconciliation et de restauration du lien", "Le pouvoir de l'amour comme désarmement spirituel ultime"],
     publicCible: ["Communautés rurales africaines", "Leaders de quartier", "Médiateurs communautaires"],
-    resume: `Dans votre village, tout le monde le sait. Dans votre quartier, tout le monde chuchote. Les accusations circulent. Les regards changent. La méfiance s'installe comme une mauvaise saison qui ne finit plus. Et vous, au milieu de tout ça, vous devez continuer à vivre — à côté de gens que vous craignez, à côté de gens qui vous craignent.
-
-Comment fait-on ?
-
-Ce livre porte une réponse que vous n'attendez pas — et qui va peut-être changer votre façon de voir les choses pour toujours : il est possible de "désarmer" la sorcellerie non par la confrontation frontale, mais par la sagesse, la protection stratégique et — oui — l'amour.
-
-L'auteur puise dans des décennies d'expérience communautaire au Centre MTHS pour proposer un art de vivre ensemble qui transcende la menace occulte. Il vous explique comment se forment et circulent les accusations, pourquoi les rumeurs amplifient les peurs au-delà de toute proportion, et comment les leaders communautaires peuvent reprendre le contrôle de ces dynamiques destructrices.
-
-Il vous enseigne ensuite des techniques concrètes de protection au quotidien, des rites de purification de l'espace communautaire, et des pratiques de réconciliation permettant de restaurer le lien même avec des personnes soupçonnées.
-
-Parce que la coexistence n'est pas la capitulation. C'est la sagesse la plus haute qui soit.`
+    resume: "Dans votre village, tout le monde le sait. Dans votre quartier, tout le monde chuchote. Comment fait-on pour continuer à vivre ?"
   },
   {
     id: 17,
@@ -651,12 +1110,7 @@ Parce que la coexistence n'est pas la capitulation. C'est la sagesse la plus hau
     auteur: "Centre MTHS",
     desc: "Analyse théologique et sociale du satanisme contemporain et de ses infiltrations dans la société africaine et mondiale.",
     prixFCFA: 6500,
-    images: [
-      "/images/livre17/livre17_1.png",
-      "/images/livre17/livre17_3.png",
-      "/images/livre17/livre17_2.png",
-      "/images/livre17/livre17_4.png"
-    ],
+    images: ["/images/livre17/livre17_1.png", "/images/livre17/livre17_3.png", "/images/livre17/livre17_2.png", "/images/livre17/livre17_4.png"],
     format: ["Papier", "PDF"],
     pages: 310,
     stock: 20,
@@ -664,36 +1118,17 @@ Parce que la coexistence n'est pas la capitulation. C'est la sagesse la plus hau
     isbn: "978-2-9541234-6-1",
     datePublication: "2023",
     langue: "Français",
-    pointsCles: [
-      "Origines et structures du satanisme contemporain",
-      "Infiltrations dans la musique, la mode, les médias et la politique",
-      "Signes de reconnaissance et rituels sataniques décryptés",
-      "Stratégies de résistance chrétienne et africaine"
-    ],
+    pointsCles: ["Origines et structures du satanisme contemporain", "Infiltrations dans la musique, la mode, les médias et la politique", "Signes de reconnaissance et rituels sataniques décryptés", "Stratégies de résistance chrétienne et africaine"],
     publicCible: ["Chrétiens en quête de discernement culturel", "Parents et éducateurs", "Pasteurs et leaders d'opinion"],
-    resume: `Vous regardez un clip musical et quelque chose vous dérange sans que vous sachiez exactement quoi. Vous voyez certains symboles partout — dans la mode, dans les films, dans les gestes de certains artistes — et une inquiétude sourde s'installe. Votre enfant écoute des musiques dont les paroles, traduites, vous glacent le sang.
-
-Vous n'êtes pas paranoïaque. Et ce livre est écrit pour vous.
-
-Le satanisme contemporain n'est pas une curiosité marginale réservée à quelques illuminés en marge de la société. Il est organisé, structuré, financé, et ses tentacules atteignent des domaines que vous fréquentez chaque jour : la musique, la mode, les réseaux sociaux, le cinéma, parfois même la politique.
-
-Cet ouvrage l'analyse avec une clarté et un courage rares. Il décrypte les origines idéologiques du satanisme moderne, ses rituels, ses symboles, ses modes d'infiltration culturelle. Il montre comment il opère spécifiquement en Afrique, comment il se greffe sur les vulnérabilités spirituelles locales, et comment distinguer une influence sataniste réelle d'une simple esthétique provocatrice.
-
-Mais il ne vous laisse pas dans la peur. Il vous arme d'un discernement culturel solide et de stratégies de résistance ancrées dans la foi chrétienne et la sagesse africaine.
-
-Parce que comprendre la dérive du monde, c'est refuser d'en être emporté.`
+    resume: "Vous regardez un clip musical et quelque chose vous dérange sans que vous sachiez exactement quoi. Vous n'êtes pas paranoïaque. Et ce livre est écrit pour vous."
   },
   {
     id: 18,
     titre: "Tradition africaine et christianisme",
     auteur: "Centre MTHS",
-    desc: "Dialogue approfondi entre les traditions ancestrales africaines et la foi chrétienne — vers une synthèse authentique et libératrice.",
+    desc: "Dialogue approfondi entre les traditions ancestrales africaines et la foi chrétienne.",
     prixFCFA: 6500,
-    images: [
-      "/images/livre18/livre18_1.png",
-      "/images/livre18/livre18_3.png",
-      "/images/livre18/livre18_2.png"
-    ],
+    images: ["/images/livre18/livre18_1.png", "/images/livre18/livre18_3.png", "/images/livre18/livre18_2.png"],
     format: ["Papier", "PDF"],
     pages: 310,
     stock: 20,
@@ -701,37 +1136,17 @@ Parce que comprendre la dérive du monde, c'est refuser d'en être emporté.`
     isbn: "978-2-9541234-6-1",
     datePublication: "2023",
     langue: "Français",
-    pointsCles: [
-      "Ce que le christianisme doit aux traditions africaines",
-      "Les pratiques traditionnelles compatibles avec la foi chrétienne",
-      "Frontières claires entre inculturation et syncrétisme",
-      "Vers une identité chrétienne africaine pleinement assumée"
-    ],
+    pointsCles: ["Ce que le christianisme doit aux traditions africaines", "Les pratiques traditionnelles compatibles avec la foi chrétienne", "Frontières claires entre inculturation et syncrétisme", "Vers une identité chrétienne africaine pleinement assumée"],
     publicCible: ["Chrétiens africains en quête d'identité", "Théologiens de l'inculturation", "Catéchistes et leaders d'Église"],
-    resume: `On vous a appris à choisir : soit vous êtes africain, soit vous êtes chrétien. Soit vous honorez vos ancêtres, soit vous priez Jésus. Soit vous gardez vos traditions, soit vous embrassez l'Évangile. Comme si votre identité devait être une capitulation.
-
-Ce livre vous libère de ce faux choix.
-
-Avec une profondeur théologique et une sensibilité culturelle rares, l'auteur démontre que le christianisme et les traditions africaines ne sont pas des ennemis — ils sont, à bien des égards, deux langages pour dire des vérités profondes sur l'homme, Dieu et le sacré. Des vérités qui se complètent, s'enrichissent et se fécondent mutuellement.
-
-Vous découvrirez ce que le christianisme africain a à gagner à puiser dans ses racines traditionnelles — sans syncrétisme, sans confusion, mais avec une intelligence qui élève les deux héritages. Vous comprendrez quelles pratiques traditionnelles sont pleinement compatibles avec la foi chrétienne, et où se situent les frontières réelles à ne pas franchir.
-
-Ce livre vous donnera quelque chose que beaucoup de chrétiens africains cherchent sans trouver : une identité intégrale. Être chrétien jusqu'au bout. Être africain jusqu'au bout. Et découvrir que ces deux plénitudes ne se contredisent pas — elles se révèlent.
-
-Vous n'aurez plus jamais à choisir.`
+    resume: "On vous a appris à choisir : soit vous êtes africain, soit vous êtes chrétien. Ce livre vous libère de ce faux choix."
   },
   {
     id: 19,
     titre: "Le bouddhisme face à la sorcellerie et au Satanisme",
     auteur: "Centre MTHS",
-    desc: "Étude comparative entre la philosophie bouddhiste et les phénomènes de sorcellerie et de satanisme — convergences et divergences.",
+    desc: "Étude comparative entre la philosophie bouddhiste et les phénomènes de sorcellerie et de satanisme.",
     prixFCFA: 6500,
-    images: [
-      "/images/livre19/livre19_1.png",
-      "/images/livre19/livre19_3.png",
-      "/images/livre19/livre19_2.png",
-      "/images/livre19/livre19_4.png"
-    ],
+    images: ["/images/livre19/livre19_1.png", "/images/livre19/livre19_3.png", "/images/livre19/livre19_2.png", "/images/livre19/livre19_4.png"],
     format: ["Papier", "PDF"],
     pages: 310,
     stock: 20,
@@ -739,24 +1154,9 @@ Vous n'aurez plus jamais à choisir.`
     isbn: "978-2-9541234-6-1",
     datePublication: "2023",
     langue: "Français",
-    pointsCles: [
-      "La notion bouddhiste du karma face aux malédictions africaines",
-      "Méditation et prière de délivrance : outils comparés",
-      "Le vide bouddhiste face au plein spirituel africain",
-      "Ce que chaque tradition peut apprendre de l'autre"
-    ],
+    pointsCles: ["La notion bouddhiste du karma face aux malédictions africaines", "Méditation et prière de délivrance : outils comparés", "Le vide bouddhiste face au plein spirituel africain", "Ce que chaque tradition peut apprendre de l'autre"],
     publicCible: ["Curieux de spiritualités comparées", "Accompagnateurs interculturels", "Chercheurs en philosophie religieuse"],
-    resume: `Le bouddhisme parle de souffrance, d'attachement, de karma, de délivrance. La MTHS parle d'oppression, de liens occultes, de transmission, de libération. Deux langages. Deux civilisations. Et une question commune : comment l'être humain se libère-t-il de ce qui l'enchaîne ?
-
-Ce livre fait dialoguer ces deux traditions avec une intelligence qui dépasse toutes les attentes.
-
-L'auteur explore les convergences troublantes entre la philosophie bouddhiste et la compréhension africaine des forces spirituelles : la notion de karma face aux malédictions héréditaires, la pratique de la méditation face aux protocoles de purification MTHS, la conception bouddhiste des entités maléfiques face aux réalités démoniaques africaines.
-
-Mais il n'efface pas les différences — il les met en lumière avec la même honnêteté, montrant où les deux traditions se séparent et pourquoi ces divergences importent.
-
-Ce livre vous donnera une chose rare : la capacité de penser votre propre foi et votre propre culture à partir d'un regard extérieur, neuf, déstabilisant — et finalement enrichissant.
-
-Que vous soyez croyant, chercheur ou simplement curieux de comprendre comment l'humanité, à travers ses grandes traditions, a toujours su qu'il existait quelque chose au-delà du visible, ce livre est une invitation à un voyage intellectuel et spirituel inoubliable.`
+    resume: "Le bouddhisme parle de souffrance, d'attachement, de karma, de délivrance. La MTHS parle d'oppression, de liens occultes, de transmission, de libération. Deux langages. Une question commune."
   },
   {
     id: 20,
@@ -764,12 +1164,7 @@ Que vous soyez croyant, chercheur ou simplement curieux de comprendre comment l'
     auteur: "Centre MTHS",
     desc: "Enquête documentée sur les organisations occultes et secrètes qui structurent les rapports de pouvoir en Afrique.",
     prixFCFA: 6500,
-    images: [
-      "/images/livre20/livre20_1.png",
-      "/images/livre20/livre20_3.png",
-      "/images/livre20/livre20_2.png",
-      "/images/livre20/livre20_4.png"
-    ],
+    images: ["/images/livre20/livre20_1.png", "/images/livre20/livre20_3.png", "/images/livre20/livre20_2.png", "/images/livre20/livre20_4.png"],
     format: ["Papier", "PDF"],
     pages: 310,
     stock: 20,
@@ -777,24 +1172,9 @@ Que vous soyez croyant, chercheur ou simplement curieux de comprendre comment l'
     isbn: "978-2-9541234-6-1",
     datePublication: "2023",
     langue: "Français",
-    pointsCles: [
-      "Cartographie des principales sociétés secrètes africaines",
-      "Rituels d'initiation et pactes de sang documentés",
-      "Lien entre sociétés secrètes, politique et économie",
-      "Comment reconnaître et se protéger de leur influence"
-    ],
+    pointsCles: ["Cartographie des principales sociétés secrètes africaines", "Rituels d'initiation et pactes de sang documentés", "Lien entre sociétés secrètes, politique et économie", "Comment reconnaître et se protéger de leur influence"],
     publicCible: ["Chrétiens en quête de discernement social", "Leaders politiques et communautaires", "Chercheurs en sciences sociales africaines"],
-    resume: `Il y a une autre Afrique, cachée sous celle que vous voyez. Une Afrique de loges, de fraternités, de pactes nocturnes et de serments de sang. Une Afrique où certaines réussites s'achètent à un prix que personne ne prononce à voix haute. Une Afrique où les rapports de pouvoir — politiques, économiques, familiaux — sont souvent gouvernés par des règles que seuls les initiés connaissent.
-
-Ce livre vous ouvre les portes de cette Afrique-là.
-
-Avec une rigueur documentaire et un courage intellectuel rares, l'auteur cartographie les principales sociétés secrètes et sectes qui opèrent sur le continent africain : leurs origines, leurs structures, leurs rituels d'initiation, leurs pactes, et la façon dont elles s'infiltrent dans les sphères politiques, économiques et religieuses.
-
-Vous comprendrez des choses que vous aviez toujours senties confusément — pourquoi certaines personnes montent si vite et tombent si brutalement, pourquoi certains milieux semblent régis par des loyautés impossibles à comprendre de l'extérieur, pourquoi certaines décisions politiques semblent obéir à une logique invisible.
-
-Ce livre ne cherche pas à alimenter la paranoïa. Il cherche à vous donner la lucidité nécessaire pour naviguer dans ces réalités, protéger votre famille, et faire des choix éclairés dans une société africaine dont les codes les plus profonds sont souvent les moins connus.
-
-Ce que vous ne savez pas peut vous contrôler. Ce que vous savez peut vous libérer.`
+    resume: "Il y a une autre Afrique, cachée sous celle que vous voyez. Une Afrique de loges, de fraternités, de pactes nocturnes et de serments de sang."
   },
   {
     id: 21,
@@ -802,12 +1182,25 @@ Ce que vous ne savez pas peut vous contrôler. Ce que vous savez peut vous libé
     auteur: "Centre MTHS",
     desc: "Guide complet pour comprendre le langage des rêves selon la tradition africaine, la psychologie et la spiritualité chrétienne.",
     prixFCFA: 6500,
-    images: [
-      "/images/livre21/livre21_1.png",
-      "/images/livre21/livre21_3.png",
-      "/images/livre21/livre21_2.png",
-      "/images/livre21/livre21_4.png"
-    ],
+    images: ["/images/livre21/livre21_1.png", "/images/livre21/livre21_3.png", "/images/livre21/livre21_2.png", "/images/livre21/livre21_4.png"],
+    format: ["Papier", "PDF"],
+    pages: 310,
+    stock: 20,
+    type: "Livre",
+    isbn: "978-2-9541234-6-1",
+    datePublication: "2023",
+    langue: "Français",
+    pointsCles: ["Typologie des rêves : révélation, avertissement, attaque spirituelle, refoulement", "Symbolique africaine des rêves les plus fréquents", "Comment répondre spirituellement à un rêve alarmant", "Journal de rêves et méthode d'interprétation progressive"],
+    publicCible: ["Personnes troublées par leurs rêves", "Accompagnateurs spirituels", "Tout chrétien africain"],
+    resume: "La nuit dernière, vous avez rêvé. Et à votre réveil, quelque chose ne vous a pas lâché. Ce guide complet vous enseigne à déchiffrer ce langage."
+  },
+  {
+    id: 22,
+    titre: "Comment obtenir ta Délivrance et ta Victoire contre le Diable, les Démons et les Sorciers",
+    auteur: "Centre MTHS",
+    desc: "Guide pratique de délivrance et de guerre spirituelle selon les protocoles éprouvés du Centre MTHS.",
+    prixFCFA: 6500,
+    images: ["/images/livre22/livre22_1.png", "/images/livre22/livre22_3.png", "/images/livre22/livre22_2.png", "/images/livre22/livre22_4.png"],
     format: ["Papier", "PDF"],
     pages: 310,
     stock: 20,
@@ -816,71 +1209,79 @@ Ce que vous ne savez pas peut vous contrôler. Ce que vous savez peut vous libé
     datePublication: "2023",
     langue: "Français",
     pointsCles: [
-      "Typologie des rêves : révélation, avertissement, attaque spirituelle, refoulement",
-      "Symbolique africaine des rêves les plus fréquents",
-      "Comment répondre spirituellement à un rêve alarmant",
-      "Journal de rêves et méthode d'interprétation progressive"
+      "Comprendre la nature de l'oppression spirituelle : modes opératoires du diable, des démons et des sorciers",
+      "Identifier les portes d'entrée des forces obscures dans une vie (traumatismes, pactes, lignées)",
+      "Protocole de délivrance en trois phases : rupture des liens, nettoyage intérieur, restauration de l'identité",
+      "Stratégies concrètes pour maintenir sa victoire et prévenir les rechutes",
+      "Témoignages édifiants de personnes libérées et accompagnées au Centre MTHS"
     ],
     publicCible: ["Personnes troublées par leurs rêves", "Accompagnateurs spirituels", "Tout chrétien africain"],
-    resume: `La nuit dernière, vous avez rêvé. Et à votre réveil, quelque chose ne vous a pas lâché — une image, une sensation, une certitude que ce rêve voulait vous dire quelque chose d'important. Mais quoi ?
+    resume: `Vous avez tout essayé. Les prières, les jeûnes, les consultations, les onctions. Pourtant, la même oppression revient. Les mêmes cauchemars. Les mêmes blocages. Les mêmes échecs répétés.
 
-Depuis toujours, l'Afrique sait que les rêves ne sont pas des accidents de la nuit. Ils sont des messages. Des avertissements. Des révélations. Parfois des attaques spirituelles. Et savoir les lire peut changer le cours de votre vie.
+Élaboré à partir de centaines de cas traités au Centre Marie Reine de la Miséricorde d'Abili, ce guide pratique vous livre les protocoles éprouvés qui ont libéré des milliers de personnes des griffes de l'ennemi.
 
-Ce guide complet vous enseigne à déchiffrer ce langage.
-
-L'auteur croise avec une intelligence remarquable trois traditions d'interprétation : la symbolique ancestrale africaine — notamment béti — forgée sur des siècles d'observation ; la psychologie moderne des rêves héritée de Jung et ses successeurs ; et la grande tradition biblique de l'interprétation des songes, de Joseph à Daniel.
-
-Vous apprendrez à distinguer un rêve de révélation divine d'un rêve d'attaque spirituelle, un rêve d'avertissement d'un simple refoulement psychologique. Vous découvrirez la symbolique des images les plus fréquentes dans les rêves africains — l'eau, le serpent, les défunts, les poursuites, les maisons — et ce qu'elles signifient vraiment dans votre contexte.
-
-Un protocole de réponse spirituelle est proposé pour les rêves alarmants. Une méthode de journal de rêves structure votre pratique dans la durée.
-
-La nuit vous parle. Il est temps d'apprendre à l'écouter.`
+La délivrance n'est pas un événement. C'est un processus. Et ce processus peut commencer aujourd'hui, avec ce livre entre vos mains.`
   },
- {
-  id: 22,
-  titre: "Comment obtenir ta Délivrance et ta Victoire contre le Diable, les Démons et les Sorciers",
-  auteur: "Centre MTHS",
-  desc: "Guide pratique de délivrance et de guerre spirituelle selon les protocoles éprouvés du Centre MTHS.",
-  prixFCFA: 6500,
-  images: [
-    "/images/livre22/livre22_1.png",
-    "/images/livre22/livre22_3.png",
-    "/images/livre22/livre22_2.png",
-    "/images/livre22/livre22_4.png"
-  ],
-  format: ["Papier", "PDF"],
-  pages: 310,
-  stock: 20,
-  type: "Livre",
-  isbn: "978-2-9541234-6-1",
-  datePublication: "2023",
-  langue: "Français",
-  pointsCles: [
-    "Comprendre la nature de l'oppression spirituelle : modes opératoires du diable, des démons et des sorciers",
-    "Identifier les portes d'entrée des forces obscures dans une vie (traumatismes, pactes, lignées)",
-    "Protocole de délivrance en trois phases : rupture des liens, nettoyage intérieur, restauration de l'identité",
-    "Stratégies concrètes pour maintenir sa victoire et prévenir les rechutes",
-    "Témoignages édifiants de personnes libérées et accompagnées au Centre MTHS"
-  ],
-  publicCible: ["Personnes troublées par leurs rêves", "Accompagnateurs spirituels", "Tout chrétien africain"],
-  resume: `Vous avez tout essayé. Les prières, les jeûnes, les consultations, les onctions. Pourtant, la même oppression revient. Les mêmes cauchemars. Les mêmes blocages. Les mêmes échecs répétés. Et au fond de vous, une question vous ronge : est‑ce que la délivrance existe vraiment pour moi ?
+  {
+    id: 23,
+    titre: "Le Remède Traditionnel Amélioré",
+    auteur: "Centre MTHS",
+    desc: "Guide pratique de délivrance et de guerre spirituelle selon les protocoles éprouvés du Centre MTHS.",
+    prixFCFA: 6500,
+    images: ["/images/livre23/livre23_1.png", "/images/livre23/livre23_3.png", "/images/livre23/livre23_2.png"],
+    format: ["Papier", "PDF"],
+    pages: 310,
+    stock: 20,
+    type: "Livre",
+    isbn: "978-2-9541234-6-1",
+    datePublication: "2023",
+    langue: "Français",
+    pointsCles: [
+      "Comprendre la nature de l'oppression spirituelle : modes opératoires du diable, des démons et des sorciers",
+      "Identifier les portes d'entrée des forces obscures dans une vie (traumatismes, pactes, lignées)",
+      "Protocole de délivrance en trois phases : rupture des liens, nettoyage intérieur, restauration de l'identité",
+      "Stratégies concrètes pour maintenir sa victoire et prévenir les rechutes",
+      "Témoignages édifiants de personnes libérées et accompagnées au Centre MTHS"
+    ],
+    publicCible: ["Personnes troublées par leurs rêves", "Accompagnateurs spirituels", "Tout chrétien africain"],
+    resume: `Vous avez tout essayé. Les prières, les jeûnes, les consultations, les onctions. Pourtant, la même oppression revient. Les mêmes cauchemars. Les mêmes blocages. Les mêmes échecs répétés.
 
-Oui. Elle existe. Et ce livre vous montre le chemin.
+Élaboré à partir de centaines de cas traités au Centre Marie Reine de la Miséricorde d'Abili, ce guide pratique vous livre les protocoles éprouvés qui ont libéré des milliers de personnes des griffes de l'ennemi.
 
-Élaboré à partir de centaines de cas traités au Centre Marie Reine de la Miséricorde d’Abili, ce guide pratique vous livre les protocoles éprouvés qui ont libéré des milliers de personnes des griffes de l’ennemi. Pas des théories, pas des formules toutes faites : une méthode progressive, concrète, qui respecte votre rythme et votre histoire.
+La délivrance n'est pas un événement. C'est un processus. Et ce processus peut commencer aujourd'hui, avec ce livre entre vos mains.`
+  },
+  {
+    id: 24,
+    titre: "CULTURE DE LA PAIX ET LUTTE CONTRE LA DÉVIANCE SPIRITUELLE ",
+    auteur: "Centre MTHS",
+    desc: "Guide pratique de délivrance et de guerre spirituelle selon les protocoles éprouvés du Centre MTHS.",
+    prixFCFA: 6500,
+    images: ["/images/livre24/livre24_1.png", "/images/livre24/livre24_3.png", "/images/livre24/livre24_2.png"],
+    format: ["Papier", "PDF"],
+    pages: 310,
+    stock: 20,
+    type: "Livre",
+    isbn: "978-2-9541234-6-1",
+    datePublication: "2023",
+    langue: "Français",
+    pointsCles: [
+      "Comprendre la nature de l'oppression spirituelle : modes opératoires du diable, des démons et des sorciers",
+      "Identifier les portes d'entrée des forces obscures dans une vie (traumatismes, pactes, lignées)",
+      "Protocole de délivrance en trois phases : rupture des liens, nettoyage intérieur, restauration de l'identité",
+      "Stratégies concrètes pour maintenir sa victoire et prévenir les rechutes",
+      "Témoignages édifiants de personnes libérées et accompagnées au Centre MTHS"
+    ],
+    publicCible: ["Personnes troublées par leurs rêves", "Accompagnateurs spirituels", "Tout chrétien africain"],
+    resume: `Vous avez tout essayé. Les prières, les jeûnes, les consultations, les onctions. Pourtant, la même oppression revient. Les mêmes cauchemars. Les mêmes blocages. Les mêmes échecs répétés.
 
-Vous découvrirez d’abord comment fonctionne réellement l’oppression spirituelle : comment le diable, les démons et les sorciers opèrent ensemble ou séparément, quelles sont leurs cibles favorites, et surtout quelles sont les portes par lesquelles ils entrent dans une vie – parfois sans que vous le sachiez.
+Élaboré à partir de centaines de cas traités au Centre Marie Reine de la Miséricorde d'Abili, ce guide pratique vous livre les protocoles éprouvés qui ont libéré des milliers de personnes des griffes de l'ennemi.
 
-Ensuite, vous serez guidé pas à pas à travers un processus de délivrance en trois phases : la rupture des liens, le nettoyage intérieur, et la restauration de votre identité spirituelle. Chaque phase est détaillée avec des prières spécifiques, des actes de guerre spirituelle et des accompagnements concrets.
-
-Mais ce livre va plus loin. Il vous apprend à garder votre victoire. Parce que beaucoup sont délivrés, mais peu le restent. Vous saurez comment construire des défenses durables, comment discerner les retours offensifs de l’ennemi, et comment vivre chaque jour dans la liberté que le Christ a gagnée pour vous.
-
-Des témoignages poignants ponctuent ces pages – des histoires de personnes qui étaient liées depuis l’enfance, qui avaient tout perdu, et qui aujourd’hui marchent dans une liberté totale.
-
-La délivrance n’est pas un événement. C’est un processus. Et ce processus peut commencer aujourd’hui, avec ce livre entre vos mains. Préparez‑vous à vivre ce que vous n’osiez plus espérer. Votre victoire est à portée.`
- }
+La délivrance n'est pas un événement. C'est un processus. Et ce processus peut commencer aujourd'hui, avec ce livre entre vos mains.`
+  }
+  
 ];
 
+// ─── Composant principal ─────────────────────────────────────────────────────
 function Produitdetail() {
   const { id } = useParams();
   const location = useLocation();
@@ -890,7 +1291,6 @@ function Produitdetail() {
   const [product, setProduct] = useState(null);
   const [category, setCategory] = useState(null);
   const [currency, setCurrency] = useState("FCFA");
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -913,7 +1313,6 @@ function Produitdetail() {
       const foundProduct = ALL_PRODUCTS.find((p) => p.id === parseInt(id));
       if (foundProduct) {
         setProduct(foundProduct);
-        setCurrentImageIndex(0); // Réinitialisation ici
         setCategory({
           id: 0,
           name: "Livres Doctrinaux & Manuels Cliniques",
@@ -931,7 +1330,6 @@ function Produitdetail() {
       setProduct(enriched || location.state.product);
       setCategory(location.state.category);
       setCurrency(location.state.currency || "FCFA");
-      setCurrentImageIndex(0); // Réinitialisation ici aussi
       setIsLoading(false);
     } else {
       loadProductFromId();
@@ -961,22 +1359,6 @@ function Produitdetail() {
   const isInCart = () =>
     globalCart.some((item) => item.id === product?.id && item.type === "mths-product");
 
-  const nextImage = () => {
-    if (product?.images?.length) {
-      setCurrentImageIndex((prev) =>
-        prev === product.images.length - 1 ? 0 : prev + 1
-      );
-    }
-  };
-
-  const prevImage = () => {
-    if (product?.images?.length) {
-      setCurrentImageIndex((prev) =>
-        prev === 0 ? product.images.length - 1 : prev - 1
-      );
-    }
-  };
-
   const increaseQuantity = () => {
     if (product && quantity < product.stock) setQuantity((prev) => prev + 1);
   };
@@ -994,6 +1376,9 @@ function Produitdetail() {
     ];
   };
 
+  const IMAGE_LABELS = ["Première de couverture", "Quatrième de couverture", "Pages intérieures", "Pages intérieures 2", "Pages intérieures 3", "Pages intérieures 4"];
+
+  // ── Loading ──
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
@@ -1008,6 +1393,7 @@ function Produitdetail() {
     );
   }
 
+  // ── Not found ──
   if (!product) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
@@ -1030,7 +1416,6 @@ function Produitdetail() {
   }
 
   const images = getImages();
-  const labelImage = ["Première de couverture", "Quatrième de couverture", "Pages intérieures"];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
@@ -1047,78 +1432,16 @@ function Produitdetail() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
 
-          {/* Galerie */}
-          <div className="space-y-6">
-            <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden">
-              <SafeImage
-                src={images[currentImageIndex]}
-                alt={`${product.titre} — vue ${currentImageIndex + 1}`}
-                className="w-full h-96 object-contain bg-gradient-to-br from-blue-50 to-blue-100 p-4"
-              />
-
-              {images.length > 1 && (
-                <>
-                  <button
-                    onClick={prevImage}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-colors"
-                    aria-label="Image précédente"
-                  >
-                    <ChevronLeft className="w-6 h-6 text-blue-600" />
-                  </button>
-                  <button
-                    onClick={nextImage}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-colors"
-                    aria-label="Image suivante"
-                  >
-                    <ChevronRight className="w-6 h-6 text-blue-600" />
-                  </button>
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                    {images.map((_, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setCurrentImageIndex(idx)}
-                        className={`h-2 rounded-full transition-all ${
-                          idx === currentImageIndex ? "bg-blue-600 w-4" : "bg-white/70 w-2 hover:bg-white"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-
-            {images.length > 1 && (
-              <div className="grid grid-cols-3 gap-3">
-                {images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentImageIndex(idx)}
-                    className={`relative overflow-hidden rounded-xl border-2 transition-all ${
-                      idx === currentImageIndex
-                        ? "border-blue-500 ring-2 ring-blue-200"
-                        : "border-gray-200 hover:border-blue-300"
-                    }`}
-                  >
-                    <SafeImage
-                      src={img}
-                      alt={labelImage[idx] || `Vue ${idx + 1}`}
-                      className="w-full h-24 object-contain bg-blue-50 p-1"
-                    />
-                    <div className="bg-blue-900/70 text-white text-[10px] text-center py-1 px-1">
-                      {labelImage[idx] || `Vue ${idx + 1}`}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Eye className="w-4 h-4 flex-shrink-0" />
-              <span>Cliquez sur les miniatures pour naviguer entre les vues</span>
-            </div>
+          {/* ══ GALERIE AVEC ZOOM ══ */}
+          <div>
+            <ImageViewer
+              images={images}
+              labels={IMAGE_LABELS.slice(0, images.length)}
+              productTitle={product.titre}
+            />
           </div>
 
-          {/* Infos produit */}
+          {/* ══ INFORMATIONS PRODUIT ══ */}
           <div className="space-y-6">
             <div>
               <div className="flex items-center justify-between mb-3">
@@ -1243,7 +1566,6 @@ function Produitdetail() {
                 </p>
               )}
 
-              {/* BOUTON "LIRE UN EXTRAIT" (PDF) */}
               <a
                 href={`/images/extrait/livre${product.id}.pdf`}
                 target="_blank"
@@ -1321,7 +1643,7 @@ function Produitdetail() {
           </div>
         </div>
 
-        {/* Résumé complet */}
+        {/* ══ RÉSUMÉ COMPLET ══ */}
         <div className="mt-14 bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-5">
             <h2 className="text-xl font-bold flex items-center gap-3">
@@ -1369,7 +1691,7 @@ function Produitdetail() {
           </div>
         </div>
 
-        {/* Livres connexes */}
+        {/* ══ LIVRES CONNEXES ══ */}
         <div className="mt-14">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-blue-900">

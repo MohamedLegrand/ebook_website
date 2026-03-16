@@ -74,7 +74,6 @@ function Footer() {
       footer: {
         copyright: "Association Mariale d'Abili (ASMAB) — Tous droits réservés.",
         tagline: "Guérir l'Invisible, Restaurer l'Homme",
-        developer: "Développé par Monsieur ZOA Stéphane",
         watermark: "La paix et la guérison pour tous"
       },
       schedule: {
@@ -149,8 +148,7 @@ function Footer() {
       footer: {
         copyright: "Abili Marian Association (ASMAB) — All rights reserved.",
         tagline: "Healing the Invisible, Restoring Humanity",
-        developer: "Developed by Mr. ZOA Stéphane",
-        watermark: "Peace and healing for all"
+        
       },
       schedule: {
         title: "Opening Hours",
