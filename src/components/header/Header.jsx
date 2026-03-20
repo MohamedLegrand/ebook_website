@@ -173,7 +173,7 @@ function Header() {
         }
       `}</style>
 
-      {/* ✅ FIX : overflow-visible sur le header pour que les dropdowns ne soient pas coupés */}
+      {/* Header principal avec overflow-visible pour les dropdowns */}
       <header className="sticky top-0 z-50 bg-white shadow-md shadow-blue-100/50 overflow-visible">
 
         {/* ===== TOP BAR ===== */}
@@ -191,11 +191,11 @@ function Header() {
               </span>
             </Link>
 
-            {/* Ticker (caché sur mobile) */}
-            <div className="hidden md:block flex-1 overflow-hidden mx-4">
-              <div className="animate-ticker flex items-center gap-8 whitespace-nowrap">
+            {/* Ticker visible sur tous les écrans (responsive) */}
+            <div className="flex-1 overflow-hidden mx-2 sm:mx-4">
+              <div className="animate-ticker flex items-center gap-4 sm:gap-8 whitespace-nowrap text-[10px] sm:text-xs">
                 {[...lang.ticker, ...lang.ticker].map((msg, i) => (
-                  <span key={i} className="flex items-center gap-2 text-xs text-blue-600 font-medium">
+                  <span key={i} className="flex items-center gap-2 text-blue-600 font-medium">
                     <span className="w-1 h-1 bg-blue-400 rounded-full" />
                     {msg}
                   </span>
@@ -261,7 +261,6 @@ function Header() {
         </div>
 
         {/* ===== NAVBAR PRINCIPALE ===== */}
-        {/* ✅ FIX : "overflow-hidden" retiré — il coupait les dropdowns positionnés en absolute */}
         <nav className="h-[72px] w-full max-w-7xl mx-auto px-3 flex items-center justify-between gap-3">
 
           {/* Logo */}
@@ -285,7 +284,6 @@ function Header() {
                 <span className="text-[22px] font-black leading-none text-blue-900 whitespace-nowrap">MTHS</span>
                 <span className="text-[11px] font-semibold text-blue-600 whitespace-nowrap">/TMSH</span>
               </div>
-              {/* ✅ max-w réduit légèrement pour compenser l'absence de overflow-hidden sur la nav */}
               <span className="logo-tagline text-[11px] font-medium text-blue-500 truncate max-w-[160px] sm:max-w-[220px] lg:max-w-[320px]">
                 {lang.tagline}
               </span>
@@ -311,7 +309,6 @@ function Header() {
                 Plus
                 <ChevronDown className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" />
               </button>
-              {/* ✅ Le dropdown est maintenant visible car plus aucun parent n'a overflow-hidden */}
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-white rounded-xl shadow-2xl shadow-blue-200/50 border border-blue-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 dropdown-animate">
                 <div className="p-1.5">
                   {moreNav.map((item) => (

@@ -1277,8 +1277,75 @@ La délivrance n'est pas un événement. C'est un processus. Et ce processus peu
 Élaboré à partir de centaines de cas traités au Centre Marie Reine de la Miséricorde d'Abili, ce guide pratique vous livre les protocoles éprouvés qui ont libéré des milliers de personnes des griffes de l'ennemi.
 
 La délivrance n'est pas un événement. C'est un processus. Et ce processus peut commencer aujourd'hui, avec ce livre entre vos mains.`
-  }
-  
+  },
+  {
+  id: 25,
+  titre: "Hindouisme et Déviance Spirituelle",
+  auteur: "Centre MTHS",
+  desc: "Guide pratique de délivrance et de guerre spirituelle selon les protocoles éprouvés du Centre MTHS.",
+  prixFCFA: 6500,
+  images: ["/images/livre25/livre25_1.png", "/images/livre25/livre25_3.png", "/images/livre25/livre25_2.png","/images/livre25/livre25_4.png"],
+  format: ["Papier", "PDF"],
+  pages: 310,
+  stock: 20,
+  type: "Livre",
+  isbn: "978-2-9541234-6-1",
+  datePublication: "2023",
+  langue: "Français",
+  pointsCles: [
+    "Comprendre la nature de l'oppression spirituelle : modes opératoires du diable, des démons et des sorciers",
+    "Identifier les influences spirituelles étrangères et leurs impacts dans la vie d’un individu",
+    "Reconnaître les portes d’entrée liées à certaines pratiques spirituelles (rituels, initiations, pactes)",
+    "Protocole de délivrance en trois phases : rupture des liens, purification intérieure, restauration",
+    "Stratégies concrètes pour se préserver et maintenir une stabilité spirituelle durable"
+  ],
+  publicCible: [
+    "Personnes confrontées à des troubles spirituels ou inexpliqués",
+    "Accompagnateurs et responsables spirituels",
+    "Tout chrétien désirant approfondir le discernement spirituel"
+  ],
+  resume: `À une époque où les pratiques spirituelles se diversifient et s’entremêlent, le discernement devient indispensable. Cet ouvrage explore les dérives spirituelles associées à certaines pratiques issues de l’hindouisme, en les confrontant à une approche chrétienne de la délivrance.
+
+À travers des enseignements accessibles et des situations concrètes, il met en évidence comment certaines influences peuvent ouvrir des portes à des oppressions invisibles, entraînant blocages, troubles et déséquilibres dans la vie quotidienne.
+
+S’appuyant sur l’expérience du Centre MTHS, ce guide propose un chemin progressif de restauration : identifier les sources d’influence, rompre les liens néfastes et retrouver une stabilité spirituelle durable.
+
+Plus qu’un simple constat, ce livre offre des repères pratiques pour comprendre, se protéger et avancer vers une liberté intérieure authentique.`
+},
+{
+  id: 26,
+  titre: "La puissance spirituelle du sexe",
+  auteur: "Centre MTHS",
+  desc: "Guide pratique de délivrance et de guerre spirituelle selon les protocoles éprouvés du Centre MTHS.",
+  prixFCFA: 6500,
+  images: ["/images/livre26/livre26_1.png", "/images/livre26/livre26_3.png", "/images/livre26/livre26_2.png"],
+  format: ["Papier", "PDF"],
+  pages: 310,
+  stock: 20,
+  type: "Livre",
+  isbn: "978-2-9541234-6-1",
+  datePublication: "2023",
+  langue: "Français",
+  pointsCles: [
+    "Comprendre l’impact spirituel des relations sexuelles et les liens invisibles qu’elles peuvent créer",
+    "Identifier les portes d’entrée liées aux pratiques sexuelles désordonnées ou non maîtrisées",
+    "Reconnaître les conséquences spirituelles : blocages, oppressions, répétitions d’échecs",
+    "Protocole de délivrance en trois phases : rupture des liens, purification intérieure, restauration",
+    "Stratégies concrètes pour préserver sa vie spirituelle et éviter les rechutes"
+  ],
+  publicCible: [
+    "Personnes confrontées à des luttes ou déséquilibres dans leur vie affective et sexuelle",
+    "Accompagnateurs et responsables spirituels",
+    "Tout chrétien désireux de comprendre les enjeux spirituels liés à la sexualité"
+  ],
+  resume: `La sexualité ne se limite pas à un simple acte physique. Elle possède une dimension spirituelle profonde, souvent ignorée, mais dont les conséquences peuvent marquer toute une vie.
+
+Cet ouvrage met en lumière l’influence spirituelle des relations sexuelles, en révélant comment certains choix et pratiques peuvent créer des liens invisibles, ouvrir des portes à des oppressions et provoquer des blocages répétés dans différents domaines de la vie.
+
+À partir de l’expérience du Centre MTHS, ce guide propose une compréhension claire des mécanismes en jeu, ainsi qu’un chemin structuré de restauration : identifier les sources d’impact, rompre les liens néfastes et retrouver une stabilité spirituelle durable.
+
+Plus qu’un enseignement, ce livre offre des clés pratiques pour vivre une vie équilibrée, préserver son intégrité spirituelle et avancer vers une véritable liberté intérieure.`
+}
 ];
 
 // ─── Composant principal ─────────────────────────────────────────────────────

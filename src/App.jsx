@@ -28,6 +28,10 @@ import Piliers from "./pages/piliers/Piliers";
 
 import ScrollToTop from "./components/scrolltotop/ScrollToTop";
 
+import HeaderConnected from "./components/headerconnected/HeaderConnected";
+import LivreConnected from "./pages/livreconnected/LivreConnected";
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -57,6 +61,9 @@ function App() {
           <Route path="/actualites" element={<Actualites />} />
           <Route path="/produit/:id" element={<Produitdetail />} />
           <Route path="/piliers" element={<Piliers />} />
+          <Route path="/headerconnected" element={<HeaderConnected />} />
+          <Route path="/livreconnected" element={<LivreConnected />} />
+     
         </Routes>
       </CartProvider>
     </BrowserRouter> 
