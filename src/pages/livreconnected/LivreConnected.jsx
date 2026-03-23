@@ -2,81 +2,48 @@ import React, { useState } from "react";
 import HeaderConnected from "../../components/headerconnected/HeaderConnected";
 import Footer from "../../components/footer/Footer";
 import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {
-  Search,
-  BookOpen,
-  Headphones,
-  Leaf,
-  Award,
-  Shield,
-  ShoppingCart,
-  Menu,
-  X,
-  DollarSign,
-  Euro,
-  Coins,
-  ChevronDown,
-  Check,
-  User,
-  Eye,
-  TrendingUp,
-  Package,
-  FileText,
-  Clock,
-  ArrowRight,
-  Filter
+  Search, BookOpen, Shield, ShoppingCart, Menu, X,
+  DollarSign, Euro, Coins, ChevronDown, Check, User,
+  Eye, TrendingUp, Package, FileText, Clock, ArrowRight
 } from "lucide-react";
 
 function LivreConnected() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currency, setCurrency] = useState("FCFA");
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [addedProducts, setAddedProducts] = useState({});
+  const [viewMode, setViewMode] = useState("grid");
   const navigate = useNavigate();
 
   const { addToCart, cart: globalCart } = useCart();
+  const { client } = useAuth();
 
-  // Taux de change (fixes pour l'exemple)
-  const exchangeRates = {
-    "FCFA": 1,
-    "USD": 0.00165,
-    "EUR": 0.00152
-  };
-
+  const exchangeRates = { "FCFA": 1, "USD": 0.00165, "EUR": 0.00152 };
   const currencyIcons = {
     "FCFA": <Coins className="w-4 h-4" />,
     "USD": <DollarSign className="w-4 h-4" />,
     "EUR": <Euro className="w-4 h-4" />
   };
-
-  const currencyNames = {
-    "FCFA": "Franc CFA",
-    "USD": "Dollar US",
-    "EUR": "Euro"
-  };
+  const currencyNames = { "FCFA": "Franc CFA", "USD": "Dollar US", "EUR": "Euro" };
 
   const formatPrice = (priceFCFA, currencyType) => {
-    const convertedPrice = priceFCFA * exchangeRates[currencyType];
-    switch(currencyType) {
-      case "FCFA":
-        return `${convertedPrice.toLocaleString('fr-FR')} FCFA`;
-      case "USD":
-        return `$${convertedPrice.toFixed(2)}`;
-      case "EUR":
-        return `€${convertedPrice.toFixed(2)}`;
-      default:
-        return `${convertedPrice.toLocaleString('fr-FR')} FCFA`;
+    const converted = priceFCFA * exchangeRates[currencyType];
+    switch (currencyType) {
+      case "FCFA": return `${converted.toLocaleString("fr-FR")} FCFA`;
+      case "USD": return `$${converted.toFixed(2)}`;
+      case "EUR": return `€${converted.toFixed(2)}`;
+      default: return `${converted.toLocaleString("fr-FR")} FCFA`;
     }
   };
 
-  // Ajout au panier
   const handleAddToCart = (product) => {
     addToCart({
       id: product.id,
-      type: 'mths-product',
+      type: "mths-product",
       title: product.titre,
       author: product.auteur || "Centre MTHS",
       price: product.prixFCFA,
@@ -87,738 +54,407 @@ function LivreConnected() {
       stock: product.stock
     });
     setAddedProducts(prev => ({ ...prev, [product.id]: true }));
-    setTimeout(() => {
-      setAddedProducts(prev => ({ ...prev, [product.id]: false }));
-    }, 2000);
+    setTimeout(() => setAddedProducts(prev => ({ ...prev, [product.id]: false })), 2000);
   };
 
-  // Vérifier si le produit est déjà dans le panier
-  const isInCart = (productId) => {
-    return globalCart.some(item => item.id === productId && item.type === 'mths-product');
-  };
+  const isInCart = (productId) =>
+    globalCart.some(item => item.id === productId && item.type === "mths-product");
 
-  // Navigation vers la page de détail
   const handleViewDetails = (product) => {
     const productImages = [
       `/images/livre${product.id}/livre${product.id}_1.png`,
       `/images/livre${product.id}/livre${product.id}_2.png`,
       `/images/livre${product.id}/livre${product.id}_3.png`
     ];
-    const cleanProduct = {
-      id: product.id,
-      titre: product.titre,
-      auteur: product.auteur,
-      desc: product.desc,
-      prixFCFA: product.prixFCFA,
-      image: product.image,
-      images: productImages,
-      format: product.format,
-      pages: product.pages,
-      stock: product.stock,
-      type: product.type,
-      isbn: product.isbn,
-      datePublication: product.datePublication,
-      langue: product.langue
-    };
     navigate(`/produit/${product.id}`, {
-      state: { product: cleanProduct, currency: currency }
+      state: { product: { ...product, images: productImages }, currency }
     });
   };
 
-  // Liste des catégories disponibles
-  const categories = [
-    { id: "all", name: "Tous les livres", icon: <BookOpen className="w-5 h-5" />, count: 0 },
-    { id: "doctrinaux", name: "Livres Doctrinaux", icon: <BookOpen className="w-5 h-5" />, count: 0 },
-    { id: "audio", name: "Supports Audio", icon: <Headphones className="w-5 h-5" />, count: 0 },
-    { id: "naturels", name: "Produits Naturels", icon: <Leaf className="w-5 h-5" />, count: 0 },
-    { id: "kits", name: "Kits de Délivrance", icon: <Award className="w-5 h-5" />, count: 0 }
-  ];
-
-  // Tous les livres (extraits de la boutique)
+  // Uniquement les livres doctrinaux
   const allBooks = [
-    {
-      id: 1,
-      titre: "Chretien africain face a la sorcellerie",
-      auteur: "Centre MTHS",
-      desc: "Manuel complet de la Médecine Traditionnelle des Handicapés Spirituels.",
-      prixFCFA: 6500,
-      image: "/images/livre1/livre1_1.png",
-      format: ["Papier", "PDF"],
-      pages: 320,
-      stock: 50,
-      type: "Livre",
-      isbn: "978-2-954-12345-6",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 2,
-      titre: "Comment reconnaitre a vur d'oeil un sorcier",
-      auteur: "Centre MTHS",
-      desc: "Étude approfondie du rite SO'O dans sa version christianisée.",
-      prixFCFA: 6500,
-      image: "/images/livre2/livre2_1.png",
-      format: ["Papier", "PDF", "EPUB"],
-      pages: 240,
-      stock: 35,
-      type: "Livre",
-      isbn: "978-2-954-12346-3",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 3,
-      titre: "Comment se soigner des persecutions spirituelles",
-      auteur: "Centre MTHS",
-      desc: "Guide des remèdes traditionnels améliorés et leur intégration.",
-      prixFCFA: 6500,
-      image: "/images/livre3/livre3_1.png",
-      format: ["Papier"],
-      pages: 280,
-      stock: 40,
-      type: "Livre",
-      isbn: "978-2-954-12347-0",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 4,
-      titre: "A la rencontre de JPSSA",
-      auteur: "Centre MTHS",
-      desc: "Méthodologie du diagnostic des handicaps spirituels.",
-      prixFCFA: 6500,
-      image: "/images/livre4/livre4_1.png",
-      format: ["PDF", "EPUB"],
-      pages: 180,
-      stock: 60,
-      type: "E-book",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 5,
-      titre: "Le musulman face a la sorcellerie",
-      auteur: "Centre MTHS",
-      desc: "Guide pratique des rites de purification selon la tradition Béti.",
-      prixFCFA: 6500,
-      image: "/images/livre5/livre5_1.png",
-      format: ["Papier", "PDF"],
-      pages: 210,
-      stock: 45,
-      type: "Livre",
-      isbn: "978-2-954-12348-7",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 6,
-      titre: "Les dix commendements de satan",
-      auteur: "Centre MTHS",
-      desc: "Fondements théologiques de l'intégration culturelle africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre6/livre6_1.png",
-      format: ["Papier"],
-      pages: 290,
-      stock: 30,
-      type: "Livre",
-      isbn: "978-2-954-12349-4",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 7,
-      titre: "La transmission de le sorcellerie au sein d'une famille",
-      auteur: "Centre MTHS",
-      desc: "Approche intégrative de la guérison selon la révélation de 1979.",
-      prixFCFA: 6500,
-      image: "/images/livre7/livre7_1.png",
-      format: ["Papier", "PDF"],
-      pages: 350,
-      stock: 25,
-      type: "Livre",
-      isbn: "978-2-954-12350-0",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 8,
-      titre: "La vie spirituel du sorcier-univer astral de la sorcelerie",
-      auteur: "Centre MTHS",
-      desc: "Analyse et solutions pour briser les chaînes familiales.",
-      prixFCFA: 6500,
-      image: "/images/livre8/livre8_1.png",
-      format: ["Papier"],
-      pages: 230,
-      stock: 40,
-      type: "Livre",
-      isbn: "978-2-954-12351-7",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 9,
-      titre: "Protocole therapeutique MTHS",
-      auteur: "Centre MTHS",
-      desc: "Interface entre psychologie moderne et spiritualité africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre9/livre9_1.png",
-      format: ["PDF", "EPUB"],
-      pages: 260,
-      stock: 35,
-      type: "E-book",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 10,
-      titre: "La guerre des spiritualités en Afrique",
-      auteur: "Centre MTHS",
-      desc: "Rites de passage christianisés pour les étapes de la vie.",
-      prixFCFA: 6500,
-      image: "/images/livre10/livre10_1.png",
-      format: ["Papier"],
-      pages: 200,
-      stock: 50,
-      type: "Livre",
-      isbn: "978-2-954-12352-4",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 12,
-      titre: "Religion Chinoise face à la Sorcellerie",
-      auteur: "Centre MTHS",
-      desc: "Analyse comparée des traditions spirituelles chinoises et africaines face aux phénomènes occultes.",
-      prixFCFA: 6500,
-      image: "/images/livre12/livre12_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12354-8",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 13,
-      titre: "La vie apres la Mort",
-      auteur: "Centre MTHS",
-      desc: "Enquête sur les conceptions africaines de l'au-delà et leur intégration dans la foi chrétienne.",
-      prixFCFA: 6500,
-      image: "/images/livre13/livre13_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12355-5",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 14,
-      titre: "Ange ou Demon",
-      auteur: "Centre MTHS",
-      desc: "Discernement des esprits dans la tradition chrétienne africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre14/livre14_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12356-2",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 15,
-      titre: "Chretien africain et la maladie",
-      auteur: "Centre MTHS",
-      desc: "Comprendre et guérir selon une approche holistique chrétienne-africaine.",
-      prixFCFA: 6500,
-      image: "/images/livre15/livre15_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12357-9",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 16,
-      titre: "Comment vivre ensemble avec les sorciers",
-      auteur: "Centre MTHS",
-      desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
-      prixFCFA: 6500,
-      image: "/images/livre16/livre16_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12358-6",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 17,
-      titre: "LE SATANISME ET LA DERIVE DU MONDE",
-      auteur: "Centre MTHS",
-      desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
-      prixFCFA: 6500,
-      image: "/images/livre17/livre17_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12358-6",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 18,
-      titre: "Traditions africaines et Christianisme",
-      auteur: "Centre MTHS",
-      desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
-      prixFCFA: 6500,
-      image: "/images/livre18/livre18_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12358-6",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 19,
-      titre: "Le bhoudisme face à la sorcellerie et au Satanisme",
-      auteur: "Centre MTHS",
-      desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
-      prixFCFA: 6500,
-      image: "/images/livre19/livre19_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12358-6",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 20,
-      titre: "Sectes et Sociétés Secrètes africaines",
-      auteur: "Centre MTHS",
-      desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
-      prixFCFA: 6500,
-      image: "/images/livre20/livre20_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12358-6",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 21,
-      titre: "Comment Comprendre et interpreter le Rêve",
-      auteur: "Centre MTHS",
-      desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
-      prixFCFA: 6500,
-      image: "/images/livre21/livre21_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12358-6",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 22,
-      titre: "Comment obtenir ta Délivrance et ta Victoire contre le Diable, les Démons et les Sorciers",
-      auteur: "Centre MTHS",
-      desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
-      prixFCFA: 6500,
-      image: "/images/livre22/livre22_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12358-6",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 23,
-      titre: "Le Remède Traditionnel Amélioré",
-      auteur: "Centre MTHS",
-      desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
-      prixFCFA: 6500,
-      image: "/images/livre23/livre23_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12358-6",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    },
-    {
-      id: 24,
-      titre: "CULTURE DE LA PAIX ET LUTTE CONTRE LA DÉVIANCE SPIRITUELLE",
-      auteur: "Centre MTHS",
-      desc: "Stratégies de coexistence et de neutralisation dans la communauté.",
-      prixFCFA: 6500,
-      image: "/images/livre24/livre24_1.png",
-      format: ["Papier", "PDF"],
-      pages: 310,
-      stock: 20,
-      type: "Livre",
-      isbn: "978-2-954-12358-6",
-      datePublication: "2023",
-      langue: "Français",
-      category: "doctrinaux"
-    }
+    { id: 1, titre: "Chretien africain face a la sorcellerie", auteur: "Centre MTHS", desc: "Manuel complet de la Médecine Traditionnelle des Handicapés Spirituels.", prixFCFA: 6500, image: "/images/livre1/livre1_1.png", format: ["Papier", "PDF"], pages: 320, stock: 50, type: "Livre", isbn: "978-2-954-12345-6", datePublication: "2023", langue: "Français" },
+    { id: 2, titre: "Comment reconnaitre a vur d'oeil un sorcier", auteur: "Centre MTHS", desc: "Étude approfondie du rite SO'O dans sa version christianisée.", prixFCFA: 6500, image: "/images/livre2/livre2_1.png", format: ["Papier", "PDF", "EPUB"], pages: 240, stock: 35, type: "Livre", isbn: "978-2-954-12346-3", datePublication: "2023", langue: "Français" },
+    { id: 3, titre: "Comment se soigner des persecutions spirituelles", auteur: "Centre MTHS", desc: "Guide des remèdes traditionnels améliorés et leur intégration.", prixFCFA: 6500, image: "/images/livre3/livre3_1.png", format: ["Papier"], pages: 280, stock: 40, type: "Livre", isbn: "978-2-954-12347-0", datePublication: "2023", langue: "Français" },
+    { id: 4, titre: "A la rencontre de JPSSA", auteur: "Centre MTHS", desc: "Méthodologie du diagnostic des handicaps spirituels.", prixFCFA: 6500, image: "/images/livre4/livre4_1.png", format: ["PDF", "EPUB"], pages: 180, stock: 60, type: "E-book", datePublication: "2023", langue: "Français" },
+    { id: 5, titre: "Le musulman face a la sorcellerie", auteur: "Centre MTHS", desc: "Guide pratique des rites de purification selon la tradition Béti.", prixFCFA: 6500, image: "/images/livre5/livre5_1.png", format: ["Papier", "PDF"], pages: 210, stock: 45, type: "Livre", isbn: "978-2-954-12348-7", datePublication: "2023", langue: "Français" },
+    { id: 6, titre: "Les dix commendements de satan", auteur: "Centre MTHS", desc: "Fondements théologiques de l'intégration culturelle africaine.", prixFCFA: 6500, image: "/images/livre6/livre6_1.png", format: ["Papier"], pages: 290, stock: 30, type: "Livre", isbn: "978-2-954-12349-4", datePublication: "2023", langue: "Français" },
+    { id: 7, titre: "La transmission de le sorcellerie au sein d'une famille", auteur: "Centre MTHS", desc: "Approche intégrative de la guérison selon la révélation de 1979.", prixFCFA: 6500, image: "/images/livre7/livre7_1.png", format: ["Papier", "PDF"], pages: 350, stock: 25, type: "Livre", isbn: "978-2-954-12350-0", datePublication: "2023", langue: "Français" },
+    { id: 8, titre: "La vie spirituel du sorcier-univer astral de la sorcelerie", auteur: "Centre MTHS", desc: "Analyse et solutions pour briser les chaînes familiales.", prixFCFA: 6500, image: "/images/livre8/livre8_1.png", format: ["Papier"], pages: 230, stock: 40, type: "Livre", isbn: "978-2-954-12351-7", datePublication: "2023", langue: "Français" },
+    { id: 9, titre: "Protocole therapeutique MTHS", auteur: "Centre MTHS", desc: "Interface entre psychologie moderne et spiritualité africaine.", prixFCFA: 6500, image: "/images/livre9/livre9_1.png", format: ["PDF", "EPUB"], pages: 260, stock: 35, type: "E-book", datePublication: "2023", langue: "Français" },
+    { id: 10, titre: "La guerre des spiritualités en Afrique", auteur: "Centre MTHS", desc: "Rites de passage christianisés pour les étapes de la vie.", prixFCFA: 6500, image: "/images/livre10/livre10_1.png", format: ["Papier"], pages: 200, stock: 50, type: "Livre", isbn: "978-2-954-12352-4", datePublication: "2023", langue: "Français" },
+    { id: 12, titre: "Religion Chinoise face à la Sorcellerie", auteur: "Centre MTHS", desc: "Analyse comparée des traditions spirituelles chinoises et africaines.", prixFCFA: 6500, image: "/images/livre12/livre12_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12354-8", datePublication: "2023", langue: "Français" },
+    { id: 13, titre: "La vie apres la Mort", auteur: "Centre MTHS", desc: "Enquête sur les conceptions africaines de l'au-delà.", prixFCFA: 6500, image: "/images/livre13/livre13_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12355-5", datePublication: "2023", langue: "Français" },
+    { id: 14, titre: "Ange ou Demon", auteur: "Centre MTHS", desc: "Discernement des esprits dans la tradition chrétienne africaine.", prixFCFA: 6500, image: "/images/livre14/livre14_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12356-2", datePublication: "2023", langue: "Français" },
+    { id: 15, titre: "Chretien africain et la maladie", auteur: "Centre MTHS", desc: "Comprendre et guérir selon une approche holistique chrétienne-africaine.", prixFCFA: 6500, image: "/images/livre15/livre15_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12357-9", datePublication: "2023", langue: "Français" },
+    { id: 16, titre: "Comment vivre ensemble avec les sorciers", auteur: "Centre MTHS", desc: "Stratégies de coexistence et de neutralisation dans la communauté.", prixFCFA: 6500, image: "/images/livre16/livre16_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12358-6", datePublication: "2023", langue: "Français" },
+    { id: 17, titre: "LE SATANISME ET LA DERIVE DU MONDE", auteur: "Centre MTHS", desc: "Analyse des dérives spirituelles dans le monde contemporain.", prixFCFA: 6500, image: "/images/livre17/livre17_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12358-6", datePublication: "2023", langue: "Français" },
+    { id: 18, titre: "Traditions africaines et Christianisme", auteur: "Centre MTHS", desc: "Pont entre les traditions ancestrales et la foi chrétienne.", prixFCFA: 6500, image: "/images/livre18/livre18_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12358-6", datePublication: "2023", langue: "Français" },
+    { id: 19, titre: "Le bhoudisme face à la sorcellerie et au Satanisme", auteur: "Centre MTHS", desc: "Étude comparative des perspectives bouddhistes face au satanisme.", prixFCFA: 6500, image: "/images/livre19/livre19_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12358-6", datePublication: "2023", langue: "Français" },
+    { id: 20, titre: "Sectes et Sociétés Secrètes africaines", auteur: "Centre MTHS", desc: "Analyse des organisations occultes et leurs influences.", prixFCFA: 6500, image: "/images/livre20/livre20_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12358-6", datePublication: "2023", langue: "Français" },
+    { id: 21, titre: "Comment Comprendre et interpreter le Rêve", auteur: "Centre MTHS", desc: "Guide d'interprétation spirituelle des rêves.", prixFCFA: 6500, image: "/images/livre21/livre21_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12358-6", datePublication: "2023", langue: "Français" },
+    { id: 22, titre: "Comment obtenir ta Délivrance et ta Victoire contre le Diable", auteur: "Centre MTHS", desc: "Manuel pratique de délivrance spirituelle.", prixFCFA: 6500, image: "/images/livre22/livre22_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12358-6", datePublication: "2023", langue: "Français" },
+    { id: 23, titre: "Le Remède Traditionnel Amélioré", auteur: "Centre MTHS", desc: "Recueil de remèdes naturels issus de la tradition africaine.", prixFCFA: 6500, image: "/images/livre23/livre23_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12358-6", datePublication: "2023", langue: "Français" },
+    { id: 24, titre: "CULTURE DE LA PAIX ET LUTTE CONTRE LA DÉVIANCE SPIRITUELLE", auteur: "Centre MTHS", desc: "Vers une culture de paix face aux déviances spirituelles.", prixFCFA: 6500, image: "/images/livre24/livre24_1.png", format: ["Papier", "PDF"], pages: 310, stock: 20, type: "Livre", isbn: "978-2-954-12358-6", datePublication: "2023", langue: "Français" }
   ];
 
-  // Mise à jour des compteurs de catégories
-  categories.forEach(cat => {
-    if (cat.id === "all") {
-      cat.count = allBooks.length;
-    } else {
-      cat.count = allBooks.filter(b => b.category === cat.id).length;
-    }
-  });
-
-  // Filtrer les livres selon la catégorie et la recherche
-  const filteredBooks = allBooks.filter(book => {
-    const matchesCategory = selectedCategory === "all" || book.category === selectedCategory;
-    const matchesSearch = book.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         book.desc.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  // Filtre uniquement par recherche — plus de catégories
+  const filteredBooks = allBooks.filter(book =>
+    book.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    book.desc.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gray-50">
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .book-card { animation: fadeInUp 0.4s ease-out both; }
+        .book-card:nth-child(1){animation-delay:0.04s} .book-card:nth-child(2){animation-delay:0.08s}
+        .book-card:nth-child(3){animation-delay:0.12s} .book-card:nth-child(4){animation-delay:0.16s}
+        .book-card:nth-child(5){animation-delay:0.20s} .book-card:nth-child(6){animation-delay:0.24s}
+        .img-zoom { transition: transform 0.5s ease; }
+        .book-card:hover .img-zoom { transform: scale(1.07); }
+        .add-btn { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .add-btn:hover:not(:disabled) { transform: scale(1.03); }
+        .add-btn:active:not(:disabled) { transform: scale(0.97); }
+      `}</style>
+
       <HeaderConnected />
 
-      <div className="flex flex-col lg:flex-row max-w-7xl mx-auto px-4 py-8">
-        {/* Bouton menu mobile */}
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="lg:hidden fixed bottom-6 right-6 z-50 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-full shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300"
-        >
-          {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+      {/* Bandeau de bienvenue */}
+      <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 text-white py-5 px-4">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <p className="text-blue-200 text-sm font-medium">Bienvenue dans votre espace,</p>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+              {client?.full_name || "Membre"} 👋
+            </h1>
+          </div>
+          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2.5 border border-white/20">
+            <BookOpen className="w-4 h-4 text-blue-200" />
+            <span className="text-sm font-medium">{allBooks.length} livres disponibles</span>
+          </div>
+        </div>
+      </div>
 
-        {/* Sidebar - Catégories */}
-        <aside
-          className={`
-            fixed lg:sticky lg:top-8 left-0 h-screen lg:h-auto w-full lg:w-80 bg-white lg:border-r border-blue-100 overflow-y-auto z-40
-            transform transition-transform duration-300 ease-in-out
-            ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-          `}
-        >
-          <div className="p-6 border-b border-blue-200 sticky top-0 bg-white z-10">
-            <h2 className="text-2xl font-bold text-blue-900 mb-4">Bibliothèque MTHS</h2>
+      <div className="max-w-7xl mx-auto px-4 py-6 flex gap-6">
+
+        {/* Sidebar */}
+        <aside className={`
+          fixed lg:sticky lg:top-6 inset-y-0 left-0 lg:h-fit w-64 bg-white rounded-2xl shadow-sm border border-gray-200
+          z-40 overflow-y-auto transition-transform duration-300
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+        `}>
+          {/* Recherche */}
+          <div className="p-5 border-b border-gray-100">
+            <h2 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-blue-600" />
+              Bibliothèque MTHS
+            </h2>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
                 placeholder="Rechercher un livre..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-blue-200 focus:border-blue-400 focus:outline-none text-sm bg-blue-50"
+                className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 focus:border-blue-400 focus:outline-none text-sm bg-gray-50 focus:bg-white transition-colors"
               />
             </div>
           </div>
 
-          {/* Sélecteur de devise */}
-          <div className="p-6 border-b border-blue-200">
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-gray-700">Devise</label>
-            </div>
+          {/* Devise */}
+          <div className="p-5 border-b border-gray-100">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Devise</p>
             <div className="relative">
               <button
                 onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
-                className="w-full flex items-center justify-between p-3 bg-blue-50 border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                className="w-full flex items-center justify-between px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors text-sm"
               >
-                <div className="flex items-center space-x-3">
-                  <div className="text-blue-600">
-                    {currencyIcons[currency]}
-                  </div>
-                  <div className="text-left">
-                    <div className="font-medium text-blue-900">{currencyNames[currency]}</div>
-                  </div>
+                <div className="flex items-center gap-2 text-blue-600">
+                  {currencyIcons[currency]}
+                  <span className="font-medium text-gray-800">{currencyNames[currency]}</span>
                 </div>
-                <ChevronDown className={`w-4 h-4 text-blue-500 transition-transform ${isCurrencyOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isCurrencyOpen ? "rotate-180" : ""}`} />
               </button>
               {isCurrencyOpen && (
                 <>
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-blue-200 rounded-lg shadow-lg z-50">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
                     {Object.entries(currencyNames).map(([key, name]) => (
                       <button
                         key={key}
-                        onClick={() => {
-                          setCurrency(key);
-                          setIsCurrencyOpen(false);
-                        }}
-                        className={`w-full flex items-center space-x-3 p-3 hover:bg-blue-50 transition-colors ${
-                          currency === key ? 'bg-blue-100 text-blue-600' : 'text-gray-700'
-                        }`}
+                        onClick={() => { setCurrency(key); setIsCurrencyOpen(false); }}
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm hover:bg-blue-50 transition-colors ${currency === key ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-700"}`}
                       >
-                        <div className={currency === key ? 'text-blue-600' : 'text-blue-500'}>
-                          {currencyIcons[key]}
-                        </div>
-                        <div className="text-left">
-                          <div className="font-medium">{name}</div>
-                        </div>
+                        <span className={currency === key ? "text-blue-600" : "text-gray-400"}>{currencyIcons[key]}</span>
+                        {name}
+                        {currency === key && <Check className="w-3.5 h-3.5 ml-auto text-blue-500" />}
                       </button>
                     ))}
                   </div>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setIsCurrencyOpen(false)}
-                  />
+                  <div className="fixed inset-0 z-40" onClick={() => setIsCurrencyOpen(false)} />
                 </>
               )}
             </div>
           </div>
 
-          {/* Liste des catégories */}
-          <nav className="p-6">
-            <h3 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-4">Catégories</h3>
-            {categories.map((category) => (
+          {/* Stats */}
+          <div className="p-5 border-b border-gray-100">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Résultats</p>
+            <div className="bg-blue-50 rounded-xl px-4 py-3 text-center">
+              <p className="text-2xl font-black text-blue-700">{filteredBooks.length}</p>
+              <p className="text-xs text-blue-500 font-medium">livre{filteredBooks.length > 1 ? "s" : ""} trouvé{filteredBooks.length > 1 ? "s" : ""}</p>
+            </div>
+          </div>
+
+          {/* Vue grille/liste */}
+          <div className="p-5 border-b border-gray-100">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Affichage</p>
+            <div className="flex gap-2">
               <button
-                key={category.id}
-                onClick={() => {
-                  setSelectedCategory(category.id);
-                  setIsSidebarOpen(false);
-                }}
-                className={`
-                  w-full text-left p-4 rounded-xl mb-3 transition-all duration-200
-                  ${selectedCategory === category.id
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
-                    : 'hover:bg-blue-50 text-gray-700 border border-blue-100'
-                  }
-                `}
+                onClick={() => setViewMode("grid")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-colors ${viewMode === "grid" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
               >
-                <div className="flex items-center space-x-3">
-                  <div className={`p-2 rounded-lg ${selectedCategory === category.id ? 'bg-white/20' : 'bg-blue-100'}`}>
-                    <div className={selectedCategory === category.id ? 'text-white' : 'text-blue-600'}>
-                      {category.icon}
-                    </div>
-                  </div>
-                  <div className="flex-1 text-left">
-                    <h3 className="font-semibold text-sm mb-1">{category.name}</h3>
-                    <p className={`text-xs ${selectedCategory === category.id ? 'text-blue-100' : 'text-blue-600'}`}>
-                      {category.count} livre{category.count > 1 ? 's' : ''}
-                    </p>
-                  </div>
-                </div>
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+                  <rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/>
+                  <rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/>
+                </svg>
+                Grille
               </button>
-            ))}
-          </nav>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-colors ${viewMode === "list" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+                  <rect x="1" y="2" width="14" height="3" rx="1"/>
+                  <rect x="1" y="7" width="14" height="3" rx="1"/>
+                  <rect x="1" y="12" width="14" height="3" rx="1"/>
+                </svg>
+                Liste
+              </button>
+            </div>
+          </div>
+
+          {/* Badge sécurité */}
+          <div className="m-5 p-4 bg-blue-50 rounded-xl border border-blue-100">
+            <div className="flex items-center gap-2 mb-1.5">
+              <Shield className="w-4 h-4 text-blue-600" />
+              <span className="text-xs font-bold text-blue-800">Achat sécurisé</span>
+            </div>
+            <p className="text-xs text-blue-500 leading-relaxed">
+              MTN MoMo • Orange Money • Carte bancaire
+            </p>
+          </div>
         </aside>
 
         {/* Overlay mobile */}
         {isSidebarOpen && (
-          <div
-            className="lg:hidden fixed inset-0 bg-black/50 z-30"
-            onClick={() => setIsSidebarOpen(false)}
-          />
+          <div className="lg:hidden fixed inset-0 bg-black/40 z-30" onClick={() => setIsSidebarOpen(false)} />
         )}
 
-        {/* Contenu principal - Grille des livres */}
-        <main className="flex-1 lg:pl-8">
-          {/* En-tête */}
-          <div className="mb-8">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-              <div>
-                <h1 className="text-2xl lg:text-3xl font-bold text-blue-900">
-                  {selectedCategory === "all" ? "Tous les livres" : categories.find(c => c.id === selectedCategory)?.name}
-                </h1>
-                <p className="text-gray-600 mt-1 text-sm lg:text-base">
-                  {filteredBooks.length} livre{filteredBooks.length > 1 ? 's' : ''} trouvé{filteredBooks.length > 1 ? 's' : ''}
-                </p>
-              </div>
-              <div className="flex items-center space-x-3 bg-white border border-blue-200 rounded-xl p-3 shadow-sm">
-                <div className="text-blue-600">{currencyIcons[currency]}</div>
-                <div className="text-sm font-medium text-blue-900">{currencyNames[currency]}</div>
-              </div>
-            </div>
+        {/* Contenu principal */}
+        <main className="flex-1 min-w-0">
+
+          {/* Barre top */}
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-lg font-bold text-gray-900">
+              Livres disponibles
+              <span className="ml-2 text-sm font-normal text-gray-400">({filteredBooks.length})</span>
+            </h2>
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="lg:hidden flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium hover:border-blue-300 transition-colors"
+            >
+              <Menu className="w-4 h-4" />
+              Filtres
+            </button>
           </div>
 
-          {/* Grille des livres */}
           {filteredBooks.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredBooks.map((book) => (
-                <div
-                  key={book.id}
-                  className={`
-                    relative bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border flex flex-col h-full
-                    ${isInCart(book.id) ? 'border-green-400 bg-green-50/30' : 'border-blue-100 hover:border-blue-300'}
-                    group hover:scale-[1.02]
-                  `}
-                >
-                  {addedProducts[book.id] && (
-                    <div className="absolute top-3 right-3 z-10 animate-bounce">
-                      <div className="bg-green-500 text-white p-1.5 rounded-full shadow-lg">
-                        <Check className="w-4 h-4" />
+            viewMode === "grid" ? (
+              /* ===== VUE GRILLE ===== */
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                {filteredBooks.map((book) => (
+                  <div
+                    key={book.id}
+                    className={`book-card bg-white rounded-2xl border overflow-hidden flex flex-col group
+                      ${isInCart(book.id) ? "border-green-300" : "border-gray-200 hover:border-blue-300"}
+                      hover:shadow-lg transition-all duration-300`}
+                  >
+                    {/* Image */}
+                    <div className="relative h-52 bg-gradient-to-br from-blue-100 to-indigo-50 overflow-hidden">
+                      <img
+                        src={book.image}
+                        alt={book.titre}
+                        className="img-zoom w-full h-full object-cover"
+                        onError={(e) => { e.target.src = "/images/default-book.jpg"; }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                      <div className="absolute top-3 left-3 flex gap-2">
+                        <span className="bg-white/95 text-blue-700 text-[11px] font-bold px-2.5 py-1 rounded-full">
+                          {book.type}
+                        </span>
+                        {book.format?.includes("PDF") && (
+                          <span className="bg-indigo-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-full">PDF</span>
+                        )}
                       </div>
-                    </div>
-                  )}
-
-                  {/* Image */}
-                  <div className="relative h-48 bg-gradient-to-br from-blue-100 to-blue-50 rounded-t-xl overflow-hidden">
-                    <img
-                      src={book.image}
-                      alt={book.titre}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      onError={(e) => { e.target.src = "/images/default-book.jpg"; }}
-                    />
-                    <div className="absolute top-3 left-3">
-                      <span className="bg-white/90 backdrop-blur-sm text-blue-700 text-xs font-medium px-3 py-1.5 rounded-full">
-                        {book.type}
-                      </span>
-                    </div>
-                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-blue-700 text-xs font-medium px-2 py-1.5 rounded-full">
-                      <div className="flex items-center gap-1">
-                        <Package className="w-3 h-3" />
-                        <span>{book.stock} restant{book.stock > 1 ? 's' : ''}</span>
+                      <div className="absolute top-3 right-3">
+                        <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${book.stock <= 25 ? "bg-orange-500 text-white" : "bg-white/95 text-gray-700"}`}>
+                          {book.stock <= 25 ? `⚡ ${book.stock} restants` : `${book.stock} en stock`}
+                        </span>
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Infos */}
-                  <div className="flex-1 p-5">
-                    <h3 className="font-bold text-blue-900 text-lg mb-3 line-clamp-2 h-14">
-                      {book.titre}
-                    </h3>
-                    <div className="flex items-center gap-2 text-blue-600 mb-4">
-                      <User className="w-4 h-4 flex-shrink-0" />
-                      <span className="text-sm truncate">{book.auteur}</span>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2 h-10">
-                      {book.desc}
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <div className="flex items-center gap-1 bg-blue-50 text-blue-700 text-xs px-3 py-1.5 rounded-lg">
-                        <FileText className="w-3 h-3" />
-                        {book.format?.join(", ")}
+                      <div className="absolute bottom-3 left-3">
+                        <span className="bg-blue-600 text-white text-sm font-black px-3 py-1.5 rounded-full shadow-lg">
+                          {formatPrice(book.prixFCFA, currency)}
+                        </span>
                       </div>
-                      {book.pages && (
-                        <div className="flex items-center gap-1 bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-lg">
-                          <Clock className="w-3 h-3" />
-                          {book.pages} pages
+                      {addedProducts[book.id] && (
+                        <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center">
+                          <div className="bg-green-500 text-white p-3 rounded-full shadow-lg">
+                            <Check className="w-6 h-6" />
+                          </div>
                         </div>
                       )}
                     </div>
-                    <div className="mt-2">
-                      <div className="text-xl font-bold text-blue-700">
-                        {formatPrice(book.prixFCFA, currency)}
-                      </div>
-                      {currency !== "FCFA" && (
-                        <div className="text-xs text-gray-500 mt-1">
-                          ≈ {book.prixFCFA.toLocaleString('fr-FR')} FCFA
-                        </div>
-                      )}
-                    </div>
-                  </div>
 
-                  {/* Boutons */}
-                  <div className="p-5 pt-0">
-                    <div className="flex flex-col sm:flex-row gap-3">
+                    {/* Infos */}
+                    <div className="flex-1 p-4">
+                      <h3 className="font-bold text-gray-900 text-sm leading-snug mb-1.5 line-clamp-2">
+                        {book.titre}
+                      </h3>
+                      <p className="text-xs text-blue-600 font-medium mb-2">{book.auteur}</p>
+                      <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-3">{book.desc}</p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {book.pages && (
+                          <span className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
+                            <Clock className="w-3 h-3" />{book.pages} pages
+                          </span>
+                        )}
+                        <span className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
+                          <FileText className="w-3 h-3" />{book.format?.join(", ")}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Boutons */}
+                    <div className="p-4 pt-0 flex gap-2">
                       <button
                         onClick={() => handleViewDetails(book)}
-                        className="flex items-center justify-center gap-2 text-sm px-4 py-3 rounded-lg font-medium border-2 border-blue-500 text-blue-600 hover:bg-blue-50 transition-colors flex-1 group/btn"
+                        className="flex items-center justify-center gap-1.5 text-xs font-semibold text-blue-600 border border-blue-200 px-3 py-2.5 rounded-xl hover:bg-blue-50 transition-colors flex-1"
                       >
-                        <Eye className="w-4 h-4" />
-                        <span>Voir détail</span>
-                        <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                        <Eye className="w-3.5 h-3.5" />
+                        Détails
                       </button>
                       <button
                         onClick={() => handleAddToCart(book)}
-                        className={`
-                          flex items-center justify-center gap-2 text-sm px-4 py-3 rounded-lg font-medium transition-all duration-300 flex-1
-                          ${isInCart(book.id)
-                            ? 'bg-green-100 text-green-700 border-2 border-green-300 hover:bg-green-200'
-                            : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white hover:scale-105'
-                          }
-                        `}
+                        className={`add-btn flex items-center justify-center gap-1.5 text-xs font-bold px-3 py-2.5 rounded-xl flex-[2] ${
+                          isInCart(book.id)
+                            ? "bg-green-50 text-green-700 border border-green-300"
+                            : "bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-200"
+                        }`}
                       >
                         {isInCart(book.id) ? (
-                          <>
-                            <Check className="w-4 h-4" />
-                            <span>Ajouté</span>
-                          </>
+                          <><Check className="w-3.5 h-3.5" />Dans le panier</>
                         ) : (
-                          <>
-                            <ShoppingCart className="w-4 h-4" />
-                            <span>Panier</span>
-                          </>
+                          <><ShoppingCart className="w-3.5 h-3.5" />Ajouter au panier</>
                         )}
                       </button>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              /* ===== VUE LISTE ===== */
+              <div className="space-y-3">
+                {filteredBooks.map((book) => (
+                  <div
+                    key={book.id}
+                    className={`book-card bg-white rounded-2xl border overflow-hidden flex flex-row group
+                      ${isInCart(book.id) ? "border-green-300" : "border-gray-200 hover:border-blue-300"}
+                      hover:shadow-md transition-all duration-300`}
+                  >
+                    <div className="relative w-28 sm:w-36 flex-shrink-0 bg-gradient-to-br from-blue-100 to-indigo-50 overflow-hidden">
+                      <img
+                        src={book.image}
+                        alt={book.titre}
+                        className="img-zoom w-full h-full object-cover"
+                        onError={(e) => { e.target.src = "/images/default-book.jpg"; }}
+                      />
+                    </div>
+                    <div className="flex-1 p-4 flex flex-col justify-between min-w-0">
+                      <div>
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <h3 className="font-bold text-gray-900 text-sm leading-snug line-clamp-2 flex-1">{book.titre}</h3>
+                          <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${book.stock <= 25 ? "bg-orange-100 text-orange-700" : "bg-blue-50 text-blue-700"}`}>
+                            {book.stock <= 25 ? `⚡ ${book.stock}` : `✓ ${book.stock}`}
+                          </span>
+                        </div>
+                        <p className="text-xs text-blue-600 font-medium mb-1">{book.auteur}</p>
+                        <p className="text-xs text-gray-500 line-clamp-1 hidden sm:block mb-2">{book.desc}</p>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[11px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">{book.type}</span>
+                          {book.format?.map(f => (
+                            <span key={f} className="text-[11px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md">{f}</span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between mt-3 gap-3">
+                        <span className="text-base font-black text-blue-700">{formatPrice(book.prixFCFA, currency)}</span>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleViewDetails(book)}
+                            className="flex items-center gap-1.5 text-xs font-semibold text-blue-600 border border-blue-200 px-3 py-2 rounded-xl hover:bg-blue-50 transition-colors"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">Détails</span>
+                          </button>
+                          <button
+                            onClick={() => handleAddToCart(book)}
+                            className={`add-btn flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl ${
+                              isInCart(book.id)
+                                ? "bg-green-50 text-green-700 border border-green-300"
+                                : "bg-blue-600 hover:bg-blue-700 text-white"
+                            }`}
+                          >
+                            {isInCart(book.id) ? (
+                              <><Check className="w-3.5 h-3.5" /><span className="hidden sm:inline">Ajouté</span></>
+                            ) : (
+                              <><ShoppingCart className="w-3.5 h-3.5" /><span className="hidden sm:inline">Ajouter</span></>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
           ) : (
             <div className="text-center py-20">
-              <BookOpen className="w-24 h-24 text-blue-200 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-blue-900 mb-2">Aucun livre trouvé</h3>
-              <p className="text-gray-600 max-w-md mx-auto">
-                Essayez de modifier votre recherche ou de sélectionner une autre catégorie.
-              </p>
+              <BookOpen className="w-16 h-16 text-gray-200 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-gray-700 mb-2">Aucun livre trouvé</h3>
+              <p className="text-gray-400 text-sm">Modifiez votre recherche.</p>
             </div>
           )}
 
-          {/* Engagement éthique */}
-          <div className="mt-12 bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-200 rounded-2xl p-6">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-600 rounded-xl">
-                  <Shield className="w-8 h-8 text-white" />
-                </div>
+          {/* Footer réassurance */}
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { icon: <Shield className="w-5 h-5 text-blue-600" />, title: "Paiement sécurisé", desc: "MTN MoMo • Orange Money • Carte" },
+              { icon: <Package className="w-5 h-5 text-blue-600" />, title: "Livraison rapide", desc: "Dans tout le Cameroun sous 48h" },
+              { icon: <TrendingUp className="w-5 h-5 text-blue-600" />, title: "Satisfaction 98%", desc: "Des milliers de lecteurs satisfaits" }
+            ].map((item, i) => (
+              <div key={i} className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3">
+                <div className="p-2 bg-blue-50 rounded-lg flex-shrink-0">{item.icon}</div>
                 <div>
-                  <h3 className="font-bold text-gray-900 text-lg mb-2">Notre Engagement Éthique</h3>
-                  <p className="text-gray-600 text-sm max-w-2xl">
-                    Aucune promesse magique • Complémentarité avec les soins médicaux • 
-                    Conformité à la législation camerounaise • Produits 100% naturels et certifiés
-                  </p>
+                  <p className="text-sm font-bold text-gray-800">{item.title}</p>
+                  <p className="text-xs text-gray-500">{item.desc}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-green-600" />
-                <span className="text-sm font-medium text-gray-700">
-                  Satisfaction client : 98%
-                </span>
-              </div>
-            </div>
+            ))}
           </div>
         </main>
       </div>

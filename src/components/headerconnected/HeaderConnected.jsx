@@ -1,27 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   User, Menu, X, Globe, ChevronDown, Search,
   ShoppingCart, BookOpen, Bell, LogOut, Settings,
   Package, Heart, Home, AlertCircle, ChevronRight, Trash2, ArrowRight
 } from "lucide-react";
 import { useCart } from "../../context/CartContext";
-
-// ===== Simulation d'un contexte d'authentification (à remplacer par votre vrai contexte) =====
-// Si vous avez déjà un contexte AuthContext, supprimez ces lignes et décommentez l'import ci-dessous.
-// import { useAuth } from "../../context/AuthContext";
-
-// Hook factice pour simuler un utilisateur connecté
-const useAuth = () => {
-  // Remplacez ces données par celles de votre vrai utilisateur connecté
-  const user = {
-    name: "Jean Dupont",
-    email: "jean.dupont@example.com",
-    avatar: "https://via.placeholder.com/32x32?text=JD"
-  };
-  return { user };
-};
-// ========================================================================================
+import { useAuth } from "../../context/AuthContext";
 
 // Hook personnalisé pour détecter les clics en dehors
 function useOnClickOutside(ref, handler) {
@@ -50,9 +35,23 @@ function HeaderConnected() {
   const searchRef = useRef(null);
 
   const { cart, removeFromCart, clearCart, getCartTotal } = useCart();
-  const { user } = useAuth(); // Récupération de l'utilisateur (simulé ici)
 
-  // Notifications simulées (à remplacer par de vraies données)
+  // Récupération du vrai client connecté depuis AuthContext
+  // client contient : id, full_name, email, created_at, updated_at
+  const { client, logout } = useAuth();
+  const navigate = useNavigate();
+
+  // Calcul des initiales du client pour l'avatar
+  // Ex: "Jean Dupont" → "JD"
+  const initiales = client?.full_name
+    ? client.full_name
+        .split(" ")
+        .map((mot) => mot.charAt(0).toUpperCase())
+        .slice(0, 2)
+        .join("")
+    : "?";
+
+  // Notifications simulées (à remplacer par de vraies données API plus tard)
   const [notifications, setNotifications] = useState([
     { id: 1, message: "Votre commande a été expédiée", read: false, time: "Il y a 2 heures" },
     { id: 2, message: "Nouveau livre disponible", read: true, time: "Il y a 1 jour" },
@@ -79,6 +78,15 @@ function HeaderConnected() {
       searchRef.current.focus();
     }
   }, [isSearchOpen]);
+
+  // Fonction de déconnexion
+  // Vide le contexte + localStorage puis redirige vers l'accueil
+  const handleLogout = () => {
+    logout();
+    setIsAccountOpen(false);
+    setIsMenuOpen(false);
+    navigate("/");
+  };
 
   const t = useMemo(() => ({
     fr: {
@@ -185,7 +193,6 @@ function HeaderConnected() {
               </span>
             </Link>
 
-            {/* Ticker visible sur tous les écrans */}
             <div className="flex-1 overflow-hidden mx-2 sm:mx-4">
               <div className="animate-ticker flex items-center gap-4 sm:gap-8 whitespace-nowrap text-[10px] sm:text-xs">
                 {[...lang.ticker, ...lang.ticker].map((msg, i) => (
@@ -453,16 +460,13 @@ function HeaderConnected() {
                 onClick={() => setIsAccountOpen(!isAccountOpen)}
                 className="flex items-center gap-1.5 pl-2 pr-1 py-1 rounded-xl hover:bg-blue-50 transition-all"
               >
-                <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-blue-200">
-                  <img
-                    src={user?.avatar || "https://via.placeholder.com/32x32?text=User"}
-                    alt={user?.name || "User"}
-                    className="w-full h-full object-cover"
-                    onError={(e) => { e.target.src = "https://via.placeholder.com/32x32?text=User"; }}
-                  />
+                {/* Avatar avec initiales du vrai client */}
+                <div className="w-8 h-8 rounded-full bg-blue-600 border-2 border-blue-200 flex items-center justify-center shrink-0">
+                  <span className="text-white text-xs font-bold">{initiales}</span>
                 </div>
+                {/* Vrai nom du client */}
                 <span className="hidden lg:inline text-sm font-medium text-blue-700 max-w-[100px] truncate">
-                  {user?.name || "Utilisateur"}
+                  {client?.full_name || "Utilisateur"}
                 </span>
                 <ChevronDown className="w-3.5 h-3.5 text-blue-400" />
               </button>
@@ -470,9 +474,14 @@ function HeaderConnected() {
               {isAccountOpen && (
                 <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl shadow-blue-200/60 border border-blue-100 z-50 overflow-hidden dropdown-animate">
                   <div className="p-2">
+                    {/* Vrai nom et email du client */}
                     <div className="px-3 py-2 border-b border-blue-100 mb-1">
-                      <p className="text-sm font-bold text-blue-900 truncate">{user?.name || "Utilisateur"}</p>
-                      <p className="text-[10px] text-blue-400 truncate">{user?.email || "email@example.com"}</p>
+                      <p className="text-sm font-bold text-blue-900 truncate">
+                        {client?.full_name || "Utilisateur"}
+                      </p>
+                      <p className="text-[10px] text-blue-400 truncate">
+                        {client?.email || "email@example.com"}
+                      </p>
                     </div>
                     <Link
                       to="/profil"
@@ -499,11 +508,9 @@ function HeaderConnected() {
                       {lang.account.settings}
                     </Link>
                     <div className="border-t border-blue-100 my-1" />
+                    {/* Bouton déconnexion branché sur handleLogout */}
                     <button
-                      onClick={() => {
-                        // Logique de déconnexion
-                        setIsAccountOpen(false);
-                      }}
+                      onClick={handleLogout}
                       className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg w-full text-left transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
@@ -580,8 +587,9 @@ function HeaderConnected() {
             </div>
             <div>
               <p className="text-white font-black text-base leading-none">MTHS/TMSH</p>
+              {/* Vrai nom du client dans le drawer */}
               <p className="text-blue-300 text-[10px] leading-tight mt-0.5 truncate">
-                {user?.name || "Membre"}
+                {client?.full_name || "Membre"}
               </p>
             </div>
           </div>
@@ -694,11 +702,9 @@ function HeaderConnected() {
               <Settings className="w-5 h-5 text-blue-600" />
               <span className="flex-1 text-sm font-semibold">{lang.account.settings}</span>
             </Link>
+            {/* Bouton déconnexion mobile branché sur handleLogout */}
             <button
-              onClick={() => {
-                // Déconnexion
-                setIsMenuOpen(false);
-              }}
+              onClick={handleLogout}
               className="flex items-center gap-3 px-3 py-3 rounded-xl text-red-600 hover:bg-red-50 w-full text-left transition-all"
             >
               <LogOut className="w-5 h-5" />

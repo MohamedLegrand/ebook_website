@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,8 @@ function Register() {
   const [activeField, setActiveField] = useState(null);
   const [circlePositions, setCirclePositions] = useState([]);
   const [starPositions, setStarPositions] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const circles = Array.from({ length: 8 }, (_, i) => ({
@@ -38,15 +41,18 @@ function Register() {
       ...prev,
       [name]: type === "checkbox" ? checked : value
     }));
+    // Efface l'erreur du champ dès que l'utilisateur retape
     if (formErrors[name]) {
       setFormErrors(prev => ({ ...prev, [name]: "" }));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setFormErrors({});
 
+    // Validation côté client avant d'appeler l'API
     const errors = {};
     if (!formData.fullName.trim()) errors.fullName = "Nom requis";
     if (!formData.email) errors.email = "Email requis";
@@ -62,11 +68,41 @@ function Register() {
       return;
     }
 
-    setTimeout(() => {
-      console.log("Inscription avec:", formData);
+    try {
+      // Appel à l'API Go
+      // On envoie full_name, email, password et confirm_password
+      // comme attendu par le handler Register en Go
+      const response = await fetch("http://localhost:8080/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          full_name: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+          confirm_password: formData.confirmPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Gestion des erreurs renvoyées par l'API
+        // Ex: email déjà utilisé (409), données invalides (400)
+        setFormErrors({ general: data.error || "Erreur lors de l'inscription" });
+        setIsLoading(false);
+        return;
+      }
+
+      // Inscription réussie — on redirige vers la page de connexion
+      // Le client doit se connecter pour obtenir son token JWT
+      navigate("/login");
+
+    } catch (err) {
+      // Erreur réseau (serveur éteint, pas de connexion, etc.)
+      setFormErrors({ general: "Impossible de contacter le serveur" });
+    } finally {
       setIsLoading(false);
-      alert("Inscription réussie ! (simulation)");
-    }, 1500);
+    }
   };
 
   const handleGoogleSignup = () => {
@@ -161,6 +197,17 @@ function Register() {
 
           {/* Formulaire */}
           <form className="space-y-3" onSubmit={handleSubmit}>
+
+            {/* Erreur générale (email déjà pris, serveur inaccessible, etc.) */}
+            {formErrors.general && (
+              <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-xs px-3 py-2 rounded-lg">
+                <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                {formErrors.general}
+              </div>
+            )}
+
             {/* Nom complet */}
             <div>
               <div className="relative">

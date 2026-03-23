@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -7,11 +9,15 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [formErrors, setFormErrors] = useState({});
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setFormErrors({});
 
+    // Validation côté client
     const errors = {};
     if (!email) errors.email = "L'email est requis";
     else if (!/\S+@\S+\.\S+/.test(email)) errors.email = "Email invalide";
@@ -24,10 +30,36 @@ function Login() {
       return;
     }
 
-    setTimeout(() => {
-      console.log("Login attempt with:", { email, password, rememberMe });
+    try {
+      // Appel à l'API Go
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // L'API a retourné une erreur (mauvais identifiants, etc.)
+        setFormErrors({ general: data.error || "Erreur de connexion" });
+        setIsLoading(false);
+        return;
+      }
+
+      // Connexion réussie — on stocke le token et les infos du client
+      // dans le contexte AuthContext et le localStorage
+      login(data.token, data.client);
+
+      // Redirection vers la page des livres
+      navigate("/livreconnected");
+
+    } catch (err) {
+      // Erreur réseau (serveur éteint, pas de connexion, etc.)
+      setFormErrors({ general: "Impossible de contacter le serveur" });
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -96,6 +128,17 @@ function Login() {
 
           {/* Formulaire */}
           <form className="space-y-3" onSubmit={handleSubmit}>
+
+            {/* Erreur générale (mauvais identifiants, serveur inaccessible) */}
+            {formErrors.general && (
+              <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-xs px-3 py-2 rounded-lg animate-fadeIn">
+                <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                {formErrors.general}
+              </div>
+            )}
+
             {/* Email */}
             <div className="animate-fadeInLeft" style={{ animationDelay: "0.1s" }}>
               <div className="relative group">
