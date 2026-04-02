@@ -432,7 +432,7 @@ function HeaderConnected() {
                           </div>
                           <div className="flex gap-2">
                             <Link
-                              to="/cart"
+                              to="/cartconnected"
                               onClick={() => setIsCartOpen(false)}
                               className="flex-1 py-2.5 text-center text-sm font-semibold text-blue-700 border-2 border-blue-200 rounded-xl hover:bg-blue-50 transition-colors"
                             >
@@ -660,7 +660,7 @@ function HeaderConnected() {
               )}
             </Link>
             <Link
-              to="/cart"
+              to="/cartconnected"
               onClick={() => setIsMenuOpen(false)}
               className="flex items-center gap-3 px-3 py-3 rounded-xl text-blue-800 hover:bg-blue-50 transition-all"
             >

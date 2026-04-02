@@ -31,6 +31,7 @@ import ScrollToTop from "./components/scrolltotop/ScrollToTop";
 
 import HeaderConnected from "./components/headerconnected/HeaderConnected";
 import LivreConnected from "./pages/livreconnected/LivreConnected";
+import Cartconnected from "./pages/cartconnected/Cartconnected";
 
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
             <Route path="/piliers" element={<Piliers />} />
             <Route path="/headerconnected" element={<HeaderConnected />} />
             <Route path="/livreconnected" element={<LivreConnected />} />
+            <Route path="/cartconnected" element={<Cartconnected />} />
           </Routes>
         </CartProvider>
       </AuthProvider>
