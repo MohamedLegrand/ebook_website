@@ -153,7 +153,7 @@ function Boutique() {
       id: 0,
       name: "Livres Doctrinaux & Manuels Clinique",
       icon: <BookOpen className="w-5 h-5" />,
-      count: 16, // Mise à jour de 11 à 16
+      count: 29, // Mise à jour du nombre total de livres
       description: "Ouvrages de référence sur la Médecine Traditionnelle des Handicapés Spirituels",
       couleur: "from-blue-500 to-blue-600",
       produits: [
@@ -529,6 +529,51 @@ function Boutique() {
           stock: 20,
           type: "Livre",
           isbn: "978-2-954-12358-6",
+          datePublication: "2023",
+          langue: "Français"
+        },
+        {
+          id: 27,
+          titre: "Le Cameroun dans les flammes",
+          auteur: "Centre MTHS",
+          desc: "Analyse profonde des crises spirituelles et sociales qui ravagent le Cameroun, avec des solutions concrètes pour la paix et la réconciliation nationale.",
+          prixFCFA: 6500,
+          image: "/images/livre27/livre27_1.png",
+          format: ["Papier", "PDF"],
+          pages: 320,
+          stock: 25,
+          type: "Livre",
+          isbn: "978-2-954-12359-3",
+          datePublication: "2023",
+          langue: "Français"
+        },
+        {
+          id: 28,
+          titre: "L'Hygiène de l'âme",
+          auteur: "Centre MTHS",
+          desc: "Guide spirituel pour purifier et entretenir l'âme chrétienne, avec des pratiques quotidiennes de sanctification et de croissance spirituelle.",
+          prixFCFA: 6500,
+          image: "/images/livre28/livre28_1.png",
+          format: ["Papier", "PDF"],
+          pages: 290,
+          stock: 30,
+          type: "Livre",
+          isbn: "978-2-954-12360-9",
+          datePublication: "2023",
+          langue: "Français"
+        },
+        {
+          id: 29,
+          titre: "CONSEQUENCES SPIRITUELLES DE LA MASTURBATION ET DE LA PORNOGRAPHIE DANS TA VIE",
+          auteur: "Centre MTHS",
+          desc: "Étude biblique approfondie sur les impacts spirituels de la masturbation et de la pornographie, avec des voies de délivrance et de restauration selon les principes chrétiens.",
+          prixFCFA: 6500,
+          image: "/images/livre29/livre29_1.png",
+          format: ["Papier", "PDF"],
+          pages: 340,
+          stock: 35,
+          type: "Livre",
+          isbn: "978-2-954-12361-6",
           datePublication: "2023",
           langue: "Français"
         }

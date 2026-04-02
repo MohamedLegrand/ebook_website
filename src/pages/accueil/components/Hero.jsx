@@ -43,6 +43,11 @@ function Hero() {
     { id: 22, titre: "Comment obtenir ta Délivrance et ta Victoire", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre22/livre22_1.png", type: "Délivrance", pages: 310, stock: 20 },
     { id: 23, titre: "Le Remède Traditionnel Amélioré", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre23/livre23_1.png", type: "Délivrance", pages: 310, stock: 20 },
     { id: 24, titre: "CULTURE DE LA PAIX ET LUTTE CONTRE LA DÉVIANCE SPIRITUELLE ", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre24/livre24_1.png", type: "Délivrance", pages: 310, stock: 20 },
+    { id: 25, titre: "Hindouisme et Déviance Spirituelle ", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre25/livre25_1.png", type: "Délivrance", pages: 310, stock: 20 },
+    { id: 26, titre: "la puissance spirituelle du sexe", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre26/livre26_1.png", type: "Délivrance", pages: 310, stock: 20 },
+    { id: 27, titre: "Le Cameroun dans les flammes", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre27/livre27_1.png", type: "Délivrance", pages: 310, stock: 20 },
+    { id: 28, titre: "L'Hygiène de l'âme", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre28/livre28_1.png", type: "Délivrance", pages: 310, stock: 20 },
+    { id: 29, titre: "CONSEQUENCES SPIRITUELLES DE LA MASTURBATION ET DE LA PORNOGRAPHIE DANS TA VIE", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre29/livre29_1.png", type: "Délivrance", pages: 310, stock: 20 },
   ];
 
   const colorPalette = [
@@ -113,8 +118,6 @@ function Hero() {
         /* ─── SIDE ARROWS ─── */
         .h-arrow {
           position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
           z-index: 30;
           width: 46px; height: 46px;
           border-radius: 50%;
@@ -132,8 +135,16 @@ function Hero() {
           color: #1d4ed8;
           box-shadow: 0 6px 20px rgba(59,130,246,0.22);
         }
-        .h-arrow-left  { left: 16px; }
-        .h-arrow-right { right: 16px; }
+        .h-arrow-left  { 
+          top: 50%;
+          left: 16px;
+          transform: translateY(-50%);
+        }
+        .h-arrow-right { 
+          top: 50%;
+          right: 16px;
+          transform: translateY(-50%);
+        }
 
         /* ─── MAIN LAYOUT ─── */
         .h-body {
@@ -271,7 +282,6 @@ function Hero() {
           box-shadow: 0 2px 8px rgba(0,0,0,0.05);
           transition: transform 0.2s, box-shadow 0.2s;
           min-width: 0; flex: 1 1 auto;
-          /* pas de cursor: pointer */
         }
         .h-card:hover {
           transform: translateY(-2px);
@@ -309,29 +319,130 @@ function Hero() {
         }
 
         @media (max-width: 640px) {
-          .h-body { padding: 0 50px; }
-          .h-left { padding: 20px 12px 20px 0; }
-          .h-right { width: clamp(110px, 38%, 220px); }
-          .h-desc { display: none; }
-          .h-cards { display: none; }
-          .h-stats { gap: 10px; flex-wrap: nowrap; overflow: hidden; }
-          .h-stat:nth-child(3) { display: none; }
-          .h-arrow { width: 38px; height: 38px; }
-          .h-arrow-left  { left: 8px; }
-          .h-arrow-right { right: 8px; }
-          .h-book { max-height: clamp(160px, 50vw, 260px); }
+          .h-body { 
+            flex-direction: column-reverse; /* Livre en haut, texte en bas */
+            padding: 80px 20px 90px; /* Espace pour les flèches haut/bas */
+            align-items: center;
+          }
+          
+          .h-left { 
+            padding: 20px 0 0 0; 
+            width: 100%;
+            max-width: 400px;
+          }
+          
+          .h-right { 
+            width: 100%; 
+            max-width: 280px;
+            padding: 0;
+            margin-bottom: 20px;
+          }
+          
+          .h-book { 
+            max-height: 320px; 
+          }
+          
+          .h-cards { 
+            display: flex; 
+            width: 100%; 
+            justify-content: space-between;
+            margin-top: 15px;
+          }
+          
+          .h-stats { 
+            gap: 15px; 
+            justify-content: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+          }
+          
+          .h-stat { 
+            flex-direction: column; 
+            text-align: center; 
+            gap: 4px;
+            min-width: 80px;
+          }
+          
+          /* Flèches en haut et bas */
+          .h-arrow {
+            width: 42px; 
+            height: 42px;
+          }
+          
+          .h-arrow-left {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+          }
+          
+          .h-arrow-right {
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            top: auto;
+          }
+          
+          .h-desc { 
+            display: block; 
+            text-align: center;
+            font-size: 13px;
+          }
+          
+          .h-title { 
+            text-align: center;
+            font-size: 1.3rem;
+          }
+          
+          .h-author { 
+            justify-content: center;
+          }
+          
+          .h-price-row { 
+            justify-content: center;
+          }
         }
 
         @media (max-width: 380px) {
-          .h-body { padding: 0 44px; }
-          .h-right { width: clamp(100px, 40%, 170px); }
-          .h-title { font-size: 0.95rem; }
-          .h-price-row { gap: 6px; }
-          .h-stock-chip { display: none; }
-          .h-stats { display: none; }
-          .h-arrow { width: 32px; height: 32px; }
-          .h-arrow-left  { left: 6px; }
-          .h-arrow-right { right: 6px; }
+          .h-body { 
+            padding: 75px 15px 85px;
+          }
+          
+          .h-right { 
+            max-width: 240px;
+          }
+          
+          .h-book { 
+            max-height: 280px; 
+          }
+          
+          .h-left { 
+            max-width: 100%;
+          }
+          
+          .h-title { 
+            font-size: 1.15rem;
+          }
+          
+          .h-arrow {
+            width: 38px; 
+            height: 38px;
+          }
+          
+          .h-arrow-left {
+            top: 15px;
+          }
+          
+          .h-arrow-right {
+            bottom: 15px;
+          }
+          
+          .h-stats { 
+            display: none;
+          }
+          
+          .h-stock-chip { 
+            display: none;
+          }
         }
       `}</style>
 
@@ -348,7 +459,7 @@ function Hero() {
         </button>
 
         <div className="h-body">
-          {/* LEFT - TEXT */}
+          {/* LEFT - TEXT (sera en bas sur mobile grâce à column-reverse) */}
           <div className="h-left">
             <div className="h-slides-wrap">
               {slides.map((s, i) => (
@@ -418,14 +529,13 @@ function Hero() {
             </div>
           </div>
 
-          {/* RIGHT - BOOK */}
+          {/* RIGHT - BOOK (sera en haut sur mobile grâce à column-reverse) */}
           <div className="h-right">
             <div className="h-book-stage">
               {slides.map((s, i) => (
                 <div key={s.id} className={`h-book-slide ${i === currentSlide ? "active" : "inactive"}`}>
                   <div className="h-book-glow" style={{ background: slide.solid }} />
 
-                  {/* Le livre est cliquable (image uniquement) */}
                   <div className="h-book" onClick={() => goToProduct(s)}>
                     <div className="h-book-spine" style={{ background: `linear-gradient(180deg, ${slide.solid}dd 0%, ${slide.solid}88 100%)` }}>
                       <span className="h-book-spine-text">MTHS</span>
@@ -439,7 +549,6 @@ function Hero() {
                     <div className="h-book-curl" />
                   </div>
 
-                  {/* Cartes d'information — non cliquables (pas de onClick) */}
                   <div className="h-cards">
                     <div className="h-card">
                       <div className="h-card-icon" style={{ background: slide.light }}>

@@ -1345,6 +1345,135 @@ Cet ouvrage met en lumière l’influence spirituelle des relations sexuelles, e
 À partir de l’expérience du Centre MTHS, ce guide propose une compréhension claire des mécanismes en jeu, ainsi qu’un chemin structuré de restauration : identifier les sources d’impact, rompre les liens néfastes et retrouver une stabilité spirituelle durable.
 
 Plus qu’un enseignement, ce livre offre des clés pratiques pour vivre une vie équilibrée, préserver son intégrité spirituelle et avancer vers une véritable liberté intérieure.`
+},
+{
+  id: 27,
+  titre: "Le Cameroun dans les flammes",
+  auteur: "Centre MTHS",
+  desc: "Une analyse profonde et sans concession des crises spirituelles, sociales et politiques qui ravagent le Cameroun. Ce livre révèle les racines occultes des conflits armés, des divisions ethniques et des dérives spirituelles qui menacent l'unité nationale.",
+  prixFCFA: 6500,
+  images: [
+    "/images/livre27/livre27_1.png"
+  ],
+  format: ["Papier", "PDF"],
+  pages: 310,
+  stock: 20,
+  type: "Livre",
+  isbn: "978-2-9541234-7-8",
+  datePublication: "2024",
+  langue: "Français",
+  pointsCles: [
+    "Comprendre les crises sociales, économiques et spirituelles qui affectent le Cameroun",
+    "Identifier les racines profondes des blocages et instabilités",
+    "Analyser les conséquences sur la jeunesse, les familles et la nation",
+    "Proposer des pistes de transformation et de restauration durable",
+    "Développer une conscience citoyenne et spirituelle face aux défis actuels"
+  ],
+  publicCible: [
+    "Citoyens camerounais et africains intéressés par les enjeux sociétaux",
+    "Responsables spirituels et leaders communautaires",
+    "Étudiants, chercheurs et analystes",
+    "Toute personne engagée dans le développement du Cameroun"
+  ],
+  resume: `Le Cameroun dans les flammes offre une analyse profonde et sans concession des crises spirituelles, sociales et politiques qui ravagent le Cameroun. Ce livre révèle les racines occultes des conflits armés, des divisions ethniques et des dérives spirituelles qui menacent l'unité nationale.
+
+À travers des témoignages poignants et des analyses théologiques, découvrez comment la sorcellerie moderne et les spiritualités parallèles alimentent les flammes de la discorde. L'ouvrage explore les mécanismes invisibles qui sous-tendent les crises camerounaises : guerres fratricides, corruption endémique, divisions ethniques et dérives spirituelles.
+
+Plus qu'une simple analyse, ce livre propose des solutions concrètes pour la paix et la réconciliation nationale. Il invite les Camerounais à un examen de conscience collectif et à un retour aux valeurs spirituelles authentiques qui ont fait la force de la nation.
+
+Un guide essentiel pour comprendre les véritables enjeux spirituels derrière les crises camerounaises et les voies de réconciliation authentique.`,
+
+À travers une approche mêlant analyse et discernement, il invite à une prise de conscience collective et à une responsabilité individuelle. Il ne s’agit pas seulement de constater les problèmes, mais d’identifier des solutions durables et de participer activement à la restauration du Cameroun.
+
+Plus qu’un simple livre, c’est un appel à la réflexion, à l’engagement et à la transformation pour un avenir meilleur.`
+},
+{
+  id: 28,
+  titre: "L'Hygiène de l'âme",
+  auteur: "Centre MTHS",
+  desc: "Un traité spirituel complet sur la purification et l'entretien quotidien de l'âme chrétienne. Découvrez les pratiques ancestrales africaines christianisées pour maintenir une hygiène spirituelle parfaite.",
+  prixFCFA: 6500,
+  images: [
+    "/images/livre28/livre28_1.png",
+    "/images/livre28/livre28_2.png",
+    "/images/livre28/livre28_4.png",
+    "/images/livre28/livre28_3.png"
+  ],
+  format: ["Papier", "PDF"],
+  pages: 310,
+  stock: 20,
+  type: "Livre",
+  isbn: "978-2-9541234-8-5",
+  datePublication: "2024",
+  langue: "Français",
+  pointsCles: [
+    "Comprendre les principes fondamentaux de l’hygiène spirituelle de l’âme",
+    "Identifier les influences négatives qui polluent l’âme",
+    "Mettre en place des pratiques quotidiennes de purification intérieure",
+    "Développer une discipline spirituelle pour maintenir l’équilibre intérieur",
+    "Apprendre à restaurer une âme affaiblie ou blessée"
+  ],
+  publicCible: [
+    "Personnes en quête de paix intérieure et d’équilibre spirituel",
+    "Responsables spirituels et accompagnateurs",
+    "Toute personne souhaitant approfondir sa relation avec Dieu",
+    "Lecteurs intéressés par le développement personnel et spirituel"
+  ],
+  resume: `L'Hygiène de l'âme est un traité spirituel complet sur la purification et l'entretien quotidien de l'âme chrétienne. Découvrez les pratiques ancestrales africaines christianisées pour maintenir une hygiène spirituelle parfaite : prières de sanctification, jeûnes purificateurs, méditations bibliques et rituels de protection.
+
+Ce guide révèle comment éviter les contaminations spirituelles du quotidien, comment détecter les signes de souillure de l'âme, et comment restaurer une pureté spirituelle perdue. L'ouvrage explore les différentes formes de pollution spirituelle et propose des protocoles précis pour chaque situation.
+
+Une approche holistique intégrant psychologie moderne et spiritualité africaine pour une vie spirituelle saine et équilibrée. Plus qu'un manuel technique, c'est un compagnon spirituel pour ceux qui aspirent à une intimité profonde avec Dieu.`,
+
+Cet ouvrage propose une approche claire et pratique de l’hygiène de l’âme, en mettant en lumière les éléments qui peuvent la polluer ou l’affaiblir, ainsi que les moyens de la restaurer et de la maintenir en bonne santé.
+
+À travers des enseignements structurés et des principes concrets, le lecteur est guidé vers une transformation intérieure durable.
+
+Plus qu’un simple guide, ce livre est une invitation à entretenir une vie intérieure saine, équilibrée et alignée avec des principes spirituels solides.`
+},
+{
+  id: 29,
+  titre: "Conséquences spirituelles de la masturbation et de la pornographie dans ta vie",
+  auteur: "Centre MTHS",
+  desc: "Une étude biblique approfondie et sans tabou sur les conséquences spirituelles dévastatrices de la masturbation et de la pornographie. Ce livre révèle comment ces pratiques apparemment anodines ouvrent des portes démoniaques.",
+  prixFCFA: 6500,
+  images: [
+    "/images/livre29/livre29_1.png",
+    "/images/livre29/livre29_2.png",
+    "/images/livre29/livre29_4.png",
+    "/images/livre29/livre29_3.png"
+  ],
+  format: ["Papier", "PDF"],
+  pages: 310,
+  stock: 20,
+  type: "Livre",
+  isbn: "978-2-9541234-9-2",
+  datePublication: "2024",
+  langue: "Français",
+  pointsCles: [
+    "Comprendre les impacts spirituels et psychologiques de la masturbation et de la pornographie",
+    "Identifier les schémas de dépendance et leurs conséquences sur la vie quotidienne",
+    "Reconnaître les effets sur les relations, la discipline et la croissance personnelle",
+    "Découvrir des principes de libération et de restauration intérieure",
+    "Mettre en place des stratégies concrètes pour retrouver le contrôle et l’équilibre"
+  ],
+  publicCible: [
+    "Personnes confrontées à des luttes dans ce domaine et cherchant à s’en libérer",
+    "Jeunes adultes et adolescents en quête de repères",
+    "Accompagnateurs et responsables spirituels",
+    "Toute personne souhaitant comprendre ces enjeux et évoluer"
+  ],
+  resume: `CONSEQUENCES SPIRITUELLES DE LA MASTURBATION ET DE LA PORNOGRAPHIE DANS TA VIE est une étude biblique approfondie et sans tabou sur les conséquences spirituelles dévastatrices de la masturbation et de la pornographie. Ce livre révèle comment ces pratiques apparemment anodines ouvrent des portes démoniaques, créent des liens spirituels destructeurs et altèrent profondément la relation avec Dieu.
+
+Découvrez les mécanismes occultes derrière l'addiction, les conséquences sur la vie conjugale, professionnelle et spirituelle, et surtout les voies de délivrance efficaces. L'ouvrage explore les racines spirituelles de ces comportements et propose des protocoles de délivrance bibliques éprouvés.
+
+Un guide courageux qui ose aborder un sujet tabou avec la franchise biblique nécessaire pour la vraie liberté spirituelle. Plus qu'une analyse, c'est un chemin vers la restauration complète et la victoire sur ces chaînes spirituelles.`,
+
+Cet ouvrage propose une analyse profonde de leurs conséquences sur la vie spirituelle, émotionnelle et personnelle, en mettant en lumière les effets cachés qui peuvent freiner l’épanouissement et créer des dépendances.
+
+À travers une approche basée sur la compréhension et la restauration, il offre des pistes concrètes pour sortir de ces pratiques et retrouver une vie équilibrée.
+
+Plus qu’un constat, ce livre est un guide vers la liberté intérieure et la transformation durable.`
 }
 ];
 
