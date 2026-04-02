@@ -1382,10 +1382,6 @@ Plus qu’un enseignement, ce livre offre des clés pratiques pour vivre une vie
 Plus qu'une simple analyse, ce livre propose des solutions concrètes pour la paix et la réconciliation nationale. Il invite les Camerounais à un examen de conscience collectif et à un retour aux valeurs spirituelles authentiques qui ont fait la force de la nation.
 
 Un guide essentiel pour comprendre les véritables enjeux spirituels derrière les crises camerounaises et les voies de réconciliation authentique.`,
-
-À travers une approche mêlant analyse et discernement, il invite à une prise de conscience collective et à une responsabilité individuelle. Il ne s’agit pas seulement de constater les problèmes, mais d’identifier des solutions durables et de participer activement à la restauration du Cameroun.
-
-Plus qu’un simple livre, c’est un appel à la réflexion, à l’engagement et à la transformation pour un avenir meilleur.`
 },
 {
   id: 28,
@@ -1424,12 +1420,6 @@ Plus qu’un simple livre, c’est un appel à la réflexion, à l’engagement 
 Ce guide révèle comment éviter les contaminations spirituelles du quotidien, comment détecter les signes de souillure de l'âme, et comment restaurer une pureté spirituelle perdue. L'ouvrage explore les différentes formes de pollution spirituelle et propose des protocoles précis pour chaque situation.
 
 Une approche holistique intégrant psychologie moderne et spiritualité africaine pour une vie spirituelle saine et équilibrée. Plus qu'un manuel technique, c'est un compagnon spirituel pour ceux qui aspirent à une intimité profonde avec Dieu.`,
-
-Cet ouvrage propose une approche claire et pratique de l’hygiène de l’âme, en mettant en lumière les éléments qui peuvent la polluer ou l’affaiblir, ainsi que les moyens de la restaurer et de la maintenir en bonne santé.
-
-À travers des enseignements structurés et des principes concrets, le lecteur est guidé vers une transformation intérieure durable.
-
-Plus qu’un simple guide, ce livre est une invitation à entretenir une vie intérieure saine, équilibrée et alignée avec des principes spirituels solides.`
 },
 {
   id: 29,
@@ -1468,12 +1458,6 @@ Plus qu’un simple guide, ce livre est une invitation à entretenir une vie int
 Découvrez les mécanismes occultes derrière l'addiction, les conséquences sur la vie conjugale, professionnelle et spirituelle, et surtout les voies de délivrance efficaces. L'ouvrage explore les racines spirituelles de ces comportements et propose des protocoles de délivrance bibliques éprouvés.
 
 Un guide courageux qui ose aborder un sujet tabou avec la franchise biblique nécessaire pour la vraie liberté spirituelle. Plus qu'une analyse, c'est un chemin vers la restauration complète et la victoire sur ces chaînes spirituelles.`,
-
-Cet ouvrage propose une analyse profonde de leurs conséquences sur la vie spirituelle, émotionnelle et personnelle, en mettant en lumière les effets cachés qui peuvent freiner l’épanouissement et créer des dépendances.
-
-À travers une approche basée sur la compréhension et la restauration, il offre des pistes concrètes pour sortir de ces pratiques et retrouver une vie équilibrée.
-
-Plus qu’un constat, ce livre est un guide vers la liberté intérieure et la transformation durable.`
 }
 ];
 
