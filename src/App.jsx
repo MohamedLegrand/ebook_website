@@ -26,22 +26,23 @@ import Boutique from "./pages/boutique/Boutique";
 import Actualites from "./pages/actualites/Actualites";
 import Produitdetail from "./pages/produitdetail/Produitdetail";
 import Piliers from "./pages/piliers/Piliers";
-
-import ScrollToTop from "./components/scrolltotop/ScrollToTop";
-
-import HeaderConnected from "./components/headerconnected/HeaderConnected";
 import LivreConnected from "./pages/livreconnected/LivreConnected";
 import Cartconnected from "./pages/cartconnected/Cartconnected";
+import Profil from "./pages/profil/Profil";
+
+import ScrollToTop from "./components/scrolltotop/ScrollToTop";
 
 
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      {/* AuthProvider enveloppe tout pour que useAuth()
-          soit accessible dans toute l'application */}
       <AuthProvider>
         <CartProvider>
+
+       
+          
+
           <Routes>
             <Route path="/" element={<Accueil />} />
             <Route path="/categories" element={<Categories />} />
@@ -66,10 +67,11 @@ function App() {
             <Route path="/actualites" element={<Actualites />} />
             <Route path="/produit/:id" element={<Produitdetail />} />
             <Route path="/piliers" element={<Piliers />} />
-            <Route path="/headerconnected" element={<HeaderConnected />} />
             <Route path="/livreconnected" element={<LivreConnected />} />
             <Route path="/cartconnected" element={<Cartconnected />} />
+            <Route path="/profil" element={<Profil />} />
           </Routes>
+
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>

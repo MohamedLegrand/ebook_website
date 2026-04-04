@@ -397,8 +397,11 @@ function HeaderConnected() {
                     ) : (
                       <>
                         <div className="max-h-60 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-                          {cart.map((item, i) => (
-                            <div key={`${item.id}-${i}`} className="flex items-center gap-2 p-2 rounded-xl hover:bg-blue-50 transition-colors">
+                          {cart.map((item) => (
+                            <div 
+                              key={`${item.id}-${item.type}`} 
+                              className="flex items-center gap-2 p-2 rounded-xl hover:bg-blue-50 transition-colors"
+                            >
                               <div className="w-12 h-12 rounded-lg overflow-hidden bg-blue-100 shrink-0">
                                 <img
                                   src={item.cover}
@@ -416,9 +419,13 @@ function HeaderConnected() {
                                 </div>
                               </div>
                               <button
-                                onClick={() => removeFromCart(item.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeFromCart(item.id, item.type);
+                                }}
                                 className="text-red-300 hover:text-red-500 transition-colors p-1 shrink-0"
                                 aria-label="Retirer du panier"
+                                type="button"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>

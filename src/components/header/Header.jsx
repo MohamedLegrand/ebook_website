@@ -387,8 +387,11 @@ function Header() {
                     ) : (
                       <>
                         <div className="max-h-60 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-                          {cart.map((item, i) => (
-                            <div key={`${item.id}-${i}`} className="flex items-center gap-2 p-2 rounded-xl hover:bg-blue-50 transition-colors">
+                          {cart.map((item) => (
+                            <div 
+                              key={`${item.id}-${item.type}`} 
+                              className="flex items-center gap-2 p-2 rounded-xl hover:bg-blue-50 transition-colors"
+                            >
                               <div className="w-12 h-12 rounded-lg overflow-hidden bg-blue-100 shrink-0">
                                 <img
                                   src={item.cover}
@@ -406,9 +409,13 @@ function Header() {
                                 </div>
                               </div>
                               <button
-                                onClick={() => removeFromCart(item.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeFromCart(item.id, item.type);
+                                }}
                                 className="text-red-300 hover:text-red-500 transition-colors p-1 shrink-0"
                                 aria-label="Retirer du panier"
+                                type="button"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
@@ -559,8 +566,11 @@ function Header() {
             ) : (
               <>
                 <div className="space-y-1.5 max-h-36 overflow-y-auto mb-2.5 custom-scrollbar">
-                  {cart.slice(0, 4).map((item, i) => (
-                    <div key={i} className="flex items-center gap-2 bg-blue-50 rounded-xl p-2">
+                  {cart.slice(0, 4).map((item) => (
+                    <div 
+                      key={`${item.id}-${item.type}`} 
+                      className="flex items-center gap-2 bg-blue-50 rounded-xl p-2"
+                    >
                       <div className="w-10 h-10 rounded-lg overflow-hidden bg-blue-100 shrink-0">
                         <img
                           src={item.cover}
@@ -574,9 +584,13 @@ function Header() {
                         <p className="text-[10px] text-blue-600 font-bold">{fmt(item.price)}</p>
                       </div>
                       <button
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeFromCart(item.id, item.type);
+                        }}
                         className="text-red-400 hover:text-red-600 p-0.5 shrink-0"
                         aria-label="Retirer"
+                        type="button"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
