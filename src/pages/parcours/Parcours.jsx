@@ -1,10 +1,23 @@
-import React, { useState } from "react";
-import { 
-  Heart, Users, Ear, Search, ArrowRightCircle, Stethoscope, 
-  CheckCircle, Calendar, Clock, Shield, BookOpen, Target,
-  ChevronDown, ChevronUp, MapPin, UserCheck, Star, Award,
-  PlayCircle, Download, MessageCircle, Phone, Sparkles
-} from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+
+// Hook personnalisé pour détecter l'entrée dans le viewport
+function useInView(threshold = 0.15) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setInView(true);
+      },
+      { threshold }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [threshold]);
+
+  return [ref, inView];
+}
 
 function Parcours() {
   const [activeStep, setActiveStep] = useState(0);
@@ -14,7 +27,6 @@ function Parcours() {
       id: 1,
       titre: "Accueil & Accueil Bienveillant",
       description: "Réception chaleureuse et bienveillante de la personne dans un esprit d'écoute et de respect total de sa dignité.",
-      icon: <Users className="w-10 h-10" />,
       details: {
         duree: "30-45 minutes",
         lieu: "Centre MTHS ou en ligne",
@@ -33,7 +45,6 @@ function Parcours() {
       id: 2,
       titre: "Écoute Active & Diagnostic",
       description: "Entretien approfondi et confidentiel pour recueillir le vécu, les souffrances invisibles et les symptômes spirituels, psychiques et sociaux.",
-      icon: <Ear className="w-10 h-10" />,
       details: {
         duree: "1-2 heures",
         lieu: "Cabinet privé ou en ligne",
@@ -52,7 +63,6 @@ function Parcours() {
       id: 3,
       titre: "Discernement & Analyse",
       description: "Analyse spirituelle et psychosomatique pour identifier la racine des troubles (envoûtements, possessions, blocages mystiques, etc.).",
-      icon: <Search className="w-10 h-10" />,
       details: {
         duree: "24-48 heures d'analyse",
         lieu: "Centre de discernement MTHS",
@@ -71,7 +81,6 @@ function Parcours() {
       id: 4,
       titre: "Orientation Personnalisée",
       description: "Proposition d'un parcours personnalisé adapté à la situation, en complémentarité avec les soins médicaux si nécessaire.",
-      icon: <ArrowRightCircle className="w-10 h-10" />,
       details: {
         duree: "1 heure",
         lieu: "Centre MTHS",
@@ -90,7 +99,6 @@ function Parcours() {
       id: 5,
       titre: "Thérapie Progressive",
       description: "Application des 5 piliers de la MTHS : diagnostic, naturopathie/RTA, rituels SO'O inculturés, délivrance, rééducation morale.",
-      icon: <Stethoscope className="w-10 h-10" />,
       details: {
         duree: "Variable selon le cas (1-6 mois)",
         lieu: "Centre MTHS et à distance",
@@ -109,7 +117,6 @@ function Parcours() {
       id: 6,
       titre: "Suivi & Réinsertion",
       description: "Accompagnement durable pour consolider la guérison, favoriser la resocialisation et prévenir les rechutes, avec dignité et absence de jugement.",
-      icon: <CheckCircle className="w-10 h-10" />,
       details: {
         duree: "3-12 mois de suivi",
         lieu: "À distance et rencontres périodiques",
@@ -127,10 +134,10 @@ function Parcours() {
   ];
 
   const statistiques = [
-    { valeur: "95%", label: "de satisfaction client", icon: <Star className="w-6 h-6" /> },
-    { valeur: "2,500+", label: "parcours accomplis", icon: <UserCheck className="w-6 h-6" /> },
-    { valeur: "98%", label: "de guérison durable", icon: <Award className="w-6 h-6" /> },
-    { valeur: "24/7", label: "support disponible", icon: <Phone className="w-6 h-6" /> }
+    { valeur: "95%", label: "de satisfaction client" },
+    { valeur: "2,500+", label: "parcours accomplis" },
+    { valeur: "98%", label: "de guérison durable" },
+    { valeur: "24/7", label: "support disponible" }
   ];
 
   const temoignages = [
@@ -151,115 +158,160 @@ function Parcours() {
     }
   ];
 
+  // Références pour les animations au scroll
+  const [heroRef, heroInView] = useInView(0.1);
+  const [statsRef, statsInView] = useInView(0.2);
+  const [etapesRef, etapesInView] = useInView(0.2);
+  const [temoignagesRef, temoignagesInView] = useInView(0.2);
+  const [ressourcesRef, ressourcesInView] = useInView(0.2);
+  const [ctaRef, ctaInView] = useInView(0.3);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideInLeft {
+          from { opacity: 0; transform: translateX(-40px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+          from { opacity: 0; transform: translateX(40px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-fadeUp { animation: fadeUp 0.8s ease forwards; }
+        .animate-fadeIn { animation: fadeIn 1s ease forwards; }
+        .animate-scaleIn { animation: scaleIn 0.6s ease forwards; }
+        .animate-slideLeft { animation: slideInLeft 0.7s ease forwards; }
+        .animate-slideRight { animation: slideInRight 0.7s ease forwards; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .hover-grow { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .hover-grow:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15); }
+        .stat-card { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+        .stat-card:hover { transform: translateY(-8px); box-shadow: 0 25px 35px -12px rgba(59,130,246,0.25); }
+        .step-pulse {
+          animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0.4); }
+          50% { box-shadow: 0 0 0 8px rgba(59,130,246,0); }
+        }
+      `}</style>
 
       <main className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center p-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-6">
-            <Target className="w-8 h-8 text-white" />
+        
+        {/* Hero Section avec image de fond améliorée */}
+        <div 
+          ref={heroRef}
+          className="relative overflow-hidden rounded-2xl mb-12 shadow-2xl"
+        >
+          <div className="absolute inset-0">
+            <img
+              src="/images/rites/passage.jpg"
+              alt="Parcours MTHS"
+              className="w-full h-full object-cover opacity-40"
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-900/60 to-blue-800/40"></div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Parcours d'Accompagnement MTHS
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Un chemin structuré en 6 étapes pour une guérison intégrale du corps, de l'âme et de l'esprit.
-            Chaque parcours est personnalisé, confidentiel et respectueux de votre dignité.
-          </p>
-          
-          {/* Note importante */}
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 max-w-4xl mx-auto">
-            <div className="flex items-start gap-4">
-              <div className="bg-blue-100 p-3 rounded-lg">
-                <Shield className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-gray-900 mb-2">Notre Engagement</h3>
-                <p className="text-gray-600">
-                  Nous accompagnons avec dignité, sans jugement, en complémentarité avec les soins hospitaliers.
-                  Votre confidentialité est garantie à chaque étape du parcours.
-                </p>
+          <div className={`relative text-center py-20 px-4 transition-all duration-700 ${heroInView ? 'animate-fadeUp' : 'opacity-0'}`}>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+              Parcours d'Accompagnement MTHS
+            </h1>
+            <p className="text-xl text-blue-50 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow">
+              Un chemin structuré en 6 étapes pour une guérison intégrale du corps, de l'âme et de l'esprit.
+              Chaque parcours est personnalisé, confidentiel et respectueux de votre dignité.
+            </p>
+            
+            <div className="bg-white/90 backdrop-blur-sm border border-blue-200 rounded-xl p-6 max-w-4xl mx-auto shadow-lg">
+              <div className="flex items-start gap-4">
+                <div className="bg-blue-100 p-3 rounded-lg">
+                  {/* Icône supprimée */}
+                </div>
+                <div className="text-left">
+                  <h3 className="font-bold text-gray-900 mb-2 text-lg">Notre Engagement</h3>
+                  <p className="text-gray-700">
+                    Nous accompagnons avec dignité, sans jugement, en complémentarité avec les soins hospitaliers.
+                    Votre confidentialité est garantie à chaque étape du parcours.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Statistiques */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+        {/* Statistiques avec animations */}
+        <div ref={statsRef} className="mb-16">
+          <h2 className={`text-3xl font-bold text-gray-900 mb-10 text-center transition-all duration-700 ${statsInView ? 'animate-fadeUp' : 'opacity-0'}`}>
             Notre Parcours en Chiffres
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {statistiques.map((stat, index) => (
-              <div key={index} className="bg-white rounded-xl border border-blue-100 p-6 text-center hover:shadow-lg transition-shadow">
-                <div className="text-blue-600 mb-3 flex justify-center">
-                  {stat.icon}
-                </div>
-                <div className="text-3xl font-bold text-gray-900 mb-2">{stat.valeur}</div>
-                <div className="text-gray-600 text-sm">{stat.label}</div>
+              <div 
+                key={index} 
+                className={`stat-card bg-white rounded-xl border border-blue-100 p-6 text-center shadow-md transition-all duration-700 ${statsInView ? 'animate-scaleIn' : 'opacity-0'}`}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="text-4xl font-extrabold text-blue-700 mb-2">{stat.valeur}</div>
+                <div className="text-gray-600 text-sm font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Étapes du parcours */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+        <div ref={etapesRef} className="mb-20">
+          <h2 className={`text-3xl font-bold text-gray-900 mb-10 text-center transition-all duration-700 ${etapesInView ? 'animate-fadeUp' : 'opacity-0'}`}>
             Les 6 Étapes de Votre Parcours
           </h2>
           
-          {/* Timeline version Desktop */}
+          {/* Desktop Timeline */}
           <div className="hidden lg:block">
             <div className="relative">
-              {/* Ligne verticale de la timeline */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-400 to-blue-900"></div>
-              
+              <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-300 via-blue-500 to-blue-700 rounded-full"></div>
               <div className="space-y-12">
                 {etapes.map((etape, index) => (
                   <div 
                     key={etape.id}
-                    className={`relative flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+                    className={`relative flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} transition-all duration-700 ${etapesInView ? (index % 2 === 0 ? 'animate-slideLeft' : 'animate-slideRight') : 'opacity-0'}`}
+                    style={{ animationDelay: `${index * 0.15}s` }}
                   >
-                    {/* Contenu de l'étape */}
                     <div className={`w-1/2 ${index % 2 === 0 ? 'pr-12 text-right' : 'pl-12'}`}>
                       <div 
-                        className={`bg-white rounded-2xl border border-blue-100 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer ${
-                          activeStep === index ? 'ring-2 ring-blue-500' : ''
+                        className={`bg-white rounded-2xl border border-blue-100 p-6 shadow-lg hover-grow cursor-pointer transition-all duration-300 ${
+                          activeStep === index ? 'ring-2 ring-blue-500 shadow-xl' : ''
                         }`}
                         onClick={() => setActiveStep(index)}
                       >
-                        <div className="flex items-center gap-4 mb-4">
-                          <div className={`p-3 rounded-full bg-gradient-to-r ${etape.couleur} text-white`}>
-                            {etape.icon}
-                          </div>
-                          <div className={`flex-1 ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
-                            <h3 className="text-xl font-bold text-gray-900">{etape.titre}</h3>
-                            <p className="text-sm text-gray-600 mt-1">Étape {etape.id}/6</p>
-                          </div>
+                        <div className="mb-3">
+                          <h3 className="text-xl font-bold text-gray-900">{etape.titre}</h3>
+                          <p className="text-sm text-blue-600 font-semibold mt-1">Étape {etape.id}/6</p>
                         </div>
                         <p className="text-gray-700">{etape.description}</p>
-                        
-                        <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
-                            {etape.details.duree}
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <MapPin className="w-4 h-4" />
-                            {etape.details.lieu.split(' ')[0]}
-                          </div>
+                        <div className="flex items-center justify-between mt-4 text-sm text-gray-500 border-t pt-3 border-blue-50">
+                          <span className="flex items-center gap-1">⏱️ {etape.details.duree}</span>
+                          <span className="flex items-center gap-1">📍 {etape.details.lieu.split(' ')[0]}</span>
                         </div>
                       </div>
                     </div>
-
-                    {/* Point sur la timeline */}
                     <div className="absolute left-1/2 transform -translate-x-1/2">
-                      <div className={`w-8 h-8 rounded-full border-4 border-white bg-gradient-to-r ${etape.couleur} ${
-                        activeStep === index ? 'scale-125 shadow-lg' : ''
-                      } transition-all duration-300`}></div>
+                      <div className={`w-10 h-10 rounded-full border-4 border-white bg-gradient-to-r ${etape.couleur} shadow-md transition-all duration-300 ${
+                        activeStep === index ? 'scale-150 shadow-lg step-pulse' : ''
+                      }`}></div>
                     </div>
-
                     <div className="w-1/2"></div>
                   </div>
                 ))}
@@ -267,103 +319,85 @@ function Parcours() {
             </div>
           </div>
 
-          {/* Version Mobile et Tablette */}
-          <div className="lg:hidden">
-            <div className="space-y-6">
-              {etapes.map((etape, index) => (
+          {/* Mobile Accordion */}
+          <div className="lg:hidden space-y-6">
+            {etapes.map((etape, index) => (
+              <div 
+                key={etape.id}
+                className={`bg-white rounded-2xl border border-blue-100 p-6 shadow-md transition-all duration-700 ${etapesInView ? 'animate-fadeUp' : 'opacity-0'}`}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
                 <div 
-                  key={etape.id}
-                  className="bg-white rounded-2xl border border-blue-100 p-6 hover:shadow-xl transition-all duration-300"
+                  className="flex items-center justify-between cursor-pointer"
+                  onClick={() => setActiveStep(activeStep === index ? -1 : index)}
                 >
-                  <div 
-                    className="flex items-center justify-between cursor-pointer"
-                    onClick={() => setActiveStep(activeStep === index ? -1 : index)}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`p-3 rounded-full bg-gradient-to-r ${etape.couleur} text-white`}>
-                        {etape.icon}
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-gray-900">{etape.titre}</h3>
-                        <p className="text-sm text-gray-600">Étape {etape.id}/6</p>
-                      </div>
-                    </div>
-                    {activeStep === index ? (
-                      <ChevronUp className="w-5 h-5 text-blue-500" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-blue-400" />
-                    )}
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900">{etape.titre}</h3>
+                    <p className="text-sm text-blue-600">Étape {etape.id}/6</p>
                   </div>
-                  
-                  <p className="text-gray-700 mt-4">{etape.description}</p>
-                  
-                  {/* Détails développés */}
-                  {activeStep === index && (
-                    <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
-                      <div className="grid grid-cols-2 gap-4 mb-4">
-                        <div className="flex items-center gap-2 text-sm text-gray-700">
-                          <Clock className="w-4 h-4 text-blue-500" />
-                          <span><strong>Durée :</strong> {etape.details.duree}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-700">
-                          <MapPin className="w-4 h-4 text-blue-500" />
-                          <span><strong>Lieu :</strong> {etape.details.lieu}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="mb-4">
-                        <h4 className="font-bold text-gray-900 text-sm mb-2">Objectif</h4>
-                        <p className="text-gray-700 text-sm">{etape.details.objectif}</p>
-                      </div>
-                      
-                      <div className="mb-4">
-                        <h4 className="font-bold text-gray-900 text-sm mb-2">Actions concrètes</h4>
-                        <ul className="space-y-2">
-                          {etape.details.actions.map((action, idx) => (
-                            <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
-                              <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                              {action}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-bold text-gray-900 text-sm mb-2">Résultat attendu</h4>
-                        <p className="text-gray-700 text-sm">{etape.details.resultat}</p>
-                      </div>
-                    </div>
-                  )}
+                  <div className="text-blue-500 text-xl font-bold">
+                    {activeStep === index ? "▲" : "▼"}
+                  </div>
                 </div>
-              ))}
-            </div>
+                <p className="text-gray-700 mt-4">{etape.description}</p>
+                
+                {activeStep === index && (
+                  <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200 animate-fadeIn">
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div className="text-sm text-gray-700"><strong>Durée :</strong> {etape.details.duree}</div>
+                      <div className="text-sm text-gray-700"><strong>Lieu :</strong> {etape.details.lieu}</div>
+                    </div>
+                    <div className="mb-4">
+                      <h4 className="font-bold text-gray-900 text-sm mb-2">🎯 Objectif</h4>
+                      <p className="text-gray-700 text-sm">{etape.details.objectif}</p>
+                    </div>
+                    <div className="mb-4">
+                      <h4 className="font-bold text-gray-900 text-sm mb-2">📋 Actions concrètes</h4>
+                      <ul className="space-y-2">
+                        {etape.details.actions.map((action, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
+                            <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                            {action}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-900 text-sm mb-2">✨ Résultat attendu</h4>
+                      <p className="text-gray-700 text-sm">{etape.details.resultat}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Section Témoignages */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+        {/* Témoignages */}
+        <div ref={temoignagesRef} className="mb-20">
+          <h2 className={`text-3xl font-bold text-gray-900 mb-10 text-center transition-all duration-700 ${temoignagesInView ? 'animate-fadeUp' : 'opacity-0'}`}>
             Témoignages de Parcours Accomplis
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {temoignages.map((temoignage, idx) => (
-              <div key={idx} className="bg-white rounded-2xl border border-blue-100 p-6">
+              <div 
+                key={idx} 
+                className={`bg-white rounded-2xl border border-blue-100 p-6 shadow-lg hover-grow transition-all duration-700 ${temoignagesInView ? 'animate-scaleIn' : 'opacity-0'}`}
+                style={{ animationDelay: `${idx * 0.15}s` }}
+              >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md">
                     {temoignage.nom.split(' ')[0].charAt(0)}
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">{temoignage.nom}</h4>
-                    <p className="text-sm text-blue-600 flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {temoignage.duree}
-                    </p>
+                    <h4 className="font-bold text-gray-900 text-lg">{temoignage.nom}</h4>
+                    <p className="text-sm text-blue-600 flex items-center gap-1">⏱️ {temoignage.duree}</p>
                   </div>
                 </div>
-                <p className="text-gray-700 italic mb-4">"{temoignage.texte}"</p>
+                <p className="text-gray-700 italic mb-4 leading-relaxed">"{temoignage.texte}"</p>
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                    <span key={i} className="text-yellow-400 text-xl">★</span>
                   ))}
                 </div>
               </div>
@@ -371,45 +405,29 @@ function Parcours() {
           </div>
         </div>
 
-        {/* Section Ressources */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+        {/* Ressources */}
+        <div ref={ressourcesRef} className="mb-20">
+          <h2 className={`text-3xl font-bold text-gray-900 mb-10 text-center transition-all duration-700 ${ressourcesInView ? 'animate-fadeUp' : 'opacity-0'}`}>
             Prêt à Commencer Votre Parcours ?
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
-              { 
-                title: "Consultation Initiale", 
-                desc: "Rencontre d'évaluation gratuite pour définir votre parcours",
-                icon: <Calendar className="w-8 h-8" />,
-                action: "Prendre RDV",
-                link: "/contact"
-              },
-              { 
-                title: "Documentation Complète", 
-                desc: "Téléchargez notre guide détaillé du parcours MTHS",
-                icon: <BookOpen className="w-8 h-8" />,
-                action: "Télécharger",
-                link: "/docs/parcours-mths.pdf"
-              },
-              { 
-                title: "Questions Fréquentes", 
-                desc: "Consultez nos réponses aux questions les plus courantes",
-                icon: <MessageCircle className="w-8 h-8" />,
-                action: "Consulter",
-                link: "/faq"
-              }
+              { title: "Consultation Initiale", desc: "Rencontre d'évaluation gratuite pour définir votre parcours", action: "Prendre RDV", link: "/contact" },
+              { title: "Documentation Complète", desc: "Téléchargez notre guide détaillé du parcours MTHS", action: "Télécharger", link: "/docs/parcours-mths.pdf" },
+              { title: "Questions Fréquentes", desc: "Consultez nos réponses aux questions les plus courantes", action: "Consulter", link: "/faq" }
             ].map((ressource, idx) => (
-              <div key={idx} className="bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-                <div className="text-blue-600 mb-4">{ressource.icon}</div>
-                <h3 className="font-bold text-gray-900 text-lg mb-2">{ressource.title}</h3>
-                <p className="text-gray-600 text-sm mb-4">{ressource.desc}</p>
+              <div 
+                key={idx} 
+                className={`bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-2xl p-6 shadow-md hover-grow transition-all duration-700 ${ressourcesInView ? 'animate-slideRight' : 'opacity-0'}`}
+                style={{ animationDelay: `${idx * 0.1}s` }}
+              >
+                <h3 className="font-bold text-gray-900 text-xl mb-2">{ressource.title}</h3>
+                <p className="text-gray-700 text-sm mb-5 leading-relaxed">{ressource.desc}</p>
                 <a 
                   href={ressource.link}
-                  className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium"
+                  className="inline-flex items-center gap-2 text-blue-700 hover:text-blue-900 font-semibold border-b-2 border-blue-300 pb-1 transition-all hover:gap-3"
                 >
-                  {ressource.action}
-                  <ArrowRightCircle className="w-4 h-4" />
+                  {ressource.action} <span className="text-lg">→</span>
                 </a>
               </div>
             ))}
@@ -417,41 +435,37 @@ function Parcours() {
         </div>
 
         {/* CTA Final */}
-        <div className="text-center">
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-8 text-white">
+        <div ref={ctaRef} className="text-center">
+          <div className={`bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-10 text-white shadow-2xl transition-all duration-1000 ${ctaInView ? 'animate-scaleIn' : 'opacity-0'}`}>
             <div className="max-w-3xl mx-auto">
-              <Sparkles className="w-12 h-12 mx-auto mb-4" />
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">
+              <h3 className="text-3xl md:text-4xl font-bold mb-5">
                 Commencez Votre Chemin de Guérison Aujourd'hui
               </h3>
-              <p className="text-blue-100 mb-6 text-lg">
+              <p className="text-blue-100 mb-8 text-lg leading-relaxed">
                 Rejoignez les milliers de personnes qui ont retrouvé la paix et l'équilibre 
                 grâce à notre accompagnement holistique.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-5 justify-center">
                 <a
                   href="/contact"
-                  className="px-8 py-3 bg-white text-blue-600 hover:bg-blue-50 font-semibold rounded-lg transition-colors flex items-center justify-center gap-3"
+                  className="px-8 py-4 bg-white text-blue-700 hover:bg-blue-50 font-bold rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-1"
                 >
-                  <Calendar className="w-5 h-5" />
-                  Prendre Rendez-vous Gratuit
+                  📅 Prendre Rendez-vous Gratuit
                 </a>
                 <a
                   href="/urgence"
-                  className="px-8 py-3 border-2 border-white text-white hover:bg-white/10 font-semibold rounded-lg transition-colors flex items-center justify-center gap-3"
+                  className="px-8 py-4 border-2 border-white text-white hover:bg-white/10 font-bold rounded-xl transition-all hover:-translate-y-1"
                 >
-                  <Phone className="w-5 h-5" />
-                  Urgence : +237 693 21 54 31
+                  📞 Urgence : +237 693 21 54 31
                 </a>
               </div>
-              <p className="mt-6 text-sm text-blue-200">
+              <p className="mt-8 text-sm text-blue-200">
                 Première consultation gratuite • Confidentialité garantie • Approche respectueuse
               </p>
             </div>
           </div>
         </div>
       </main>
-
     </div>
   );
 }

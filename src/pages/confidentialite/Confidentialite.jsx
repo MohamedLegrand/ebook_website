@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import { 
-  Shield, 
-  Lock, 
-  Eye, 
-  Trash2, 
-  Download, 
-  Mail, 
-  Calendar, 
-  Building, 
-  ChevronDown, 
-  ChevronUp, 
-  ChevronRight,
-  CheckCircle, 
-  AlertTriangle,
-  FileText,
-  Heart,
-  Cross,
-  Users
-} from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+
+// Hook personnalisé pour les animations au scroll
+function useInView(threshold = 0.15) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setInView(true);
+      },
+      { threshold }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [threshold]);
+
+  return [ref, inView];
+}
 
 function Confidentialite() {
   const [openSections, setOpenSections] = useState({});
@@ -30,14 +30,14 @@ function Confidentialite() {
   };
 
   const tableOfContents = [
-    { id: "introduction", title: "1. Introduction", icon: <Shield className="w-5 h-5" /> },
-    { id: "collecte", title: "2. Données collectées", icon: <Eye className="w-5 h-5" /> },
-    { id: "utilisation", title: "3. Utilisation des données", icon: <Building className="w-5 h-5" /> },
-    { id: "partage", title: "4. Partage des données", icon: <Mail className="w-5 h-5" /> },
-    { id: "droits", title: "5. Vos droits", icon: <CheckCircle className="w-5 h-5" /> },
-    { id: "securite", title: "6. Sécurité", icon: <Lock className="w-5 h-5" /> },
-    { id: "conservation", title: "7. Conservation", icon: <Calendar className="w-5 h-5" /> },
-    { id: "engagement", title: "8. Notre engagement", icon: <Heart className="w-5 h-5" /> }
+    { id: "introduction", title: "1. Introduction" },
+    { id: "collecte", title: "2. Données collectées" },
+    { id: "utilisation", title: "3. Utilisation des données" },
+    { id: "partage", title: "4. Partage des données" },
+    { id: "droits", title: "5. Vos droits" },
+    { id: "securite", title: "6. Sécurité" },
+    { id: "conservation", title: "7. Conservation" },
+    { id: "engagement", title: "8. Notre engagement" }
   ];
 
   const vosDroits = [
@@ -76,74 +76,122 @@ function Confidentialite() {
   const principesConfidentialite = [
     {
       principe: "Secret professionnel absolu",
-      description: "Tous les thérapeutes et collaborateurs sont liés par le secret professionnel",
-      icon: "🤐"
+      description: "Tous les thérapeutes et collaborateurs sont liés par le secret professionnel"
     },
     {
       principe: "Absence de jugement",
-      description: "Nous accueillons chaque parole sans préjugé ni condamnation",
-      icon: "❤️"
+      description: "Nous accueillons chaque parole sans préjugé ni condamnation"
     },
     {
       principe: "Consentement éclairé",
-      description: "Vous êtes informé et donnez votre consentement pour chaque traitement",
-      icon: "✍️"
+      description: "Vous êtes informé et donnez votre consentement pour chaque traitement"
     },
     {
       principe: "Minimisation des données",
-      description: "Nous collectons uniquement les données nécessaires à votre accompagnement",
-      icon: "🎯"
+      description: "Nous collectons uniquement les données nécessaires à votre accompagnement"
     }
   ];
 
-  return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
+  // Références pour animations scroll
+  const [heroRef, heroInView] = useInView(0.1);
+  const [tocRef, tocInView] = useInView(0.2);
+  const [contentRef, contentInView] = useInView(0.1);
+  const [ctaRef, ctaInView] = useInView(0.3);
 
-      {/* Contenu principal */}
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideInLeft {
+          from { opacity: 0; transform: translateX(-30px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-fadeUp { animation: fadeUp 0.8s ease forwards; }
+        .animate-fadeIn { animation: fadeIn 0.9s ease forwards; }
+        .animate-scaleIn { animation: scaleIn 0.6s ease forwards; }
+        .animate-slideLeft { animation: slideInLeft 0.7s ease forwards; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .toc-item {
+          transition: all 0.25s ease;
+        }
+        .toc-item:hover {
+          transform: translateX(4px);
+          background-color: #eff6ff;
+        }
+        .card-hover {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1);
+        }
+      `}</style>
+
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-r from-blue-800 to-cyan-700 text-white py-12 md:py-16">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <div className="flex justify-center mb-6">
-                <div className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
-                  <Shield className="w-12 h-12" />
-                </div>
+        {/* Hero Section avec image de fond */}
+        <section className="relative overflow-hidden bg-gradient-to-r from-blue-900 to-cyan-800 text-white">
+          <div className="absolute inset-0">
+            <img
+              src="/images/temoignages/confi.jpg"
+              alt="Charte de confidentialité MTHS"
+              className="w-full h-full object-cover opacity-25"
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-900/60 via-blue-800/40 to-transparent"></div>
+          </div>
+          
+          <div ref={heroRef} className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 text-center">
+            <div className={`transition-all duration-700 ${heroInView ? 'animate-fadeUp' : 'opacity-0'}`}>
+              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+                <span className="text-sm font-medium">Centre MTHS • Association Mariale d'Abili</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
                 Charte de Confidentialité
               </h1>
-              <p className="text-lg sm:text-xl text-blue-100 max-w-4xl mx-auto">
-                Centre MARIE REINE DE LA MISÉRICORDE D'ABILI • Association Mariale d'Abili (ASMAB)
+              <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto mb-2">
+                Centre MARIE REINE DE LA MISÉRICORDE D'ABILI
               </p>
-              <p className="text-base text-blue-200 mt-2">
+              <p className="text-base text-blue-200 mt-1">
                 Dernière mise à jour : 15 janvier 2024 • Conforme à la Loi Camerounaise
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-6">
-                <div className="flex items-center gap-2 text-sm bg-white/20 px-4 py-2 rounded-full">
-                  <Calendar className="w-4 h-4" />
-                  Fondé en 1979
-                </div>
-                <div className="flex items-center gap-2 text-sm bg-white/20 px-4 py-2 rounded-full">
-                  <CheckCircle className="w-4 h-4" />
-                  Récépissé N°030/RDA/J12/SAAJP
-                </div>
-                <div className="flex items-center gap-2 text-sm bg-white/20 px-4 py-2 rounded-full">
-                  <Lock className="w-4 h-4" />
-                  Confidentialité absolue
-                </div>
+                <div className="text-sm bg-white/20 px-4 py-2 rounded-full">Fondé en 1979</div>
+                <div className="text-sm bg-white/20 px-4 py-2 rounded-full">Récépissé N°030/RDA/J12/SAAJP</div>
+                <div className="text-sm bg-white/20 px-4 py-2 rounded-full">Confidentialité absolue</div>
               </div>
             </div>
+          </div>
+
+          {/* Vague décorative */}
+          <div className="absolute bottom-0 left-0 right-0">
+            <svg className="w-full h-12 text-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor" opacity=".1"></path>
+              <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" fill="currentColor" opacity=".3"></path>
+            </svg>
           </div>
         </section>
 
         {/* Main Content */}
         <section className="py-12 md:py-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            
             {/* Important Notice */}
-            <div className="mb-12 bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+            <div className={`mb-12 bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-500 p-6 rounded-r-lg transition-all duration-700 ${heroInView ? 'animate-fadeIn' : 'opacity-0'}`}>
               <div className="flex items-start gap-4">
-                <Heart className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                <div className="w-1 h-12 bg-blue-600 rounded-full mt-1"></div>
                 <div>
                   <h3 className="text-lg font-bold text-gray-800 mb-2">Notre engagement pastoral</h3>
                   <p className="text-gray-700">
@@ -157,10 +205,9 @@ function Confidentialite() {
 
             <div className="grid lg:grid-cols-4 gap-8">
               {/* Table of Contents - Left Sidebar */}
-              <div className="lg:col-span-1">
-                <div className="sticky top-24 bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-                  <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <Shield className="w-5 h-5" />
+              <div ref={tocRef} className="lg:col-span-1">
+                <div className={`sticky top-24 bg-white rounded-xl shadow-lg border border-gray-200 p-6 transition-all duration-700 ${tocInView ? 'animate-slideLeft' : 'opacity-0'}`}>
+                  <h3 className="text-lg font-bold text-gray-800 mb-4">
                     Sommaire
                   </h3>
                   <nav className="space-y-2">
@@ -168,11 +215,9 @@ function Confidentialite() {
                       <a
                         key={item.id}
                         href={`#${item.id}`}
-                        className="flex items-center gap-3 p-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all group"
+                        className="toc-item flex items-center gap-3 p-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
                       >
-                        <div className="text-gray-400 group-hover:text-blue-500">
-                          {item.icon}
-                        </div>
+                        <span className="text-blue-500 font-medium">{item.title.charAt(0)}</span>
                         <span className="font-medium text-sm">{item.title}</span>
                       </a>
                     ))}
@@ -183,21 +228,21 @@ function Confidentialite() {
                     <h4 className="font-bold text-gray-800 mb-3">Contact responsable</h4>
                     <div className="space-y-3">
                       <div className="flex items-start gap-2">
-                        <Mail className="w-4 h-4 text-blue-600 mt-1 flex-shrink-0" />
+                        <span className="text-blue-600 mt-1">📧</span>
                         <div>
                           <p className="font-medium text-sm text-gray-700">contact@mths-abili.org</p>
                           <p className="text-xs text-gray-500">Réponse sous 48h</p>
                         </div>
                       </div>
                       <div className="flex items-start gap-2">
-                        <Building className="w-4 h-4 text-blue-600 mt-1 flex-shrink-0" />
+                        <span className="text-blue-600 mt-1">📍</span>
                         <div>
                           <p className="font-medium text-sm text-gray-700">Centre MTHS Abili</p>
                           <p className="text-xs text-gray-500">27 km de Yaoundé, Cameroun</p>
                         </div>
                       </div>
                       <div className="flex items-start gap-2">
-                        <Users className="w-4 h-4 text-blue-600 mt-1 flex-shrink-0" />
+                        <span className="text-blue-600 mt-1">🏛️</span>
                         <div>
                           <p className="font-medium text-sm text-gray-700">Association Mariale d'Abili</p>
                           <p className="text-xs text-gray-500">Récépissé N°030/RDA/J12/SAAJP</p>
@@ -208,17 +253,17 @@ function Confidentialite() {
 
                   <a
                     href="/conditions"
-                    className="mt-6 w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all shadow-md"
+                    className="mt-6 w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all shadow-md text-center"
                   >
-                    <FileText className="w-5 h-5" />
                     Charte et Conditions
                   </a>
                 </div>
               </div>
 
               {/* Main Content - Right Column */}
-              <div className="lg:col-span-3">
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+              <div ref={contentRef} className="lg:col-span-3">
+                <div className={`bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-700 ${contentInView ? 'animate-fadeUp' : 'opacity-0'}`}>
+                  
                   {/* Introduction */}
                   <div className="p-6 md:p-8 border-b border-gray-200">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">Introduction</h2>
@@ -237,19 +282,15 @@ function Confidentialite() {
                     <div id="introduction" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("introduction")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-blue-100 p-2 rounded-lg">
-                            <Shield className="w-6 h-6 text-blue-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">1. Introduction</h3>
+                          <div className="bg-blue-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-blue-600">1</div>
+                          <h3 className="text-xl font-bold text-gray-800">Introduction</h3>
                         </div>
-                        {openSections.introduction ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.introduction ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.introduction || window.innerWidth > 768) && (
@@ -263,22 +304,10 @@ function Confidentialite() {
                           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                             <h4 className="font-bold text-gray-800 mb-2">Notre engagement</h4>
                             <ul className="space-y-2 text-sm">
-                              <li className="flex items-start gap-2">
-                                <Heart className="w-4 h-4 text-blue-500 mt-0.5" />
-                                <span>Confidentialité absolue de votre parcours spirituel</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <Cross className="w-4 h-4 text-blue-500 mt-0.5" />
-                                <span>Respect de la dignité humaine et de votre liberté</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <Shield className="w-4 h-4 text-blue-500 mt-0.5" />
-                                <span>Sécurité maximale de vos informations sensibles</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <Users className="w-4 h-4 text-blue-500 mt-0.5" />
-                                <span>Absence totale de jugement et de discrimination</span>
-                              </li>
+                              <li className="flex items-start gap-2">• Confidentialité absolue de votre parcours spirituel</li>
+                              <li className="flex items-start gap-2">• Respect de la dignité humaine et de votre liberté</li>
+                              <li className="flex items-start gap-2">• Sécurité maximale de vos informations sensibles</li>
+                              <li className="flex items-start gap-2">• Absence totale de jugement et de discrimination</li>
                             </ul>
                           </div>
                         </div>
@@ -289,19 +318,15 @@ function Confidentialite() {
                     <div id="collecte" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("collecte")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-purple-100 p-2 rounded-lg">
-                            <Eye className="w-6 h-6 text-purple-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">2. Données collectées</h3>
+                          <div className="bg-purple-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-purple-600">2</div>
+                          <h3 className="text-xl font-bold text-gray-800">Données collectées</h3>
                         </div>
-                        {openSections.collecte ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.collecte ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.collecte || window.innerWidth > 768) && (
@@ -348,19 +373,15 @@ function Confidentialite() {
                     <div id="utilisation" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("utilisation")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-green-100 p-2 rounded-lg">
-                            <Building className="w-6 h-6 text-green-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">3. Utilisation des données</h3>
+                          <div className="bg-green-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-green-600">3</div>
+                          <h3 className="text-xl font-bold text-gray-800">Utilisation des données</h3>
                         </div>
-                        {openSections.utilisation ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.utilisation ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.utilisation || window.innerWidth > 768) && (
@@ -371,9 +392,7 @@ function Confidentialite() {
                           
                           <div className="space-y-3">
                             <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-                              <div className="bg-blue-100 p-2 rounded">
-                                <span className="font-bold text-blue-700">1</span>
-                              </div>
+                              <div className="bg-blue-100 p-2 rounded w-8 h-8 flex items-center justify-center font-bold text-blue-700">1</div>
                               <div>
                                 <h4 className="font-bold text-blue-800">Accompagnement spirituel</h4>
                                 <p className="text-sm text-blue-700">
@@ -384,9 +403,7 @@ function Confidentialite() {
                             </div>
                             
                             <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-                              <div className="bg-green-100 p-2 rounded">
-                                <span className="font-bold text-green-700">2</span>
-                              </div>
+                              <div className="bg-green-100 p-2 rounded w-8 h-8 flex items-center justify-center font-bold text-green-700">2</div>
                               <div>
                                 <h4 className="font-bold text-green-800">Sécurité et prévention</h4>
                                 <p className="text-sm text-green-700">
@@ -397,9 +414,7 @@ function Confidentialite() {
                             </div>
                             
                             <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
-                              <div className="bg-purple-100 p-2 rounded">
-                                <span className="font-bold text-purple-700">3</span>
-                              </div>
+                              <div className="bg-purple-100 p-2 rounded w-8 h-8 flex items-center justify-center font-bold text-purple-700">3</div>
                               <div>
                                 <h4 className="font-bold text-purple-800">Amélioration des services</h4>
                                 <p className="text-sm text-purple-700">
@@ -417,19 +432,15 @@ function Confidentialite() {
                     <div id="partage" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("partage")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-amber-100 p-2 rounded-lg">
-                            <Mail className="w-6 h-6 text-amber-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">4. Partage des données</h3>
+                          <div className="bg-amber-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-amber-600">4</div>
+                          <h3 className="text-xl font-bold text-gray-800">Partage des données</h3>
                         </div>
-                        {openSections.partage ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.partage ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.partage || window.innerWidth > 768) && (
@@ -443,18 +454,9 @@ function Confidentialite() {
                             <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                               <h4 className="font-bold text-gray-800 mb-2">Partage avec consentement</h4>
                               <ul className="space-y-2 text-sm">
-                                <li className="flex items-center gap-2">
-                                  <span className="font-semibold">• Équipe thérapeutique :</span>
-                                  <span>Thérapeutes et accompagnants du Centre (secret professionnel)</span>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <span className="font-semibold">• Référents spirituels :</span>
-                                  <span>Prêtres accompagnateurs (avec votre accord)</span>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <span className="font-semibold">• Médecins partenaires :</span>
-                                  <span>Dans le cadre de la complémentarité médecine moderne/MTHS</span>
-                                </li>
+                                <li className="flex items-center gap-2"><span className="font-semibold">• Équipe thérapeutique :</span> Thérapeutes et accompagnants du Centre (secret professionnel)</li>
+                                <li className="flex items-center gap-2"><span className="font-semibold">• Référents spirituels :</span> Prêtres accompagnateurs (avec votre accord)</li>
+                                <li className="flex items-center gap-2"><span className="font-semibold">• Médecins partenaires :</span> Dans le cadre de la complémentarité médecine moderne/MTHS</li>
                               </ul>
                             </div>
                             
@@ -484,19 +486,15 @@ function Confidentialite() {
                     <div id="droits" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("droits")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-emerald-100 p-2 rounded-lg">
-                            <CheckCircle className="w-6 h-6 text-emerald-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">5. Vos droits</h3>
+                          <div className="bg-emerald-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-emerald-600">5</div>
+                          <h3 className="text-xl font-bold text-gray-800">Vos droits</h3>
                         </div>
-                        {openSections.droits ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.droits ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.droits || window.innerWidth > 768) && (
@@ -508,9 +506,9 @@ function Confidentialite() {
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {vosDroits.map((droit, index) => (
-                              <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
+                              <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 card-hover">
                                 <h4 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
-                                  <CheckCircle className="w-5 h-5 text-emerald-500" />
+                                  <span className="text-emerald-500 text-lg">✓</span>
                                   {droit.droit}
                                 </h4>
                                 <p className="text-sm text-gray-600 mb-2">{droit.description}</p>
@@ -532,8 +530,7 @@ function Confidentialite() {
                                 href="mailto:contact@mths-abili.org"
                                 className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                               >
-                                <Mail className="w-4 h-4" />
-                                Envoyer un email
+                                📧 Envoyer un email
                               </a>
                               <a
                                 href="/contact"
@@ -551,19 +548,15 @@ function Confidentialite() {
                     <div id="securite" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("securite")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-indigo-100 p-2 rounded-lg">
-                            <Lock className="w-6 h-6 text-indigo-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">6. Sécurité des données</h3>
+                          <div className="bg-indigo-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-indigo-600">6</div>
+                          <h3 className="text-xl font-bold text-gray-800">Sécurité des données</h3>
                         </div>
-                        {openSections.securite ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.securite ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.securite || window.innerWidth > 768) && (
@@ -577,44 +570,20 @@ function Confidentialite() {
                             <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
                               <h4 className="font-bold text-indigo-800 mb-2">Mesures physiques</h4>
                               <ul className="space-y-2 text-sm">
-                                <li className="flex items-center gap-2">
-                                  <Lock className="w-4 h-4 text-indigo-500" />
-                                  Archives sécurisées sous clé
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <Lock className="w-4 h-4 text-indigo-500" />
-                                  Accès contrôlé aux locaux
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <Lock className="w-4 h-4 text-indigo-500" />
-                                  Destruction sécurisée des documents
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <Lock className="w-4 h-4 text-indigo-500" />
-                                  Pas de discussion hors cadre professionnel
-                                </li>
+                                <li className="flex items-center gap-2">🔒 Archives sécurisées sous clé</li>
+                                <li className="flex items-center gap-2">🔒 Accès contrôlé aux locaux</li>
+                                <li className="flex items-center gap-2">🔒 Destruction sécurisée des documents</li>
+                                <li className="flex items-center gap-2">🔒 Pas de discussion hors cadre professionnel</li>
                               </ul>
                             </div>
                             
                             <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                               <h4 className="font-bold text-blue-800 mb-2">Mesures organisationnelles</h4>
                               <ul className="space-y-2 text-sm">
-                                <li className="flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-blue-500" />
-                                  Formation au secret professionnel
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-blue-500" />
-                                  Accès restreint aux dossiers
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-blue-500" />
-                                  Procédures de sécurité strictes
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-blue-500" />
-                                  Engagement écrit de confidentialité
-                                </li>
+                                <li className="flex items-center gap-2">✓ Formation au secret professionnel</li>
+                                <li className="flex items-center gap-2">✓ Accès restreint aux dossiers</li>
+                                <li className="flex items-center gap-2">✓ Procédures de sécurité strictes</li>
+                                <li className="flex items-center gap-2">✓ Engagement écrit de confidentialité</li>
                               </ul>
                             </div>
                           </div>
@@ -635,19 +604,15 @@ function Confidentialite() {
                     <div id="conservation" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("conservation")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-cyan-100 p-2 rounded-lg">
-                            <Calendar className="w-6 h-6 text-cyan-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">7. Conservation des données</h3>
+                          <div className="bg-cyan-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-cyan-600">7</div>
+                          <h3 className="text-xl font-bold text-gray-800">Conservation des données</h3>
                         </div>
-                        {openSections.conservation ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.conservation ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.conservation || window.innerWidth > 768) && (
@@ -707,19 +672,15 @@ function Confidentialite() {
                     <div id="engagement" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("engagement")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-pink-100 p-2 rounded-lg">
-                            <Heart className="w-6 h-6 text-pink-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">8. Notre engagement éthique</h3>
+                          <div className="bg-pink-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-pink-600">8</div>
+                          <h3 className="text-xl font-bold text-gray-800">Notre engagement éthique</h3>
                         </div>
-                        {openSections.engagement ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.engagement ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.engagement || window.innerWidth > 768) && (
@@ -733,7 +694,7 @@ function Confidentialite() {
                             {principesConfidentialite.map((principe, index) => (
                               <div key={index} className="p-4 rounded-lg border border-blue-200 bg-blue-50">
                                 <div className="flex items-start gap-3 mb-2">
-                                  <span className="text-2xl">{principe.icon}</span>
+                                  <span className="text-2xl">🛡️</span>
                                   <div>
                                     <h4 className="font-bold text-blue-800">{principe.principe}</h4>
                                     <p className="text-sm text-blue-700 mt-1">{principe.description}</p>
@@ -749,22 +710,10 @@ function Confidentialite() {
                               Chaque thérapeute et collaborateur signe un engagement de confidentialité qui stipule :
                             </p>
                             <ul className="space-y-2 text-sm text-blue-700">
-                              <li className="flex items-start gap-2">
-                                <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                                <span>Secret professionnel absolu jusqu'à la mort</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                                <span>Absence de jugement et respect inconditionnel</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                                <span>Protection maximale des données confiées</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                                <span>Non-utilisation des données à des fins personnelles</span>
-                              </li>
+                              <li className="flex items-start gap-2">✓ Secret professionnel absolu jusqu'à la mort</li>
+                              <li className="flex items-start gap-2">✓ Absence de jugement et respect inconditionnel</li>
+                              <li className="flex items-start gap-2">✓ Protection maximale des données confiées</li>
+                              <li className="flex items-start gap-2">✓ Non-utilisation des données à des fins personnelles</li>
                             </ul>
                           </div>
                         </div>
@@ -802,9 +751,9 @@ function Confidentialite() {
                 </div>
 
                 {/* Accept Statement */}
-                <div className="mt-8 text-center">
+                <div ref={ctaRef} className={`mt-8 text-center transition-all duration-1000 ${ctaInView ? 'animate-scaleIn' : 'opacity-0'}`}>
                   <div className="inline-flex items-center gap-4 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200">
-                    <Shield className="w-8 h-8 text-green-600" />
+                    <span className="text-3xl">🛡️</span>
                     <div className="text-left">
                       <p className="font-bold text-gray-800">
                         « Votre confiance est sacrée. Votre parole reste ici. »
@@ -821,22 +770,6 @@ function Confidentialite() {
           </div>
         </section>
       </main>
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-      `}</style>
     </div>
   );
 }

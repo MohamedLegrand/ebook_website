@@ -1,19 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Compass,
-  Leaf,
-  Droplets,
-  Shield,
-  Users,
-  Target,
-  Heart,
-  Sparkles,
-  ArrowRight,
-  ChevronDown,
-  Check,
-  Star,
-  Quote,
-} from "lucide-react";
 
 /* ─── Hook: observe si l'élément est visible (pour animations) ─── */
 function useInView(threshold = 0.15) {
@@ -72,7 +57,6 @@ const Piliers = () => {
       number: "01",
       title: "Diagnostic spirituel & psychosomatique",
       subtitle: "Voir au-delà du symptôme",
-      icon: <Compass className="w-7 h-7" />,
       color: "#1d4ed8",
       colorLight: "#eff6ff",
       colorMid: "#bfdbfe",
@@ -92,7 +76,6 @@ const Piliers = () => {
       number: "02",
       title: "Naturopathie & pharmacopée africaine",
       subtitle: "La sagesse de la terre au service de l'âme",
-      icon: <Leaf className="w-7 h-7" />,
       color: "#15803d",
       colorLight: "#f0fdf4",
       colorMid: "#bbf7d0",
@@ -112,7 +95,6 @@ const Piliers = () => {
       number: "03",
       title: "Rituels de purification — Rite SO'O inculturé",
       subtitle: "Purifier pour libérer",
-      icon: <Droplets className="w-7 h-7" />,
       color: "#0e7490",
       colorLight: "#ecfeff",
       colorMid: "#a5f3fc",
@@ -132,7 +114,6 @@ const Piliers = () => {
       number: "04",
       title: "Délivrance & désenvoûtement",
       subtitle: "Briser les chaînes de l'invisible",
-      icon: <Shield className="w-7 h-7" />,
       color: "#7e22ce",
       colorLight: "#faf5ff",
       colorMid: "#e9d5ff",
@@ -152,7 +133,6 @@ const Piliers = () => {
       number: "05",
       title: "Rééducation morale & réinsertion sociale",
       subtitle: "Renaître parmi les siens",
-      icon: <Users className="w-7 h-7" />,
       color: "#b45309",
       colorLight: "#fffbeb",
       colorMid: "#fde68a",
@@ -170,11 +150,36 @@ const Piliers = () => {
   ];
 
   const steps = [
-    { id: 1, title: "Identification", short: "Nommer la souffrance", icon: <Target className="w-5 h-5" />, desc: "Reconnaître et nommer la souffrance spirituelle avec la personne, sans tabou ni jugement, dans un espace de confiance totale." },
-    { id: 2, title: "Maîtrise", short: "Stabiliser la situation", icon: <Shield className="w-5 h-5" />, desc: "Stabiliser la situation par des prières, des soins adaptés et une mise à distance des sources de perturbation." },
-    { id: 3, title: "Confession", short: "Libérer par la parole", icon: <Heart className="w-5 h-5" />, desc: "Libération intérieure par la parole, le pardon et la réconciliation — avec soi-même, avec les autres, avec Dieu." },
-    { id: 4, title: "Anéantissement", short: "Briser les liens", icon: <Sparkles className="w-5 h-5" />, desc: "Rupture définitive et solennelle avec les liens du mal, par les sacrements, les rites de purification et la prière de délivrance." },
-    { id: 5, title: "Resocialisation", short: "Retrouver sa place", icon: <Users className="w-5 h-5" />, desc: "Réintégration progressive dans la famille, la communauté et la vie active, avec un suivi bienveillant dans la durée." },
+    { 
+      id: 1, 
+      title: "Identification", 
+      short: "Nommer la souffrance", 
+      desc: "Reconnaître et nommer la souffrance spirituelle avec la personne, sans tabou ni jugement, dans un espace de confiance totale." 
+    },
+    { 
+      id: 2, 
+      title: "Maîtrise", 
+      short: "Stabiliser la situation", 
+      desc: "Stabiliser la situation par des prières, des soins adaptés et une mise à distance des sources de perturbation." 
+    },
+    { 
+      id: 3, 
+      title: "Confession", 
+      short: "Libérer par la parole", 
+      desc: "Libération intérieure par la parole, le pardon et la réconciliation — avec soi-même, avec les autres, avec Dieu." 
+    },
+    { 
+      id: 4, 
+      title: "Anéantissement", 
+      short: "Briser les liens", 
+      desc: "Rupture définitive et solennelle avec les liens du mal, par les sacrements, les rites de purification et la prière de délivrance." 
+    },
+    { 
+      id: 5, 
+      title: "Resocialisation", 
+      short: "Retrouver sa place", 
+      desc: "Réintégration progressive dans la famille, la communauté et la vie active, avec un suivi bienveillant dans la durée." 
+    },
   ];
 
   const stats = [
@@ -234,19 +239,26 @@ const Piliers = () => {
         .card-hover:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0,0,0,0.1); }
         
         .stat-divider { background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3), transparent); }
-        .icon-hover { transition: transform 0.3s ease; }
-        .icon-hover:hover { transform: rotate(8deg) scale(1.1); }
       `}</style>
 
-      {/* HERO SECTION */}
+      {/* HERO SECTION AVEC IMAGE DE FOND */}
       <section
         ref={heroRef}
         className="relative bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 text-white overflow-hidden"
         style={{ minHeight: "88vh" }}
       >
+        {/* Image de fond */}
+        <div className="absolute inset-0">
+          <img
+            src="/images/piliers/piliers.jpg"
+            alt="Piliers de la MTHS"
+            className="w-full h-full object-cover opacity-20"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+        </div>
+
         <div className="hero-pattern absolute inset-0" />
 
-        {/* Decorative circles */}
         <div className="absolute top-20 right-16 w-80 h-80 bg-blue-700/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
         <div className="absolute -bottom-20 left-10 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl rotate-anim" />
         <div className="absolute top-40 left-1/3 w-64 h-64 bg-indigo-600/10 rounded-full blur-2xl float-anim" />
@@ -256,7 +268,6 @@ const Piliers = () => {
           {/* Left Content */}
           <div className={`flex-1 max-w-2xl ${heroInView ? "anim-up" : "opacity-0"}`}>
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-blue-200 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-8 backdrop-blur-sm hover:bg-white/20 transition-colors">
-              <Star className="w-3.5 h-3.5 text-yellow-400 bounce-soft" />
               Médecine Traditionnelle des Handicapés Spirituels
             </div>
 
@@ -276,7 +287,6 @@ const Piliers = () => {
               <a href="#piliers"
                 className="inline-flex items-center gap-2 bg-white text-blue-900 px-7 py-3.5 rounded-xl font-bold text-sm hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl active:scale-95">
                 Découvrir les piliers
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
               <a href="#protocole"
                 className="inline-flex items-center gap-2 border-2 border-white/30 text-white px-7 py-3.5 rounded-xl font-semibold text-sm hover:bg-white/10 transition-all active:scale-95">
@@ -299,12 +309,7 @@ const Piliers = () => {
                   className="w-full flex items-center gap-4 bg-white/8 border border-white/15 rounded-2xl px-5 py-4 text-left hover:bg-white/15 hover:border-white/30 transition-all group backdrop-blur-sm"
                 >
                   <span className="text-xs font-bold text-blue-400 w-6 flex-shrink-0">{p.number}</span>
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110" 
-                       style={{ backgroundColor: p.color + "33", color: "#93c5fd" }}>
-                    {p.icon}
-                  </div>
                   <span className="text-sm font-semibold text-white/90 leading-snug">{p.title}</span>
-                  <ArrowRight className="w-4 h-4 text-white/30 group-hover:text-white/70 ml-auto flex-shrink-0 transition-all group-hover:translate-x-1" />
                 </button>
               ))}
             </div>
@@ -314,7 +319,6 @@ const Piliers = () => {
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40 animate-bounce">
           <span className="text-xs tracking-widest uppercase">Défiler</span>
-          <ChevronDown className="w-5 h-5" />
         </div>
       </section>
 
@@ -389,10 +393,6 @@ const Piliers = () => {
                 className={`flex-1 flex flex-col items-center gap-2 px-4 py-4 rounded-xl font-semibold text-sm transition-all duration-300 ${activePillar === i ? "text-white shadow-md scale-105" : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"}`}
                 style={activePillar === i ? { backgroundColor: p.color } : {}}
               >
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${activePillar === i ? "bg-white/20 rotate-3" : "bg-slate-100"}`}
-                  style={activePillar === i ? {} : { color: p.color }}>
-                  {p.icon}
-                </div>
                 <span className="text-xs text-center leading-snug">{p.number} — {p.title.split("&")[0].trim()}</span>
               </button>
             ))}
@@ -409,12 +409,7 @@ const Piliers = () => {
                     {ap.number}
                   </span>
                   <div className="flex items-center gap-3 -mt-6 mb-6">
-                    <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-white backdrop-blur-sm icon-hover">
-                      {ap.icon}
-                    </div>
-                    <div>
-                      <div className="text-white/60 text-xs font-semibold uppercase tracking-wide">Pilier {ap.number}</div>
-                    </div>
+                    <div className="text-white/60 text-xs font-semibold uppercase tracking-wide">Pilier {ap.number}</div>
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-3">
                     {ap.title}
@@ -440,19 +435,13 @@ const Piliers = () => {
                 </p>
 
                 <div className="bg-slate-50 rounded-2xl p-6 hover:shadow-md transition-shadow">
-                  <h4 className="font-bold text-slate-800 text-sm uppercase tracking-wide mb-4 flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: ap.color }}>
-                      <Check className="w-3 h-3 text-white" />
-                    </div>
+                  <h4 className="font-bold text-slate-800 text-sm uppercase tracking-wide mb-4">
                     Ce que ce pilier apporte
                   </h4>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {ap.benefits.map((b, i) => (
                       <li key={i} className="flex items-start gap-3 text-sm text-slate-700 group">
-                        <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 transition-transform group-hover:scale-110" style={{ backgroundColor: ap.color + "1a" }}>
-                          <Check className="w-3 h-3" style={{ color: ap.color }} />
-                        </div>
-                        {b}
+                        <span className="text-slate-700">{b}</span>
                       </li>
                     ))}
                   </ul>
@@ -484,9 +473,6 @@ const Piliers = () => {
                 className={`card-hover bg-white rounded-2xl p-5 text-left border-2 transition-all ${activePillar === i ? "shadow-lg" : "border-slate-200 hover:border-slate-300"}`}
                 style={activePillar === i ? { borderColor: p.color } : {}}
               >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 icon-hover" style={{ backgroundColor: p.colorLight }}>
-                  <div style={{ color: p.color }}>{p.icon}</div>
-                </div>
                 <div className="text-xs font-bold uppercase tracking-wide mb-1.5" style={{ color: p.color }}>{p.number}</div>
                 <h4 className="text-sm font-bold text-slate-800 leading-snug">{p.title}</h4>
                 <p className="text-xs text-slate-500 mt-1.5 italic">{p.subtitle}</p>
@@ -522,7 +508,6 @@ const Piliers = () => {
                       <div className="text-center">
                         <div className="text-2xl font-bold">{step.id}</div>
                         <div className="w-6 h-px bg-blue-400 mx-auto my-1" />
-                        <div className="text-blue-300 transition-transform group-hover:scale-110" style={{ transform: "scale(0.85)" }}>{step.icon}</div>
                       </div>
                     </div>
 
@@ -535,7 +520,7 @@ const Piliers = () => {
                           <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide">{step.short}</p>
                         </div>
                         {i < steps.length - 1 && (
-                          <ArrowRight className="w-4 h-4 text-slate-300 mt-1 flex-shrink-0 rotate-90 sm:rotate-0 group-hover:text-blue-400 transition-colors group-hover:translate-x-1" />
+                          <div className="w-4 h-4 text-slate-300 mt-1 flex-shrink-0 rotate-90 sm:rotate-0 group-hover:text-blue-400 transition-colors group-hover:translate-x-1" />
                         )}
                       </div>
                       <p className="text-slate-600 text-sm sm:text-base leading-relaxed mt-3">
@@ -557,7 +542,6 @@ const Piliers = () => {
         <div className="absolute bottom-10 right-20 w-80 h-80 bg-indigo-700/20 rounded-full blur-3xl rotate-anim" />
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <Quote className="w-12 h-12 text-blue-400/50 mx-auto mb-8 float-anim" />
           <blockquote className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-snug text-white mb-8 italic">
             "La MTHS ne soigne pas des maladies. Elle restaure des personnes."
           </blockquote>
@@ -590,7 +574,7 @@ const Piliers = () => {
                   {["Confidentialité et respect absolu de votre vie privée","Accompagnement individuel adapté à votre situation","Thérapeutes formés et certifiés par le Centre MTHS"].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-slate-700 group">
                       <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110">
-                        <Check className="w-3 h-3 text-white" />
+                        {/* Check supprimé */}
                       </div>
                       {item}
                     </li>
@@ -602,12 +586,10 @@ const Piliers = () => {
                 <a href="/contact"
                   className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold text-base transition-all shadow-lg hover:shadow-xl active:scale-[0.97] flex items-center justify-center gap-2 group">
                   Demander un accompagnement
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </a>
                 <a href="/publications"
                   className="border-2 border-blue-200 text-blue-700 hover:bg-blue-50 px-8 py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 group">
                   Consulter nos publications
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </a>
               </div>
             </div>

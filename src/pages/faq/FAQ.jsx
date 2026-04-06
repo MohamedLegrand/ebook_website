@@ -1,5 +1,23 @@
-import React, { useState } from "react";
-import { ChevronDown, ChevronUp, BookOpen, Cross, Heart, Shield, Mail, Clock, Users, MapPin, Phone, AlertCircle } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+
+// Hook personnalisé pour les animations au scroll
+function useInView(threshold = 0.15) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setInView(true);
+      },
+      { threshold }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [threshold]);
+
+  return [ref, inView];
+}
 
 function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -11,7 +29,6 @@ function FAQ() {
   const faqCategories = [
     {
       title: "Comprendre la MTHS",
-      icon: <Heart className="w-5 h-5" />,
       items: [
         {
           question: "Qu'est-ce que la Médecine Traditionnelle des Handicapés Spirituels (MTHS) ?",
@@ -33,7 +50,6 @@ function FAQ() {
     },
     {
       title: "Pathologies & Accompagnement",
-      icon: <AlertCircle className="w-5 h-5" />,
       items: [
         {
           question: "Quelles pathologies la MTHS prend-elle en charge ?",
@@ -55,7 +71,6 @@ function FAQ() {
     },
     {
       title: "Rite SO'O & Inculturation",
-      icon: <Cross className="w-5 h-5" />,
       items: [
         {
           question: "Qu'est-ce que le rite SO'O ?",
@@ -73,7 +88,6 @@ function FAQ() {
     },
     {
       title: "Boutique & Produits",
-      icon: <BookOpen className="w-5 h-5" />,
       items: [
         {
           question: "Quels produits propose la Boutique du Centre ?",
@@ -91,7 +105,6 @@ function FAQ() {
     },
     {
       title: "Rendez-vous & Contact",
-      icon: <MapPin className="w-5 h-5" />,
       items: [
         {
           question: "Comment prendre rendez-vous au Centre ?",
@@ -113,7 +126,6 @@ function FAQ() {
     },
     {
       title: "Confidentialité & Éthique",
-      icon: <Shield className="w-5 h-5" />,
       items: [
         {
           question: "Mes informations personnelles sont-elles protégées ?",
@@ -131,7 +143,6 @@ function FAQ() {
     },
     {
       title: "Témoignages & Résultats",
-      icon: <Users className="w-5 h-5" />,
       items: [
         {
           question: "Puis-je consulter des témoignages de personnes accompagnées ?",
@@ -149,119 +160,117 @@ function FAQ() {
     }
   ];
 
+  // Références pour animations scroll
+  const [heroRef, heroInView] = useInView(0.1);
+  const [statsRef, statsInView] = useInView(0.2);
+  const [faqRef, faqInView] = useInView(0.1);
+  const [ctaRef, ctaInView] = useInView(0.3);
+
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Contenu principal */}
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideInRight {
+          from { opacity: 0; transform: translateX(40px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-fadeUp { animation: fadeUp 0.8s ease forwards; }
+        .animate-fadeIn { animation: fadeIn 0.9s ease forwards; }
+        .animate-scaleIn { animation: scaleIn 0.6s ease forwards; }
+        .animate-slideRight { animation: slideInRight 0.7s ease forwards; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .card-hover {
+          transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.4s ease;
+        }
+        .card-hover:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 25px 40px -12px rgba(0,0,0,0.15);
+        }
+        .stat-card {
+          transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 25px -12px rgba(59,130,246,0.2);
+        }
+        .category-card {
+          transition: all 0.3s ease;
+        }
+        .category-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 25px 35px -12px rgba(0,0,0,0.12);
+        }
+      `}</style>
+
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-r from-blue-800 via-blue-700 to-cyan-700 text-white overflow-hidden">
-          {/* Fond décoratif */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-10 left-10 w-64 h-64 rounded-full bg-cyan-300 blur-3xl"></div>
-            <div className="absolute bottom-10 right-10 w-80 h-80 rounded-full bg-blue-300 blur-3xl"></div>
+        {/* Hero Section avec image de fond - centrée */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-cyan-800 text-white">
+          <div className="absolute inset-0">
+            <img
+              src="/images/temoignages/faq.jpg"
+              alt="FAQ MTHS"
+              className="w-full h-full object-cover opacity-25"
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-900/60 via-blue-800/40 to-cyan-800/30"></div>
           </div>
           
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 lg:py-24">
-            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-              {/* Texte et recherche */}
-              <div className="lg:w-1/2">
-                <div className="text-center lg:text-left">
-                  <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-                    <Heart className="w-4 h-4" />
-                    <span className="text-sm font-medium">Centre d'aide MTHS</span>
-                  </div>
-                  
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 leading-tight">
-                    Questions
-                    <span className="block text-cyan-200">Fréquentes</span>
-                  </h1>
-                  
-                  <p className="text-lg sm:text-xl text-blue-100 mb-4 max-w-2xl lg:max-w-none">
-                    Trouvez des réponses sur la Médecine Traditionnelle des Handicapés Spirituels
-                  </p>
-                  
-                  <p className="text-base text-blue-200 mb-8 italic">
-                    « Au Centre, nous voyons une personne qui souffre, pas un problème à condamner. »
-                  </p>
-                  
-                  {/* Search Bar améliorée */}
-                  <div className="max-w-xl mx-auto lg:mx-0">
-                    <div className="relative group">
-                      <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-blue-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          placeholder="Recherchez une question sur la MTHS..."
-                          className="w-full px-6 py-5 rounded-xl text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-white/50 shadow-2xl text-lg"
-                        />
-                        <button className="absolute right-3 top-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg">
-                          Rechercher
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mt-4 justify-center lg:justify-start">
-                      <span className="text-sm text-blue-200 font-medium">Recherches populaires :</span>
-                      <span className="text-sm text-blue-100 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 cursor-pointer">envoûtement</span>
-                      <span className="text-sm text-blue-100 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 cursor-pointer">rite SO'O</span>
-                      <span className="text-sm text-blue-100 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 cursor-pointer">parcours</span>
-                      <span className="text-sm text-blue-100 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 cursor-pointer">délivrance</span>
-                    </div>
+          <div ref={heroRef} className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24 text-center">
+            <div className={`transition-all duration-700 ${heroInView ? 'animate-fadeUp' : 'opacity-0'}`}>
+              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+                <span className="text-sm font-medium">Centre d'aide MTHS</span>
+              </div>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 leading-tight">
+                Questions
+                <span className="block text-cyan-200">Fréquentes</span>
+              </h1>
+              <p className="text-lg sm:text-xl text-blue-100 mb-4 max-w-2xl mx-auto">
+                Trouvez des réponses sur la Médecine Traditionnelle des Handicapés Spirituels
+              </p>
+              <p className="text-base text-blue-200 mb-8 italic max-w-xl mx-auto">
+                « Au Centre, nous voyons une personne qui souffre, pas un problème à condamner. »
+              </p>
+              
+              {/* Barre de recherche */}
+              <div className="max-w-xl mx-auto">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-blue-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Recherchez une question sur la MTHS..."
+                      className="w-full px-6 py-4 rounded-xl text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-white/50 shadow-2xl text-base"
+                    />
+                    <button className="absolute right-2 top-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:from-cyan-600 hover:to-blue-700 transition-all shadow-md">
+                      Rechercher
+                    </button>
                   </div>
                 </div>
-              </div>
-
-              {/* Image */}
-              <div className="lg:w-1/2 mt-8 lg:mt-0">
-                <div className="relative mx-auto max-w-md lg:max-w-full">
-                  <div className="relative group">
-                    <div className="absolute -inset-4 bg-gradient-to-r from-cyan-400/30 to-blue-500/30 rounded-3xl blur-xl group-hover:blur-2xl transition duration-500"></div>
-                    
-                    <div className="relative overflow-hidden rounded-2xl shadow-2xl border-4 border-white/20 transform lg:-rotate-1 group-hover:rotate-0 transition-transform duration-500">
-                      <img
-                        src="/images/centre-abili.jpg"
-                        alt="Centre MARIE REINE DE LA MISÉRICORDE D'ABILI"
-                        className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80";
-                        }}
-                      />
-                      
-                      <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 via-transparent to-transparent"></div>
-                      
-                      <div className="absolute top-6 right-6 bg-white text-blue-600 px-4 py-3 rounded-xl shadow-2xl transform rotate-3">
-                        <div className="flex items-center gap-2">
-                          <Cross className="w-4 h-4" />
-                          <span className="font-bold text-sm">Depuis 1979</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="absolute -bottom-6 -left-6 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-4 rounded-xl shadow-2xl hidden lg:block">
-                      <div className="text-center">
-                        <div className="text-2xl font-bold">45+</div>
-                        <div className="text-xs font-medium">Ans d'expérience</div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-6 flex items-center justify-center gap-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      <span className="text-blue-100">Abili, Cameroun</span>
-                    </div>
-                    <div className="h-4 w-px bg-white/30"></div>
-                    <div className="flex items-center gap-2">
-                      <Phone className="w-4 h-4" />
-                      <span className="text-blue-100">Accompagnement disponible</span>
-                    </div>
-                  </div>
+                <div className="flex flex-wrap gap-2 mt-4 justify-center">
+                  <span className="text-sm text-blue-200 font-medium">Recherches populaires :</span>
+                  <span className="text-sm text-blue-100 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 cursor-pointer transition">envoûtement</span>
+                  <span className="text-sm text-blue-100 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 cursor-pointer transition">rite SO'O</span>
+                  <span className="text-sm text-blue-100 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 cursor-pointer transition">parcours</span>
+                  <span className="text-sm text-blue-100 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 cursor-pointer transition">délivrance</span>
                 </div>
               </div>
             </div>
           </div>
-          
-          {/* Vague décorative en bas */}
+
+          {/* Vague décorative */}
           <div className="absolute bottom-0 left-0 right-0">
             <svg className="w-full h-12 text-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
               <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor" opacity=".1"></path>
@@ -270,37 +279,34 @@ function FAQ() {
           </div>
         </section>
 
-        {/* FAQ Content */}
+        {/* Contenu FAQ */}
         <section className="py-12 md:py-16 lg:py-20">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-              <div className="bg-white rounded-2xl p-6 text-center shadow-xl border border-blue-100 transform hover:-translate-y-1 transition-transform duration-300">
-                <div className="text-3xl font-bold text-blue-600 mb-2">1979</div>
-                <div className="text-gray-600 font-medium">Année de révélation</div>
-                <div className="mt-2 text-sm text-gray-500">12 mai à Abili</div>
-              </div>
-              <div className="bg-white rounded-2xl p-6 text-center shadow-xl border border-blue-100 transform hover:-translate-y-1 transition-transform duration-300">
-                <div className="text-3xl font-bold text-blue-600 mb-2">5</div>
-                <div className="text-gray-600 font-medium">Piliers thérapeutiques</div>
-                <div className="mt-2 text-sm text-gray-500">Approche holistique</div>
-              </div>
-              <div className="bg-white rounded-2xl p-6 text-center shadow-xl border border-blue-100 transform hover:-translate-y-1 transition-transform duration-300">
-                <div className="text-3xl font-bold text-blue-600 mb-2">6</div>
-                <div className="text-gray-600 font-medium">Étapes d'accompagnement</div>
-                <div className="mt-2 text-sm text-gray-500">Parcours structuré</div>
-              </div>
-              <div className="bg-white rounded-2xl p-6 text-center shadow-xl border border-blue-100 transform hover:-translate-y-1 transition-transform duration-300">
-                <div className="text-3xl font-bold text-blue-600 mb-2">100%</div>
-                <div className="text-gray-600 font-medium">Confidentialité</div>
-                <div className="mt-2 text-sm text-gray-500">Respect et dignité</div>
-              </div>
+            
+            {/* Statistiques rapides */}
+            <div ref={statsRef} className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+              {[
+                { value: "1979", label: "Année de révélation", sub: "12 mai à Abili" },
+                { value: "5", label: "Piliers thérapeutiques", sub: "Approche holistique" },
+                { value: "6", label: "Étapes d'accompagnement", sub: "Parcours structuré" },
+                { value: "100%", label: "Confidentialité", sub: "Respect et dignité" }
+              ].map((stat, idx) => (
+                <div 
+                  key={idx}
+                  className={`stat-card bg-white rounded-2xl p-6 text-center shadow-lg border border-blue-100 transition-all duration-700 ${statsInView ? 'animate-scaleIn' : 'opacity-0'}`}
+                  style={{ animationDelay: `${idx * 0.1}s` }}
+                >
+                  <div className="text-3xl font-bold text-blue-700 mb-2">{stat.value}</div>
+                  <div className="text-gray-700 font-medium">{stat.label}</div>
+                  <div className="mt-1 text-sm text-gray-500">{stat.sub}</div>
+                </div>
+              ))}
             </div>
 
             {/* Message pastoral */}
-            <div className="mb-12 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-8 border-l-4 border-blue-600">
+            <div className="mb-12 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-8 border-l-4 border-blue-600 shadow-md">
               <div className="flex items-start gap-4">
-                <Heart className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
+                <div className="w-1 h-12 bg-blue-600 rounded-full mt-2"></div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">Notre engagement pastoral</h3>
                   <p className="text-gray-700 leading-relaxed">
@@ -310,51 +316,53 @@ function FAQ() {
               </div>
             </div>
 
-            {/* FAQ Categories */}
-            <div className="space-y-8">
-              {faqCategories.map((category, categoryIndex) => (
-                <div key={categoryIndex} className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden transform hover:shadow-2xl transition-shadow duration-300">
-                  {/* Category Header */}
+            {/* Catégories FAQ */}
+            <div ref={faqRef} className="space-y-8">
+              {faqCategories.map((category, catIdx) => (
+                <div 
+                  key={catIdx}
+                  className={`category-card bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden transition-all duration-700 ${faqInView ? 'animate-fadeUp' : 'opacity-0'}`}
+                  style={{ animationDelay: `${catIdx * 0.1}s` }}
+                >
+                  {/* En-tête de catégorie */}
                   <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 border-b border-gray-200">
                     <div className="flex items-center gap-4">
-                      <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-3 rounded-xl text-white shadow-md">
-                        {category.icon}
+                      <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md">
+                        {catIdx + 1}
                       </div>
                       <div>
                         <h2 className="text-xl md:text-2xl font-bold text-gray-800">
                           {category.title}
                         </h2>
                         <p className="text-sm text-gray-600 mt-1">
-                          {category.items.length} questions fréquentes
+                          {category.items.length} question{category.items.length > 1 ? 's' : ''}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* FAQ Items */}
+                  {/* Items FAQ */}
                   <div className="divide-y divide-gray-100">
-                    {category.items.map((item, itemIndex) => {
-                      const isOpen = openIndex === `${categoryIndex}-${itemIndex}`;
+                    {category.items.map((item, itemIdx) => {
+                      const isOpen = openIndex === `${catIdx}-${itemIdx}`;
                       return (
-                        <div key={itemIndex} className="hover:bg-gray-50/70 transition-colors duration-200">
+                        <div key={itemIdx} className="hover:bg-gray-50/70 transition-colors duration-200">
                           <button
-                            onClick={() => toggleFAQ(`${categoryIndex}-${itemIndex}`)}
+                            onClick={() => toggleFAQ(`${catIdx}-${itemIdx}`)}
                             className="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none focus:bg-blue-50/30 transition-colors duration-200"
                           >
                             <div className="flex items-start gap-4">
                               <div className="hidden sm:block mt-2">
-                                <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+                                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"></div>
                               </div>
                               <h3 className="text-lg font-semibold text-gray-800 pr-8">
                                 {item.question}
                               </h3>
                             </div>
                             <div className="flex-shrink-0 ml-4">
-                              {isOpen ? (
-                                <ChevronUp className="w-5 h-5 text-cyan-600" />
-                              ) : (
-                                <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-cyan-500" />
-                              )}
+                              <span className="text-cyan-600 font-bold text-xl">
+                                {isOpen ? "−" : "+"}
+                              </span>
                             </div>
                           </button>
                           {isOpen && (
@@ -374,53 +382,44 @@ function FAQ() {
               ))}
             </div>
 
-            {/* Still Need Help Section */}
-            <div className="mt-20 bg-gradient-to-r from-blue-700 via-blue-600 to-cyan-600 rounded-3xl p-8 md:p-12 text-white text-center shadow-2xl overflow-hidden relative">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-0 left-1/4 w-64 h-64 rounded-full bg-white blur-3xl"></div>
-                <div className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full bg-cyan-300 blur-3xl"></div>
-              </div>
-              
-              <div className="relative max-w-2xl mx-auto">
-                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-                  <Heart className="w-4 h-4" />
-                  <span className="text-sm font-medium">Accompagnement personnalisé</span>
+            {/* Section besoin d'aide (CTA) */}
+            <div ref={ctaRef} className="mt-20">
+              <div className={`bg-gradient-to-r from-blue-700 via-blue-600 to-cyan-600 rounded-3xl p-8 md:p-12 text-white text-center shadow-2xl overflow-hidden relative transition-all duration-1000 ${ctaInView ? 'animate-scaleIn' : 'opacity-0'}`}>
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-0 left-1/4 w-64 h-64 rounded-full bg-white blur-3xl"></div>
+                  <div className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full bg-cyan-300 blur-3xl"></div>
                 </div>
                 
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
-                  Besoin d'un accompagnement spirituel ?
-                </h2>
-                <p className="text-lg text-blue-100 mb-8">
-                  Notre équipe est disponible pour vous écouter, vous orienter et marcher avec vous sur le chemin de la guérison
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a
-                    href="/contact"
-                    className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-all shadow-xl hover:scale-105 transform duration-300"
-                  >
-                    📧 Demander une orientation
-                  </a>
+                <div className="relative max-w-2xl mx-auto">
+                  <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+                    <span className="text-sm font-medium">Accompagnement personnalisé</span>
+                  </div>
                   
-                  <a
-                    href="/parcours"
-                    className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
-                  >
-                    🛤️ Découvrir le parcours
-                  </a>
-                </div>
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
+                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+                    Besoin d'un accompagnement spirituel ?
+                  </h2>
+                  <p className="text-lg text-blue-100 mb-8">
+                    Notre équipe est disponible pour vous écouter, vous orienter et marcher avec vous sur le chemin de la guérison
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a
+                      href="/contact"
+                      className="bg-white text-blue-700 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-all shadow-xl hover:scale-105 transform duration-300"
+                    >
+                      Demander une orientation
+                    </a>
+                    <a
+                      href="/parcours"
+                      className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                    >
+                      Découvrir le parcours
+                    </a>
+                  </div>
+                  <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm">
                     <span className="text-blue-200">Abili - 27 km de Yaoundé</span>
-                  </div>
-                  <div className="h-4 w-px bg-white/30"></div>
-                  <div className="flex items-center gap-2">
-                    <Shield className="w-4 h-4" />
+                    <span className="w-px h-4 bg-white/30 hidden sm:block"></span>
                     <span className="text-blue-200">Confidentialité garantie</span>
-                  </div>
-                  <div className="h-4 w-px bg-white/30"></div>
-                  <div className="flex items-center gap-2">
-                    <Heart className="w-4 h-4" />
+                    <span className="w-px h-4 bg-white/30 hidden sm:block"></span>
                     <span className="text-blue-200">Sans jugement</span>
                   </div>
                 </div>
@@ -432,16 +431,9 @@ function FAQ() {
 
       <style jsx>{`
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(-8px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        
         .animate-fadeIn {
           animation: fadeIn 0.3s ease-out;
         }

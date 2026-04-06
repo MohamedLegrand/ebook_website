@@ -1,5 +1,23 @@
-import React, { useState } from "react";
-import { CheckCircle, AlertTriangle, FileText, Shield, User, Heart, Globe, Lock, Calendar, Mail, ChevronDown, ChevronUp, Cross, Book } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+
+// Hook personnalisé pour les animations au scroll
+function useInView(threshold = 0.15) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setInView(true);
+      },
+      { threshold }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [threshold]);
+
+  return [ref, inView];
+}
 
 function Conditions() {
   const [openSections, setOpenSections] = useState({});
@@ -12,14 +30,14 @@ function Conditions() {
   };
 
   const tableOfContents = [
-    { id: "general", title: "1. Présentation", icon: <FileText className="w-5 h-5" /> },
-    { id: "mission", title: "2. Mission et objectifs", icon: <Cross className="w-5 h-5" /> },
-    { id: "services", title: "3. Services proposés", icon: <Heart className="w-5 h-5" /> },
-    { id: "ethical", title: "4. Charte éthique", icon: <Shield className="w-5 h-5" /> },
-    { id: "accompaniment", title: "5. Accompagnement", icon: <User className="w-5 h-5" /> },
-    { id: "boutique", title: "6. Boutique du Centre", icon: <Book className="w-5 h-5" /> },
-    { id: "privacy", title: "7. Confidentialité", icon: <Lock className="w-5 h-5" /> },
-    { id: "legal", title: "8. Mentions légales", icon: <Globe className="w-5 h-5" /> }
+    { id: "general", title: "1. Présentation" },
+    { id: "mission", title: "2. Mission et objectifs" },
+    { id: "services", title: "3. Services proposés" },
+    { id: "ethical", title: "4. Charte éthique" },
+    { id: "accompaniment", title: "5. Accompagnement" },
+    { id: "boutique", title: "6. Boutique du Centre" },
+    { id: "privacy", title: "7. Confidentialité" },
+    { id: "legal", title: "8. Mentions légales" }
   ];
 
   const importantPoints = [
@@ -41,54 +59,103 @@ function Conditions() {
     }
   ];
 
-  return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-white">
+  // Références pour animations scroll
+  const [heroRef, heroInView] = useInView(0.1);
+  const [tocRef, tocInView] = useInView(0.2);
+  const [contentRef, contentInView] = useInView(0.1);
+  const [ctaRef, ctaInView] = useInView(0.3);
 
-      {/* Contenu principal */}
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideInLeft {
+          from { opacity: 0; transform: translateX(-30px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-fadeUp { animation: fadeUp 0.8s ease forwards; }
+        .animate-fadeIn { animation: fadeIn 0.9s ease forwards; }
+        .animate-scaleIn { animation: scaleIn 0.6s ease forwards; }
+        .animate-slideLeft { animation: slideInLeft 0.7s ease forwards; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .card-hover {
+          transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.4s ease;
+        }
+        .card-hover:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 25px 40px -12px rgba(0,0,0,0.15);
+        }
+        .toc-item {
+          transition: all 0.25s ease;
+        }
+        .toc-item:hover {
+          transform: translateX(4px);
+          background-color: #eff6ff;
+        }
+      `}</style>
+
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-r from-blue-800 to-blue-900 text-white py-12 md:py-16">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <div className="flex justify-center mb-6">
-                <div className="bg-white/10 p-4 rounded-2xl backdrop-blur-sm">
-                  <FileText className="w-12 h-12" />
-                </div>
+        {/* Hero Section avec image de fond */}
+        <section className="relative overflow-hidden bg-gradient-to-r from-blue-900 to-blue-800 text-white">
+          <div className="absolute inset-0">
+            <img
+              src="/images/temoignages/conditions.jpg"
+              alt="Conditions d'utilisation MTHS"
+              className="w-full h-full object-cover opacity-25"
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-900/60 via-blue-800/40 to-transparent"></div>
+          </div>
+          
+          <div ref={heroRef} className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 text-center">
+            <div className={`transition-all duration-700 ${heroInView ? 'animate-fadeUp' : 'opacity-0'}`}>
+              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+                <span className="text-sm font-medium">Association Mariale d'Abili (ASMAB)</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
                 Charte et Conditions d'Utilisation
               </h1>
-              <p className="text-lg sm:text-xl text-gray-300 max-w-4xl mx-auto mb-2">
+              <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto mb-2">
                 Centre MARIE REINE DE LA MISÉRICORDE D'ABILI
               </p>
-              <p className="text-base text-blue-200">
-                Association Mariale d'Abili (ASMAB)
-              </p>
               <div className="flex flex-wrap justify-center gap-4 mt-6">
-                <div className="flex items-center gap-2 text-sm bg-white/10 px-4 py-2 rounded-full">
-                  <Calendar className="w-4 h-4" />
-                  Fondé en 1979
-                </div>
-                <div className="flex items-center gap-2 text-sm bg-white/10 px-4 py-2 rounded-full">
-                  <Shield className="w-4 h-4" />
-                  Conforme Loi 2024
-                </div>
-                <div className="flex items-center gap-2 text-sm bg-white/10 px-4 py-2 rounded-full">
-                  <Cross className="w-4 h-4" />
-                  Médecine révélée
-                </div>
+                <div className="text-sm bg-white/10 px-4 py-2 rounded-full">Fondé en 1979</div>
+                <div className="text-sm bg-white/10 px-4 py-2 rounded-full">Conforme Loi 2024</div>
+                <div className="text-sm bg-white/10 px-4 py-2 rounded-full">Médecine révélée</div>
               </div>
             </div>
+          </div>
+
+          {/* Vague décorative */}
+          <div className="absolute bottom-0 left-0 right-0">
+            <svg className="w-full h-12 text-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor" opacity=".1"></path>
+              <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" fill="currentColor" opacity=".3"></path>
+            </svg>
           </div>
         </section>
 
         {/* Main Content */}
         <section className="py-12 md:py-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            
             {/* Important Notice */}
-            <div className="mb-12 bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
+            <div className={`mb-12 bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-600 p-6 rounded-r-lg shadow-md transition-all duration-700 ${heroInView ? 'animate-fadeIn' : 'opacity-0'}`}>
               <div className="flex items-start gap-4">
-                <Heart className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                <div className="w-1 h-12 bg-blue-600 rounded-full mt-1"></div>
                 <div>
                   <h3 className="text-lg font-bold text-gray-800 mb-2">Notre engagement pastoral</h3>
                   <p className="text-gray-700 mb-3">
@@ -106,10 +173,9 @@ function Conditions() {
 
             <div className="grid lg:grid-cols-4 gap-8">
               {/* Table of Contents - Left Sidebar */}
-              <div className="lg:col-span-1">
-                <div className="sticky top-24 bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-                  <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <FileText className="w-5 h-5" />
+              <div ref={tocRef} className="lg:col-span-1">
+                <div className={`sticky top-24 bg-white rounded-xl shadow-lg border border-gray-200 p-6 transition-all duration-700 ${tocInView ? 'animate-slideLeft' : 'opacity-0'}`}>
+                  <h3 className="text-lg font-bold text-gray-800 mb-4">
                     Sommaire
                   </h3>
                   <nav className="space-y-2">
@@ -117,11 +183,9 @@ function Conditions() {
                       <a
                         key={item.id}
                         href={`#${item.id}`}
-                        className="flex items-center gap-3 p-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all group"
+                        className="toc-item flex items-center gap-3 p-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
                       >
-                        <div className="text-gray-400 group-hover:text-blue-500">
-                          {item.icon}
-                        </div>
+                        <span className="text-blue-500 font-medium">{item.title.charAt(0)}</span>
                         <span className="font-medium text-sm">{item.title}</span>
                       </a>
                     ))}
@@ -132,7 +196,7 @@ function Conditions() {
                     <div className="space-y-3">
                       {importantPoints.map((point, index) => (
                         <div key={index} className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
+                          <span className="text-green-500 text-lg mt-1">✓</span>
                           <div>
                             <p className="font-medium text-sm text-gray-700">{point.title}</p>
                             <p className="text-xs text-gray-500">{point.description}</p>
@@ -144,17 +208,17 @@ function Conditions() {
 
                   <a
                     href="/contact"
-                    className="mt-6 w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all shadow-md"
+                    className="mt-6 w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all shadow-md text-center"
                   >
-                    <Heart className="w-5 h-5" />
                     Nous contacter
                   </a>
                 </div>
               </div>
 
               {/* Main Content - Right Column */}
-              <div className="lg:col-span-3">
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+              <div ref={contentRef} className="lg:col-span-3">
+                <div className={`bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-700 ${contentInView ? 'animate-fadeUp' : 'opacity-0'}`}>
+                  
                   {/* Introduction */}
                   <div className="p-6 md:p-8 border-b border-gray-200">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">Introduction</h2>
@@ -177,19 +241,15 @@ function Conditions() {
                     <div id="general" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("general")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-blue-100 p-2 rounded-lg">
-                            <FileText className="w-6 h-6 text-blue-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">1. Présentation du Centre</h3>
+                          <div className="bg-blue-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-blue-600">1</div>
+                          <h3 className="text-xl font-bold text-gray-800">Présentation du Centre</h3>
                         </div>
-                        {openSections.general ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.general ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.general || window.innerWidth > 768) && (
@@ -203,23 +263,23 @@ function Conditions() {
                             <h4 className="font-bold text-gray-800 mb-2">Identité juridique</h4>
                             <ul className="space-y-2 text-sm">
                               <li className="flex items-start gap-2">
-                                <span className="font-bold text-blue-600">Nom :</span>
+                                <span className="font-bold text-blue-600 w-32 flex-shrink-0">Nom :</span>
                                 <span>Association Mariale d'Abili (ASMAB)</span>
                               </li>
                               <li className="flex items-start gap-2">
-                                <span className="font-bold text-blue-600">Récépissé :</span>
+                                <span className="font-bold text-blue-600 w-32 flex-shrink-0">Récépissé :</span>
                                 <span>N°030/RDA/J12/SAAJP du 14 Décembre 2010</span>
                               </li>
                               <li className="flex items-start gap-2">
-                                <span className="font-bold text-blue-600">Localisation :</span>
+                                <span className="font-bold text-blue-600 w-32 flex-shrink-0">Localisation :</span>
                                 <span>Village Abili, Préfecture du Ngoumou, 27 km de Yaoundé</span>
                               </li>
                               <li className="flex items-start gap-2">
-                                <span className="font-bold text-blue-600">Contact :</span>
+                                <span className="font-bold text-blue-600 w-32 flex-shrink-0">Contact :</span>
                                 <span>(+237) 693 21 54 31 / (+237) 677 31 44 12</span>
                               </li>
                               <li className="flex items-start gap-2">
-                                <span className="font-bold text-blue-600">BP :</span>
+                                <span className="font-bold text-blue-600 w-32 flex-shrink-0">BP :</span>
                                 <span>12561 Yaoundé, Cameroun</span>
                               </li>
                             </ul>
@@ -232,19 +292,15 @@ function Conditions() {
                     <div id="mission" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("mission")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-purple-100 p-2 rounded-lg">
-                            <Cross className="w-6 h-6 text-purple-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">2. Mission et objectifs</h3>
+                          <div className="bg-purple-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-purple-600">2</div>
+                          <h3 className="text-xl font-bold text-gray-800">Mission et objectifs</h3>
                         </div>
-                        {openSections.mission ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.mission ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.mission || window.innerWidth > 768) && (
@@ -254,18 +310,9 @@ function Conditions() {
                             Suite à l'apparition de la Sainte Vierge Marie le 12 mai 1979, notre mission est de :
                           </p>
                           <ul className="space-y-2 ml-4">
-                            <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Apporter la guérison, la conversion et la délivrance aux âmes enchaînées</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Révéler la Médecine Traditionnelle des Handicapés Spirituels</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Ramener de l'obscurité à la lumière et du pouvoir de Satan à Dieu</span>
-                            </li>
+                            <li className="flex items-start gap-2">• Apporter la guérison, la conversion et la délivrance aux âmes enchaînées</li>
+                            <li className="flex items-start gap-2">• Révéler la Médecine Traditionnelle des Handicapés Spirituels</li>
+                            <li className="flex items-start gap-2">• Ramener de l'obscurité à la lumière et du pouvoir de Satan à Dieu</li>
                           </ul>
                           
                           <h4 className="font-bold text-gray-800 mt-6">2.2 Objectifs de l'ASMAB</h4>
@@ -286,19 +333,15 @@ function Conditions() {
                     <div id="services" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("services")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-green-100 p-2 rounded-lg">
-                            <Heart className="w-6 h-6 text-green-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">3. Services proposés</h3>
+                          <div className="bg-green-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-green-600">3</div>
+                          <h3 className="text-xl font-bold text-gray-800">Services proposés</h3>
                         </div>
-                        {openSections.services ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.services ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.services || window.innerWidth > 768) && (
@@ -311,26 +354,11 @@ function Conditions() {
                             <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                               <h4 className="font-bold text-blue-800 mb-2">Les 5 Piliers Thérapeutiques</h4>
                               <ol className="space-y-2 text-sm">
-                                <li className="flex items-start gap-2">
-                                  <span className="font-bold text-blue-600">1.</span>
-                                  <span><strong>Diagnostic spirituel et psychosomatique</strong> - Discernement de l'origine du mal</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="font-bold text-blue-600">2.</span>
-                                  <span><strong>Naturopathie et remèdes traditionnels améliorés</strong> - Pharmacopée africaine purifiée</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="font-bold text-blue-600">3.</span>
-                                  <span><strong>Rituels de purification (rite SO'O inculturé)</strong> - Chemin de purification intérieure</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="font-bold text-blue-600">4.</span>
-                                  <span><strong>Délivrance et désenvoûtement</strong> - Libération par l'autorité du Christ</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="font-bold text-blue-600">5.</span>
-                                  <span><strong>Rééducation morale et réinsertion sociale</strong> - Accompagnement durable</span>
-                                </li>
+                                <li className="flex items-start gap-2"><span className="font-bold text-blue-600">1.</span> <strong>Diagnostic spirituel et psychosomatique</strong> - Discernement de l'origine du mal</li>
+                                <li className="flex items-start gap-2"><span className="font-bold text-blue-600">2.</span> <strong>Naturopathie et remèdes traditionnels améliorés</strong> - Pharmacopée africaine purifiée</li>
+                                <li className="flex items-start gap-2"><span className="font-bold text-blue-600">3.</span> <strong>Rituels de purification (rite SO'O inculturé)</strong> - Chemin de purification intérieure</li>
+                                <li className="flex items-start gap-2"><span className="font-bold text-blue-600">4.</span> <strong>Délivrance et désenvoûtement</strong> - Libération par l'autorité du Christ</li>
+                                <li className="flex items-start gap-2"><span className="font-bold text-blue-600">5.</span> <strong>Rééducation morale et réinsertion sociale</strong> - Accompagnement durable</li>
                               </ol>
                             </div>
                             
@@ -354,19 +382,15 @@ function Conditions() {
                     <div id="ethical" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("ethical")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-amber-100 p-2 rounded-lg">
-                            <Shield className="w-6 h-6 text-amber-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">4. Charte éthique</h3>
+                          <div className="bg-amber-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-amber-600">4</div>
+                          <h3 className="text-xl font-bold text-gray-800">Charte éthique</h3>
                         </div>
-                        {openSections.ethical ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.ethical ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.ethical || window.innerWidth > 768) && (
@@ -379,27 +403,19 @@ function Conditions() {
                           <div className="space-y-3">
                             <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
                               <h5 className="font-bold text-blue-800 mb-1">✓ Dignité humaine</h5>
-                              <p className="text-sm text-blue-700">
-                                Chaque patient est accueilli comme un enfant de Dieu, avec respect et bienveillance
-                              </p>
+                              <p className="text-sm text-blue-700">Chaque patient est accueilli comme un enfant de Dieu, avec respect et bienveillance</p>
                             </div>
                             <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
                               <h5 className="font-bold text-green-800 mb-1">✓ Confidentialité</h5>
-                              <p className="text-sm text-green-700">
-                                Tout ce qui est partagé reste strictement confidentiel
-                              </p>
+                              <p className="text-sm text-green-700">Tout ce qui est partagé reste strictement confidentiel</p>
                             </div>
                             <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
                               <h5 className="font-bold text-purple-800 mb-1">✓ Absence de jugement</h5>
-                              <p className="text-sm text-purple-700">
-                                Nous voyons une personne qui souffre, pas un problème à condamner
-                              </p>
+                              <p className="text-sm text-purple-700">Nous voyons une personne qui souffre, pas un problème à condamner</p>
                             </div>
                             <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
                               <h5 className="font-bold text-orange-800 mb-1">✓ Transparence</h5>
-                              <p className="text-sm text-orange-700">
-                                Aucune promesse magique ou miraculeuse, seulement la vérité
-                              </p>
+                              <p className="text-sm text-orange-700">Aucune promesse magique ou miraculeuse, seulement la vérité</p>
                             </div>
                           </div>
                           
@@ -420,19 +436,15 @@ function Conditions() {
                     <div id="accompaniment" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("accompaniment")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-red-100 p-2 rounded-lg">
-                            <User className="w-6 h-6 text-red-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">5. Conditions d'accompagnement</h3>
+                          <div className="bg-red-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-red-600">5</div>
+                          <h3 className="text-xl font-bold text-gray-800">Conditions d'accompagnement</h3>
                         </div>
-                        {openSections.accompaniment ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.accompaniment ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.accompaniment || window.innerWidth > 768) && (
@@ -442,22 +454,10 @@ function Conditions() {
                             L'accompagnement au Centre nécessite :
                           </p>
                           <ul className="space-y-2 ml-4">
-                            <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Une demande d'orientation via le formulaire de contact</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Un rendez-vous préalable avec l'équipe du Centre</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>L'acceptation de la charte éthique et du parcours proposé</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>L'engagement dans un processus progressif de guérison</span>
-                            </li>
+                            <li>• Une demande d'orientation via le formulaire de contact</li>
+                            <li>• Un rendez-vous préalable avec l'équipe du Centre</li>
+                            <li>• L'acceptation de la charte éthique et du parcours proposé</li>
+                            <li>• L'engagement dans un processus progressif de guérison</li>
                           </ul>
                           
                           <h4 className="font-bold text-gray-800">5.2 Pathologies prises en charge</h4>
@@ -483,19 +483,15 @@ function Conditions() {
                     <div id="boutique" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("boutique")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-orange-100 p-2 rounded-lg">
-                            <Book className="w-6 h-6 text-orange-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">6. Boutique du Centre</h3>
+                          <div className="bg-orange-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-orange-600">6</div>
+                          <h3 className="text-xl font-bold text-gray-800">Boutique du Centre</h3>
                         </div>
-                        {openSections.boutique ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.boutique ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.boutique || window.innerWidth > 768) && (
@@ -545,19 +541,15 @@ function Conditions() {
                     <div id="privacy" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("privacy")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-indigo-100 p-2 rounded-lg">
-                            <Lock className="w-6 h-6 text-indigo-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">7. Confidentialité et protection des données</h3>
+                          <div className="bg-indigo-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-indigo-600">7</div>
+                          <h3 className="text-xl font-bold text-gray-800">Confidentialité et protection des données</h3>
                         </div>
-                        {openSections.privacy ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.privacy ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.privacy || window.innerWidth > 768) && (
@@ -574,22 +566,10 @@ function Conditions() {
                               Vous disposez des droits suivants concernant vos données personnelles :
                             </p>
                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                              <li className="flex items-center gap-2">
-                                <CheckCircle className="w-4 h-4 text-indigo-500" />
-                                Droit d'accès à vos données
-                              </li>
-                              <li className="flex items-center gap-2">
-                                <CheckCircle className="w-4 h-4 text-indigo-500" />
-                                Droit de rectification
-                              </li>
-                              <li className="flex items-center gap-2">
-                                <CheckCircle className="w-4 h-4 text-indigo-500" />
-                                Droit à l'effacement
-                              </li>
-                              <li className="flex items-center gap-2">
-                                <CheckCircle className="w-4 h-4 text-indigo-500" />
-                                Droit à la confidentialité
-                              </li>
+                              <li>✓ Droit d'accès à vos données</li>
+                              <li>✓ Droit de rectification</li>
+                              <li>✓ Droit à l'effacement</li>
+                              <li>✓ Droit à la confidentialité</li>
                             </ul>
                           </div>
 
@@ -609,19 +589,15 @@ function Conditions() {
                     <div id="legal" className="p-6 md:p-8">
                       <button
                         onClick={() => toggleSection("legal")}
-                        className="w-full flex justify-between items-center text-left"
+                        className="w-full flex justify-between items-center text-left group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="bg-cyan-100 p-2 rounded-lg">
-                            <Globe className="w-6 h-6 text-cyan-600" />
-                          </div>
-                          <h3 className="text-xl font-bold text-gray-800">8. Mentions légales et conformité</h3>
+                          <div className="bg-cyan-100 p-2 rounded-lg w-10 h-10 flex items-center justify-center font-bold text-cyan-600">8</div>
+                          <h3 className="text-xl font-bold text-gray-800">Mentions légales et conformité</h3>
                         </div>
-                        {openSections.legal ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
-                        )}
+                        <span className="text-cyan-600 font-bold text-xl group-hover:scale-110 transition-transform">
+                          {openSections.legal ? "−" : "+"}
+                        </span>
                       </button>
                       
                       {(openSections.legal || window.innerWidth > 768) && (
@@ -652,7 +628,6 @@ function Conditions() {
                           </div>
                           
                           <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                            <Mail className="w-5 h-5 text-blue-600" />
                             <div>
                               <p className="font-medium text-blue-800">Questions ou préoccupations ?</p>
                               <p className="text-sm text-blue-700">
@@ -671,7 +646,7 @@ function Conditions() {
                     <h3 className="text-xl font-bold text-gray-800 mb-4">Conclusion</h3>
                     <p className="text-gray-700 mb-6">
                       En utilisant les services du Centre MARIE REINE DE LA MISÉRICORDE D'ABILI, vous acceptez 
-                      les présentes conditions et vous engagez dans un parcours de guérison spirituelle fondé sur 
+                      les présentes conditions et vous vous engagez dans un parcours de guérison spirituelle fondé sur 
                       la foi, la dignité humaine et l'accompagnement bienveillant.
                     </p>
                     
@@ -693,9 +668,8 @@ function Conditions() {
                 </div>
 
                 {/* Accept Statement */}
-                <div className="mt-8 text-center">
+                <div ref={ctaRef} className={`mt-8 text-center transition-all duration-1000 ${ctaInView ? 'animate-scaleIn' : 'opacity-0'}`}>
                   <div className="inline-flex items-center gap-4 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200">
-                    <Heart className="w-8 h-8 text-blue-600" />
                     <div className="text-left">
                       <p className="font-bold text-gray-800">
                         « Vous n'êtes pas seul face à ce que vous vivez. »
@@ -711,22 +685,6 @@ function Conditions() {
           </div>
         </section>
       </main>
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-      `}</style>
     </div>
   );
 }

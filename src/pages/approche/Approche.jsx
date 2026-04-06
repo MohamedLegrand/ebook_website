@@ -1,20 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { 
-  Stethoscope, 
-  Leaf, 
-  Droplet, 
-  Zap, 
-  Users,
-  Search,
-  Shield,
-  BookOpen,
-  Target,
-  Sparkles,
-  Heart,
-  CheckCircle2,
-  ArrowRight,
-  RefreshCw
-} from "lucide-react";
 
 function Approche() {
   const [isVisible, setIsVisible] = useState({});
@@ -70,10 +54,10 @@ function Approche() {
   const pillars = [
     {
       id: 1,
-      icon: Stethoscope,
       title: "Diagnostic Spirituel et Psychosomatique",
       color: "from-blue-600 to-cyan-600",
       bgColor: "from-blue-50 to-cyan-50",
+      image: "/images/piliers/spirituel.jpg",
       description: "À l'image du devin traditionnel qui interroge les signes, mais à la lumière de l'Esprit Saint, le thérapeute MTHS discerne l'origine visible et invisible de la souffrance.",
       details: [
         "Écoute de l'histoire personnelle et familiale",
@@ -87,10 +71,10 @@ function Approche() {
     },
     {
       id: 2,
-      icon: Leaf,
       title: "Naturopathie et Remèdes Traditionnels Améliorés",
       color: "from-emerald-600 to-green-600",
       bgColor: "from-emerald-50 to-green-50",
+      image: "/images/piliers/naturel.jpg",
       description: "La médecine de la terre, don du Créateur à l'Afrique. Racines, feuilles, écorces, semences et produits de la ruche deviennent instruments de restauration.",
       details: [
         "Pharmacopée traditionnelle africaine purifiée",
@@ -104,10 +88,10 @@ function Approche() {
     },
     {
       id: 3,
-      icon: Droplet,
       title: "Rituels de Purification (Rite SO'O Inculturé)",
       color: "from-purple-600 to-pink-600",
       bgColor: "from-purple-50 to-pink-50",
+      image: "/images/piliers/rite.jpg",
       description: "Dans la tradition béti, le rite SO'O marquait la sortie de l'enfance. Inculturé dans la foi chrétienne, il devient chemin de purification intérieure.",
       details: [
         "Purification par l'eau sacrée",
@@ -121,10 +105,10 @@ function Approche() {
     },
     {
       id: 4,
-      icon: Zap,
       title: "Délivrance et Désenvoûtement",
       color: "from-amber-600 to-orange-600",
       bgColor: "from-amber-50 to-orange-50",
+      image: "/images/piliers/delivrance.jpg",
       description: "Le combat central : confrontation avec les puissances d'oppression, les esprits de servitude et les alliances de sorcellerie.",
       details: [
         "Autorité du Christ invoquée",
@@ -138,10 +122,10 @@ function Approche() {
     },
     {
       id: 5,
-      icon: Users,
       title: "Rééducation Morale et Réinsertion Sociale",
       color: "from-red-600 to-rose-600",
       bgColor: "from-red-50 to-rose-50",
+      image: "/images/piliers/reeducation.jpg",
       description: "La guérison ne s'arrête pas à la délivrance. Le patient est accompagné dans la reconstruction de sa vie morale, familiale et communautaire.",
       details: [
         "Enseignement moral et spirituel",
@@ -158,78 +142,82 @@ function Approche() {
   const protocol = [
     {
       number: 1,
-      title: "Identification",
-      icon: Search,
+      title: "IDENTIFICATION",
       color: "from-blue-600 to-cyan-600",
-      description: "Reconnaître la nature spirituelle du mal et nommer ce qui opprime",
+      description: "Nommer l’ennemi caché. Le mal ne se guérit que s’il est reconnu.",
       details: [
-        "Écoute attentive de la personne",
-        "Analyse des symptômes spirituels",
-        "Discernement des racines du mal",
-        "Identification des esprits en cause"
+        "Écoute prophétique des symptômes spirituels",
+        "Relevé des rêves, blocages et échecs cycliques",
+        "Discernement des héritages familiaux occultes",
+        "Cartographie des alliances brisées et des portes ouvertes"
       ]
     },
     {
       number: 2,
-      title: "Maîtrise",
-      icon: Shield,
+      title: "MAÎTRISE",
       color: "from-emerald-600 to-green-600",
-      description: "Contenir les forces en jeu et sécuriser la personne dans un cadre sacré",
+      description: "Contenir l’oppression. Placer la victime sous l’autorité du Tout-Puissant.",
       details: [
-        "Protection spirituelle du patient",
-        "Mise en sécurité dans un lieu saint",
-        "Prières de protection",
-        "Encadrement par des thérapeutes formés"
+        "Sécurisation spirituelle immédiate",
+        "Prière de couverture et de protection",
+        "Interdiction de toute attaque de rétorsion",
+        "Établissement d’un espace thérapeutique inviolable"
       ]
     },
     {
       number: 3,
-      title: "Confession Thérapeutique",
-      icon: BookOpen,
+      title: "CONFESSION THÉRAPEUTIQUE",
       color: "from-purple-600 to-pink-600",
-      description: "Libérer la parole, révéler les alliances cachées, purifier la mémoire",
+      description: "La vérité libère. Révéler les pactes secrets et les souillures.",
       details: [
-        "Confession des péchés et transgressions",
-        "Révélation des pactes occultes",
-        "Pardon et réconciliation",
-        "Purification de la mémoire familiale"
+        "Confession des péchés liés aux pratiques occultes",
+        "Dénonciation des alliances familiales avec l’ennemi",
+        "Purification de la mémoire et du lignage",
+        "Pardon reçu et pardon accordé aux ancêtres"
       ]
     },
     {
       number: 4,
-      title: "Anéantissement de l'Envoûtement",
-      icon: Zap,
+      title: "ANÉANTISSEMENT DE L’ENVOÛTEMENT",
       color: "from-amber-600 to-orange-600",
-      description: "Briser les pactes, chasser les esprits, restaurer l'autorité de Dieu",
+      description: "Briser net les chaînes. Expulser toute puissance étrangère.",
       details: [
-        "Rupture des liens mystiques",
-        "Exorcisme et délivrance",
-        "Destruction de l'EVU (esprit de rébellion)",
-        "Restauration de la souveraineté divine"
+        "Rupture solennelle des pactes de mort",
+        "Exorcisme et délivrance par le sang du Christ",
+        "Destruction de l’EVU (esprit de rébellion)",
+        "Restauration de l’autorité divine dans la vie du patient"
       ]
     },
     {
       number: 5,
-      title: "Resocialisation",
-      icon: Users,
+      title: "RESOCIALISATION",
       color: "from-red-600 to-rose-600",
-      description: "Réintégrer l'initié dans la communauté des vivants, des croyants et des responsables",
+      description: "Reconstruire l’homme libre. Le réintégrer dans sa famille et sa communauté.",
       details: [
-        "Réintégration familiale",
-        "Accompagnement social",
-        "Formation à la vie chrétienne",
-        "Suivi post-guérison"
+        "Réinsertion familiale et ecclésiale",
+        "Suivi pastoral et psychologique",
+        "Formation à la vie de responsabilité",
+        "Accompagnement professionnel et social"
       ]
     }
   ];
 
-  const CurrentPillarIcon = pillars[activePillar].icon;
   const currentPillar = pillars[activePillar];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-emerald-50">
-      {/* Hero Section */}
+
+      {/* ==================== HERO SECTION ==================== */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-emerald-800 to-teal-900 text-white">
+        <div className="absolute inset-0">
+          <img 
+            src="/images/piliers/aproche.jpg" 
+            alt="Approche thérapeutique MTHS"
+            className="w-full h-full object-cover opacity-30"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+        </div>
+
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-40 h-40 border-4 border-amber-500 rounded-full"></div>
           <div className="absolute bottom-20 right-10 w-32 h-32 border-4 border-emerald-400"></div>
@@ -240,7 +228,6 @@ function Approche() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32">
           <div className="text-center">
             <div className="inline-flex items-center gap-2 bg-emerald-500/20 backdrop-blur-sm border border-emerald-400 rounded-full px-4 sm:px-6 py-2 mb-6 sm:mb-8">
-              <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
               <span className="text-emerald-300 text-xs sm:text-sm font-medium">
                 Guérison Holistique
               </span>
@@ -275,7 +262,7 @@ function Approche() {
         </div>
       </section>
 
-      {/* Section Les 5 Piliers */}
+      {/* ==================== SECTION LES 5 PILIERS ==================== */}
       <section
         ref={addToRefs}
         className={`py-12 sm:py-16 lg:py-24 transition-all duration-1000 ${
@@ -285,7 +272,6 @@ function Approche() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 bg-blue-100 rounded-full px-4 sm:px-6 py-2 mb-4">
-              <Sparkles className="w-4 h-4 text-blue-700" />
               <span className="text-blue-800 text-xs sm:text-sm font-semibold">
                 Les Fondations de la MTHS
               </span>
@@ -302,34 +288,30 @@ function Approche() {
 
           {/* Navigation Piliers */}
           <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-8 sm:mb-12">
-            {pillars.map((pillar, index) => {
-              const PillarIcon = pillar.icon;
-              return (
-                <button
-                  key={index}
-                  onClick={() => setActivePillar(index)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
-                    activePillar === index
-                      ? `bg-gradient-to-r ${pillar.color} text-white shadow-xl scale-105`
-                      : 'bg-white text-slate-700 hover:bg-slate-50 border-2 border-slate-200'
-                  }`}
-                >
-                  <PillarIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="hidden lg:inline">{pillar.title}</span>
-                  <span className="lg:hidden">Pilier {index + 1}</span>
-                </button>
-              );
-            })}
+            {pillars.map((pillar, index) => (
+              <button
+                key={index}
+                onClick={() => setActivePillar(index)}
+                className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
+                  activePillar === index
+                    ? `bg-gradient-to-r ${pillar.color} text-white shadow-xl scale-105`
+                    : 'bg-white text-slate-700 hover:bg-slate-50 border-2 border-slate-200'
+                }`}
+              >
+                <span className="hidden lg:inline">{pillar.title}</span>
+                <span className="lg:hidden">Pilier {index + 1}</span>
+              </button>
+            ))}
           </div>
 
-          {/* Contenu Pilier Actif */}
+          {/* Contenu Pilier Actif - Texte à gauche / Image à droite */}
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-            {/* Texte */}
+            {/* GAUCHE : Texte */}
             <div className="space-y-6">
               <div className={`bg-gradient-to-br ${currentPillar.bgColor} p-6 sm:p-8 rounded-2xl shadow-xl border-l-4 ${currentPillar.color.split(' ')[0].replace('from-', 'border-')}`}>
                 <div className="flex items-start gap-4 mb-4">
                   <div className={`bg-gradient-to-br ${currentPillar.color} p-3 sm:p-4 rounded-xl flex-shrink-0`}>
-                    <CurrentPillarIcon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                    {/* Icône supprimée */}
                   </div>
                   <div>
                     <div className="text-sm font-bold text-slate-500 mb-1">
@@ -345,14 +327,12 @@ function Approche() {
                   {currentPillar.description}
                 </p>
 
-                {/* Liste détails */}
                 <div className="space-y-3">
                   {currentPillar.details.map((detail, idx) => (
                     <div
                       key={idx}
                       className="flex items-start gap-3 bg-white/60 backdrop-blur-sm p-3 rounded-lg"
                     >
-                      <CheckCircle2 className={`w-5 h-5 flex-shrink-0 mt-0.5 bg-gradient-to-r ${currentPillar.color} bg-clip-text text-transparent`} />
                       <span className="text-slate-700 text-sm">{detail}</span>
                     </div>
                   ))}
@@ -367,46 +347,24 @@ function Approche() {
               </div>
             </div>
 
-            {/* Visuel */}
+            {/* DROITE : Image du pilier */}
             <div className="relative">
-              <div className="bg-white p-6 sm:p-8 lg:p-10 rounded-3xl shadow-2xl border-4 border-slate-100">
-                {/* Cercle central avec icône */}
-                <div className="relative w-full aspect-square max-w-md mx-auto mb-8">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className={`w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-br ${currentPillar.color} rounded-full flex items-center justify-center shadow-2xl`}>
-                      <CurrentPillarIcon className="w-16 h-16 sm:w-20 sm:h-20 text-white" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className={`text-2xl sm:text-3xl font-bold bg-gradient-to-r ${currentPillar.color} bg-clip-text text-transparent`}>
-                      {activePillar + 1}
-                    </div>
-                    <div className="text-xs sm:text-sm text-slate-600 mt-1">Pilier</div>
-                  </div>
-                  <div className="text-center">
-                    <div className={`text-2xl sm:text-3xl font-bold bg-gradient-to-r ${currentPillar.color} bg-clip-text text-transparent`}>
-                      {currentPillar.details.length}
-                    </div>
-                    <div className="text-xs sm:text-sm text-slate-600 mt-1">Aspects</div>
-                  </div>
-                  <div className="text-center">
-                    <div className={`text-2xl sm:text-3xl font-bold bg-gradient-to-r ${currentPillar.color} bg-clip-text text-transparent`}>
-                      100%
-                    </div>
-                    <div className="text-xs sm:text-sm text-slate-600 mt-1">Holistique</div>
-                  </div>
-                </div>
+              <div className="overflow-hidden rounded-3xl shadow-2xl border-4 border-slate-100">
+                <img 
+                  src={currentPillar.image} 
+                  alt={currentPillar.title}
+                  className="w-full h-auto object-cover aspect-[4/3] lg:aspect-square"
+                  onError={(e) => {
+                    e.target.src = "/images/default-pilier.jpg";
+                  }}
+                />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section Protocole */}
+      {/* ==================== SECTION PROTOCOLE ==================== */}
       <section
         ref={addToRefs}
         className={`py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-slate-900 via-blue-900 to-emerald-900 text-white relative overflow-hidden transition-all duration-1000 ${
@@ -422,7 +380,6 @@ function Approche() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 bg-amber-500/20 backdrop-blur-sm border border-amber-400 rounded-full px-4 sm:px-6 py-2 mb-4">
-              <Target className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
               <span className="text-amber-300 text-xs sm:text-sm font-semibold">
                 Protocole Initiatique
               </span>
@@ -432,86 +389,70 @@ function Approche() {
             </h2>
             <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-400 to-emerald-400 mx-auto rounded-full"></div>
             <p className="text-blue-100 text-base sm:text-lg mt-6 max-w-3xl mx-auto">
-              Comparable aux grandes étapes de l'initiation africaine : de la nuit à l'aube,
-              de la captivité à la liberté, de la mort spirituelle à la vie en Dieu.
+              Un cheminement structuré, inspiré des rites de passage africains, pour briser les chaînes invisibles et renaître à la liberté.
             </p>
           </div>
 
           {/* Timeline Verticale */}
           <div className="max-w-4xl mx-auto">
-            {protocol.map((step, index) => {
-              const StepIcon = step.icon;
-              return (
-                <div
-                  key={index}
-                  className={`relative flex gap-6 sm:gap-8 mb-8 sm:mb-12 last:mb-0 cursor-pointer transition-all duration-300 ${
-                    activeStep === index ? 'scale-105' : 'hover:scale-[1.02]'
-                  }`}
-                  onClick={() => setActiveStep(index)}
-                >
-                  {/* Timeline Line */}
-                  {index < protocol.length - 1 && (
-                    <div className="absolute left-6 sm:left-8 top-16 sm:top-20 w-0.5 h-full bg-gradient-to-b from-amber-400 to-emerald-400 opacity-30"></div>
-                  )}
+            {protocol.map((step, index) => (
+              <div
+                key={index}
+                className={`relative flex gap-6 sm:gap-8 mb-8 sm:mb-12 last:mb-0 cursor-pointer transition-all duration-300 ${
+                  activeStep === index ? 'scale-105' : 'hover:scale-[1.02]'
+                }`}
+                onClick={() => setActiveStep(index)}
+              >
+                {index < protocol.length - 1 && (
+                  <div className="absolute left-8 sm:left-10 top-16 sm:top-20 w-0.5 h-full bg-gradient-to-b from-amber-400 to-emerald-400 opacity-30"></div>
+                )}
 
-                  {/* Number Circle */}
-                  <div className={`relative flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${step.color} rounded-full flex items-center justify-center shadow-2xl z-10 ${
-                    activeStep === index ? 'ring-4 ring-amber-400 ring-offset-4 ring-offset-slate-900' : ''
-                  }`}>
-                    <span className="text-xl sm:text-2xl font-bold text-white">{step.number}</span>
+                <div className={`relative flex-shrink-0 w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center shadow-2xl z-10 ${
+                  activeStep === index ? 'ring-4 ring-amber-400 ring-offset-4 ring-offset-slate-900' : ''
+                }`}>
+                  <span className="text-2xl sm:text-3xl font-black text-white">{step.number}</span>
+                </div>
+
+                <div className={`flex-1 bg-white/10 backdrop-blur-sm border-2 ${
+                  activeStep === index ? 'border-amber-400 bg-white/20' : 'border-white/20'
+                } rounded-2xl p-4 sm:p-6 lg:p-8 transition-all duration-300`}>
+                  <div className="mb-4">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+                      {step.title}
+                    </h3>
+                    <p className="text-amber-300 text-sm sm:text-base font-medium italic">
+                      {step.description}
+                    </p>
                   </div>
 
-                  {/* Content */}
-                  <div className={`flex-1 bg-white/10 backdrop-blur-sm border-2 ${
-                    activeStep === index ? 'border-amber-400 bg-white/20' : 'border-white/20'
-                  } rounded-2xl p-4 sm:p-6 lg:p-8 transition-all duration-300`}>
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className={`bg-gradient-to-br ${step.color} p-2 sm:p-3 rounded-xl`}>
-                        <StepIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
-                          {step.title}
-                        </h3>
-                        <p className="text-blue-100 text-sm sm:text-base leading-relaxed">
-                          {step.description}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Détails (visible si active) */}
-                    {activeStep === index && (
-                      <div className="mt-4 pt-4 border-t border-white/20 grid sm:grid-cols-2 gap-3">
+                  {activeStep === index && (
+                    <div className="mt-4 pt-4 border-t border-white/20">
+                      <div className="space-y-3">
                         {step.details.map((detail, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-start gap-2 bg-white/5 p-3 rounded-lg"
-                          >
-                            <ArrowRight className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
-                            <span className="text-blue-100 text-sm">{detail}</span>
+                          <div key={idx} className="flex items-start gap-3 bg-white/5 p-3 rounded-lg">
+                            <span className="text-blue-100 text-sm leading-relaxed">{detail}</span>
                           </div>
                         ))}
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
 
           {/* Citation Finale */}
           <div className="mt-12 sm:mt-16 text-center">
             <div className="max-w-3xl mx-auto bg-gradient-to-r from-amber-500/20 to-emerald-600/20 backdrop-blur-lg border-2 border-amber-400/50 rounded-2xl p-6 sm:p-8">
               <p className="text-lg sm:text-xl md:text-2xl font-bold italic text-amber-300 leading-relaxed">
-                "Ainsi, la thérapie devient un véritable passage de la nuit à l'aube,
-                de la captivité à la liberté, de la mort spirituelle à la vie en Dieu."
+                “Chaque étape est une libération, chaque protocole une renaissance. De l’ombre à la lumière, du chaos à l’ordre divin.”
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section CTA */}
+      {/* ==================== SECTION CTA ==================== */}
       <section
         ref={addToRefs}
         className={`py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-blue-50 to-emerald-50 transition-all duration-1000 ${
@@ -521,7 +462,6 @@ function Approche() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-3xl shadow-2xl p-8 sm:p-12 lg:p-16 text-center border-4 border-slate-100">
             <div className="inline-flex items-center gap-2 bg-emerald-100 rounded-full px-4 sm:px-6 py-2 mb-6">
-              <Heart className="w-4 h-4 text-emerald-700" />
               <span className="text-emerald-800 text-xs sm:text-sm font-semibold">
                 Commencez Votre Guérison
               </span>
@@ -541,19 +481,16 @@ function Approche() {
                 href="/parcours"
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-blue-700 hover:from-emerald-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-bold text-base shadow-xl shadow-emerald-900/30 transition-all duration-300 hover:scale-105"
               >
-                <RefreshCw className="w-5 h-5" />
                 Découvrir le Parcours Complet
               </a>
               <a
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 bg-white border-2 border-emerald-700 hover:bg-emerald-50 text-emerald-900 px-8 py-4 rounded-xl font-bold text-base transition-all duration-300 hover:scale-105"
               >
-                <Heart className="w-5 h-5" />
                 Prendre Rendez-vous
               </a>
             </div>
 
-            {/* Info Contact */}
             <div className="mt-10 sm:mt-12 pt-8 sm:pt-10 border-t border-slate-200">
               <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
                 <div className="bg-blue-50 p-4 rounded-xl">
