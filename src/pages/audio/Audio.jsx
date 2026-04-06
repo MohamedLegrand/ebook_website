@@ -29,9 +29,7 @@ import {
   Award,
   Check
 } from "lucide-react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
-import { useCart } from "../../context/CartContext"; // IMPORT CORRECT
+import { useCart } from "../../context/CartContext";
 
 function Audio() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,33 +37,28 @@ function Audio() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currency, setCurrency] = useState("FCFA");
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
-  const [addedBooks, setAddedBooks] = useState({}); // Pour l'animation de confirmation
+  const [addedBooks, setAddedBooks] = useState({});
 
-  // Utiliser le contexte global du panier
   const { addToCart, cart: globalCart } = useCart();
 
-  // Taux de conversion (exemples)
   const exchangeRates = {
     "FCFA": 1,
     "USD": 0.00165,
     "EUR": 0.00152
   };
 
-  // Icônes des devises
   const currencyIcons = {
     "FCFA": <Coins className="w-4 h-4" />,
     "USD": <DollarSign className="w-4 h-4" />,
     "EUR": <Euro className="w-4 h-4" />
   };
 
-  // Noms des devises
   const currencyNames = {
     "FCFA": "Franc CFA",
     "USD": "Dollar US",
     "EUR": "Euro"
   };
 
-  // Formater le prix selon la devise
   const formatPrice = (priceFCFA, currencyType) => {
     const convertedPrice = priceFCFA * exchangeRates[currencyType];
     
@@ -81,12 +74,10 @@ function Audio() {
     }
   };
 
-  // Fonction pour ajouter au panier global
   const handleAddToCart = (audioBook) => {
-    // Ajouter au panier global via le contexte
     addToCart({
       id: audioBook.id,
-      type: 'audiobook', // Type "audiobook" pour les livres audio
+      type: 'audiobook',
       title: audioBook.title,
       author: audioBook.author,
       narrator: audioBook.narrator,
@@ -97,7 +88,6 @@ function Audio() {
       listeners: audioBook.listeners
     });
     
-    // Animation de confirmation
     setAddedBooks(prev => ({
       ...prev,
       [audioBook.id]: true
@@ -111,7 +101,6 @@ function Audio() {
     }, 2000);
   };
 
-  // Vérifier si un livre audio est dans le panier global
   const isInCart = (audioBookId) => {
     return globalCart.some(item => item.id === audioBookId && item.type === 'audiobook');
   };
@@ -133,7 +122,7 @@ function Audio() {
           duration: "5h 42m",
           rating: 4.8,
           listeners: 12500,
-          cover: "/images/audio/developpement-personnel/atomic-habits.jpg" // CORRIGÉ
+          cover: "/images/audio/developpement-personnel/atomic-habits.jpg"
         },
         { 
           id: 102, 
@@ -144,7 +133,7 @@ function Audio() {
           duration: "6h 15m",
           rating: 4.7,
           listeners: 9800,
-          cover: "/images/audio/developpement-personnel/power-of-now.jpg" // CORRIGÉ
+          cover: "/images/audio/developpement-personnel/power-of-now.jpg"
         },
         { 
           id: 103, 
@@ -155,7 +144,7 @@ function Audio() {
           duration: "4h 50m",
           rating: 4.6,
           listeners: 11200,
-          cover: "/images/audio/developpement-personnel/mindset.jpg" // CORRIGÉ
+          cover: "/images/audio/developpement-personnel/mindset.jpg"
         },
         { 
           id: 104, 
@@ -166,7 +155,7 @@ function Audio() {
           duration: "5h 20m",
           rating: 4.5,
           listeners: 8700,
-          cover: "/images/audio/developpement-personnel/deep-work.jpg" // CORRIGÉ
+          cover: "/images/audio/developpement-personnel/deep-work.jpg"
         },
         { 
           id: 105, 
@@ -177,7 +166,7 @@ function Audio() {
           duration: "7h 10m",
           rating: 4.9,
           listeners: 15600,
-          cover: "/images/audio/developpement-personnel/7-habits.jpg" // CORRIGÉ
+          cover: "/images/audio/developpement-personnel/7-habits.jpg"
         },
         { 
           id: 106, 
@@ -188,7 +177,7 @@ function Audio() {
           duration: "6h 45m",
           rating: 4.8,
           listeners: 13200,
-          cover: "/images/audio/developpement-personnel/cant-hurt-me.jpg" // CORRIGÉ
+          cover: "/images/audio/developpement-personnel/cant-hurt-me.jpg"
         },
         { 
           id: 107, 
@@ -199,7 +188,7 @@ function Audio() {
           duration: "4h 55m",
           rating: 4.4,
           listeners: 10500,
-          cover: "/images/audio/developpement-personnel/subtle-art.jpg" // CORRIGÉ
+          cover: "/images/audio/developpement-personnel/subtle-art.jpg"
         },
         { 
           id: 108, 
@@ -210,7 +199,7 @@ function Audio() {
           duration: "5h 30m",
           rating: 4.6,
           listeners: 9200,
-          cover: "/images/audio/developpement-personnel/grit.jpg" // CORRIGÉ
+          cover: "/images/audio/developpement-personnel/grit.jpg"
         },
       ]
     },
@@ -230,7 +219,7 @@ function Audio() {
           duration: "6h 20m",
           rating: 4.7,
           listeners: 14300,
-          cover: "/images/audio/business/lean-startup.jpg" // CORRIGÉ
+          cover: "/images/audio/business/lean-startup.jpg"
         },
         { 
           id: 202, 
@@ -241,7 +230,7 @@ function Audio() {
           duration: "5h 45m",
           rating: 4.6,
           listeners: 11800,
-          cover: "/images/audio/business/zero-to-one.jpg" // CORRIGÉ
+          cover: "/images/audio/business/zero-to-one.jpg"
         },
         { 
           id: 203, 
@@ -252,7 +241,7 @@ function Audio() {
           duration: "5h 10m",
           rating: 4.8,
           listeners: 16700,
-          cover: "/images/audio/business/rich-dad-poor-dad.jpg" // CORRIGÉ
+          cover: "/images/audio/business/rich-dad-poor-dad.jpg"
         },
         { 
           id: 204, 
@@ -263,7 +252,7 @@ function Audio() {
           duration: "6h 50m",
           rating: 4.5,
           listeners: 9900,
-          cover: "/images/audio/business/good-to-great.jpg" // CORRIGÉ
+          cover: "/images/audio/business/good-to-great.jpg"
         },
       ]
     },
@@ -283,7 +272,7 @@ function Audio() {
           duration: "8h 15m",
           rating: 4.9,
           listeners: 12500,
-          cover: "/images/audio/sante-bien-etre/how-not-to-die.jpg" // CORRIGÉ
+          cover: "/images/audio/sante-bien-etre/how-not-to-die.jpg"
         },
         { 
           id: 302, 
@@ -294,7 +283,7 @@ function Audio() {
           duration: "7h 30m",
           rating: 4.8,
           listeners: 10800,
-          cover: "/images/audio/sante-bien-etre/why-we-sleep.jpg" // CORRIGÉ
+          cover: "/images/audio/sante-bien-etre/why-we-sleep.jpg"
         },
         { 
           id: 303, 
@@ -305,7 +294,7 @@ function Audio() {
           duration: "8h 45m",
           rating: 4.7,
           listeners: 9600,
-          cover: "/images/audio/sante-bien-etre/body-keeps-score.jpg" // CORRIGÉ
+          cover: "/images/audio/sante-bien-etre/body-keeps-score.jpg"
         },
         { 
           id: 304, 
@@ -316,7 +305,7 @@ function Audio() {
           duration: "6h 20m",
           rating: 4.6,
           listeners: 8200,
-          cover: "/images/audio/sante-bien-etre/breath.jpg" // CORRIGÉ
+          cover: "/images/audio/sante-bien-etre/breath.jpg"
         },
       ]
     },
@@ -336,7 +325,7 @@ function Audio() {
           duration: "11h 30m",
           rating: 4.9,
           listeners: 23400,
-          cover: "/images/audio/romans-fiction/1984.jpg" // CORRIGÉ
+          cover: "/images/audio/romans-fiction/1984.jpg"
         },
         { 
           id: 402, 
@@ -347,7 +336,7 @@ function Audio() {
           duration: "12h 15m",
           rating: 4.8,
           listeners: 18700,
-          cover: "/images/audio/romans-fiction/mockingbird.jpg" // CORRIGÉ
+          cover: "/images/audio/romans-fiction/mockingbird.jpg"
         },
         { 
           id: 403, 
@@ -358,7 +347,7 @@ function Audio() {
           duration: "5h 45m",
           rating: 4.7,
           listeners: 15600,
-          cover: "/images/audio/romans-fiction/great-gatsby.jpg" // CORRIGÉ
+          cover: "/images/audio/romans-fiction/great-gatsby.jpg"
         },
         { 
           id: 404, 
@@ -369,7 +358,7 @@ function Audio() {
           duration: "15h 20m",
           rating: 4.9,
           listeners: 19800,
-          cover: "/images/audio/romans-fiction/pride-prejudice.jpg" // CORRIGÉ
+          cover: "/images/audio/romans-fiction/pride-prejudice.jpg"
         },
       ]
     },
@@ -389,7 +378,7 @@ function Audio() {
           duration: "15h 25m",
           rating: 4.9,
           listeners: 28700,
-          cover: "/images/audio/histoire-culture/sapiens.jpg" // CORRIGÉ
+          cover: "/images/audio/histoire-culture/sapiens.jpg"
         },
         { 
           id: 502, 
@@ -400,7 +389,7 @@ function Audio() {
           duration: "7h 50m",
           rating: 4.7,
           listeners: 14200,
-          cover: "/images/audio/histoire-culture/brief-history-time.jpg" // CORRIGÉ
+          cover: "/images/audio/histoire-culture/brief-history-time.jpg"
         },
         { 
           id: 503, 
@@ -411,7 +400,7 @@ function Audio() {
           duration: "18h 30m",
           rating: 4.8,
           listeners: 16700,
-          cover: "/images/audio/histoire-culture/guns-germs-steel.jpg" // CORRIGÉ
+          cover: "/images/audio/histoire-culture/guns-germs-steel.jpg"
         },
         { 
           id: 504, 
@@ -422,7 +411,7 @@ function Audio() {
           duration: "20h 15m",
           rating: 4.6,
           listeners: 11300,
-          cover: "/images/audio/histoire-culture/silk-roads.jpg" // CORRIGÉ
+          cover: "/images/audio/histoire-culture/silk-roads.jpg"
         },
       ]
     },
@@ -442,7 +431,7 @@ function Audio() {
           duration: "Collection 50h",
           rating: 4.9,
           listeners: 45600,
-          cover: "/images/audio/podcasts/tim-ferriss.jpg" // CORRIGÉ
+          cover: "/images/audio/podcasts/tim-ferriss.jpg"
         },
         { 
           id: 602, 
@@ -453,7 +442,7 @@ function Audio() {
           duration: "Collection 100h",
           rating: 4.8,
           listeners: 67800,
-          cover: "/images/audio/podcasts/joe-rogan.jpg" // CORRIGÉ
+          cover: "/images/audio/podcasts/joe-rogan.jpg"
         },
         { 
           id: 603, 
@@ -464,7 +453,7 @@ function Audio() {
           duration: "Collection 75h",
           rating: 4.7,
           listeners: 89200,
-          cover: "/images/audio/podcasts/ted-talks.jpg" // CORRIGÉ
+          cover: "/images/audio/podcasts/ted-talks.jpg"
         },
         { 
           id: 604, 
@@ -475,7 +464,7 @@ function Audio() {
           duration: "Collection 60h",
           rating: 4.6,
           listeners: 56700,
-          cover: "/images/audio/podcasts/the-daily.jpg" // CORRIGÉ
+          cover: "/images/audio/podcasts/the-daily.jpg"
         },
       ]
     },
@@ -495,7 +484,7 @@ function Audio() {
           duration: "9h 20m",
           rating: 4.7,
           listeners: 12500,
-          cover: "/images/audio/musique-arts/brain-on-music.jpg" // CORRIGÉ
+          cover: "/images/audio/musique-arts/brain-on-music.jpg"
         },
         { 
           id: 702, 
@@ -506,7 +495,7 @@ function Audio() {
           duration: "8h 45m",
           rating: 4.6,
           listeners: 9800,
-          cover: "/images/audio/musique-arts/how-music-works.jpg" // CORRIGÉ
+          cover: "/images/audio/musique-arts/how-music-works.jpg"
         },
         { 
           id: 703, 
@@ -517,7 +506,7 @@ function Audio() {
           duration: "12h 30m",
           rating: 4.8,
           listeners: 7600,
-          cover: "/images/audio/musique-arts/rest-is-noise.jpg" // CORRIGÉ
+          cover: "/images/audio/musique-arts/rest-is-noise.jpg"
         },
         { 
           id: 704, 
@@ -528,7 +517,7 @@ function Audio() {
           duration: "3h 45m",
           rating: 4.5,
           listeners: 14300,
-          cover: "/images/audio/musique-arts/steal-like-artist.jpg" // CORRIGÉ
+          cover: "/images/audio/musique-arts/steal-like-artist.jpg"
         },
       ]
     },
@@ -548,7 +537,7 @@ function Audio() {
           duration: "7h 20m",
           rating: 4.8,
           listeners: 12500,
-          cover: "/images/audio/cuisine-lifestyle/salt-fat-acid-heat.jpg" // CORRIGÉ
+          cover: "/images/audio/cuisine-lifestyle/salt-fat-acid-heat.jpg"
         },
         { 
           id: 802, 
@@ -559,7 +548,7 @@ function Audio() {
           duration: "10h 15m",
           rating: 4.9,
           listeners: 9800,
-          cover: "/images/audio/cuisine-lifestyle/joy-cooking.jpg" // CORRIGÉ
+          cover: "/images/audio/cuisine-lifestyle/joy-cooking.jpg"
         },
         { 
           id: 803, 
@@ -570,7 +559,7 @@ function Audio() {
           duration: "12h 30m",
           rating: 4.7,
           listeners: 7600,
-          cover: "/images/audio/cuisine-lifestyle/mastering-art.jpg" // CORRIGÉ
+          cover: "/images/audio/cuisine-lifestyle/mastering-art.jpg"
         },
         { 
           id: 804, 
@@ -581,7 +570,7 @@ function Audio() {
           duration: "6h 45m",
           rating: 4.6,
           listeners: 8200,
-          cover: "/images/audio/cuisine-lifestyle/ottolenghi-simple.jpg" // CORRIGÉ
+          cover: "/images/audio/cuisine-lifestyle/ottolenghi-simple.jpg"
         },
       ]
     },
@@ -595,7 +584,6 @@ function Audio() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/30">
-      <Header />
 
       <div className="flex flex-1 relative">
         {/* Mobile Menu Button */}
@@ -928,8 +916,6 @@ function Audio() {
           )}
         </main>
       </div>
-
-      <Footer />
 
       {/* Styles d'animation */}
       <style jsx>{`

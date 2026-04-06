@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import {
@@ -616,8 +614,6 @@ function Boutique() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
-      <Header />
-
       <div className="flex flex-col lg:flex-row max-w-7xl mx-auto px-4 py-8">
         {/* Mobile Menu Button */}
         <button
@@ -966,8 +962,6 @@ function Boutique() {
           )}
         </main>
       </div>
-
-      <Footer />
     </div>
   );
 }

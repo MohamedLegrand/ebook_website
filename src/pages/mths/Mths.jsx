@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import { 
   Sparkles, Heart, BookOpen, Cross, MapPin, Users, 
   Leaf, Shield, Clock, ArrowRight, Star, Award,
   Target, CheckCircle, Calendar, MessageCircle, Home,
   Brain, Activity, ShieldAlert, Globe, Book, Video,
-  PhoneCall, Mail, ChevronDown
+  PhoneCall, Mail, ChevronDown 
 } from "lucide-react";
 
 function Mths() {
@@ -123,8 +121,7 @@ function Mths() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-emerald-50">
-      <Header />
-
+      
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-emerald-900 text-white">
         {/* Motifs Décoratifs Africains */}
@@ -199,7 +196,6 @@ function Mths() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* En-tête Section */}
           <div className="text-center mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 bg-blue-100 rounded-full px-4 sm:px-6 py-2 mb-4">
               <Sparkles className="w-4 h-4 text-blue-700" />
@@ -307,19 +303,15 @@ function Mths() {
 
             {/* Colonne Image/Visuel */}
             <div className="relative">
-              {/* Card Principale */}
               <div className="relative bg-gradient-to-br from-blue-100 to-emerald-100 p-6 sm:p-8 rounded-3xl shadow-2xl border-4 border-white">
-                {/* Halo lumineux */}
                 <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 to-blue-600/20 rounded-3xl blur-2xl"></div>
 
                 <div className="relative">
-                  {/* Croix Centrale */}
                   <div className="bg-gradient-to-br from-blue-700 to-blue-900 p-12 sm:p-16 rounded-2xl shadow-2xl mb-6 relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent"></div>
                     <Cross className="w-full h-full text-amber-400 relative z-10" strokeWidth={3} />
                   </div>
 
-                  {/* Texte Mission */}
                   <div className="text-center space-y-4">
                     <h3 className="text-xl sm:text-2xl font-bold text-blue-900">
                       Mission Divine
@@ -378,21 +370,21 @@ function Mths() {
               },
               {
                 number: "02",
-                title: "Naruropathie et remède traditionnel ameliorer",
+                title: "Naturopathie et remède traditionnel amélioré",
                 description: "Utilisation de plantes médicinales locales, de bains thérapeutiques et de compléments naturels, préparés selon les méthodes traditionnelles enrichies par la révélation divine.",
                 icon: "🌿",
                 color: "from-emerald-500 to-green-600"
               },
               {
                 number: "03",
-                title: "Rituel de purification (rites SO'O inculturé",
+                title: "Rituel de purification (rites SO'O inculturé)",
                 description: "Cérémonies de purification inspirées des rites ancestraux, réinterprétées dans la foi chrétienne pour libérer des souillures spirituelles et restaurer l'harmonie intérieure.",
                 icon: "👥",
                 color: "from-blue-500 to-cyan-600"
               },
               {
                 number: "04",
-                title: "Délivrance et desanvoutement ",
+                title: "Délivrance et désenvoûtement",
                 description: "Prières de délivrance, imposition des mains et sacrements pour briser les liens occultes, les malédictions générationnelles et les influences maléfiques.",
                 icon: "🔥",
                 color: "from-purple-500 to-pink-600"
@@ -425,7 +417,7 @@ function Mths() {
             ))}
           </div>
 
-          {/* Note importante */}
+          {/* Avertissement */}
           <div className="bg-white/10 backdrop-blur-lg border-2 border-amber-400/30 rounded-2xl p-6 max-w-4xl mx-auto">
             <div className="flex items-start gap-4">
               <ShieldAlert className="w-8 h-8 text-amber-400 flex-shrink-0" />
@@ -463,51 +455,14 @@ function Mths() {
             <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-blue-700 mx-auto rounded-full"></div>
           </div>
 
-          {/* Étapes du parcours */}
           <div className="space-y-8 max-w-5xl mx-auto">
             {[
-              {
-                step: "1",
-                title: "Accueil et Évaluation Initiale",
-                description: "Premier contact, écoute bienveillante, analyse des besoins et évaluation globale de la situation.",
-                duration: "1-2 séances",
-                icon: "👂"
-              },
-              {
-                step: "2",
-                title: "Diagnostic Spirituel et Psychologique",
-                description: "Identification des blocages spirituels, analyse des liens familiaux, compréhension des traumatismes.",
-                duration: "2-3 séances",
-                icon: "🔍"
-              },
-              {
-                step: "3",
-                title: "Prière et Sacrements de Guérison",
-                description: "Confession, réconciliation, prières de délivrance, imposition des mains, Eucharistie.",
-                duration: "Variables",
-                icon: "🙏"
-              },
-              {
-                step: "4",
-                title: "Traitements Naturels et Traditionnels",
-                description: "Utilisation de plantes médicinales, bains thérapeutiques, régimes alimentaires adaptés.",
-                duration: "3-6 mois",
-                icon: "🌿"
-              },
-              {
-                step: "5",
-                title: "Réconciliation Familiale et Communautaire",
-                description: "Travail sur les relations familiales, pardon mutuel, réintégration sociale.",
-                duration: "2-3 mois",
-                icon: "👨‍👩‍👧‍👦"
-              },
-              {
-                step: "6",
-                title: "Suivi et Consolidation",
-                description: "Accompagnement à long terme, prévention des rechutes, intégration communautaire.",
-                duration: "6-12 mois",
-                icon: "🛡️"
-              }
+              { step: "1", title: "Accueil et Évaluation Initiale", description: "Premier contact, écoute bienveillante, analyse des besoins et évaluation globale de la situation.", duration: "1-2 séances", icon: "👂" },
+              { step: "2", title: "Diagnostic Spirituel et Psychologique", description: "Identification des blocages spirituels, analyse des liens familiaux, compréhension des traumatismes.", duration: "2-3 séances", icon: "🔍" },
+              { step: "3", title: "Prière et Sacrements de Guérison", description: "Confession, réconciliation, prières de délivrance, imposition des mains, Eucharistie.", duration: "Variables", icon: "🙏" },
+              { step: "4", title: "Traitements Naturels et Traditionnels", description: "Utilisation de plantes médicinales, bains thérapeutiques, régimes alimentaires adaptés.", duration: "3-6 mois", icon: "🌿" },
+              { step: "5", title: "Réconciliation Familiale et Communautaire", description: "Travail sur les relations familiales, pardon mutuel, réintégration sociale.", duration: "2-3 mois", icon: "👨‍👩‍👧‍👦" },
+              { step: "6", title: "Suivi et Consolidation", description: "Accompagnement à long terme, prévention des rechutes, intégration communautaire.", duration: "6-12 mois", icon: "🛡️" }
             ].map((step, index) => (
               <div
                 key={index}
@@ -622,11 +577,9 @@ function Mths() {
             <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-blue-700 mx-auto rounded-full"></div>
           </div>
 
-          {/* Carousel des témoignages */}
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 border-2 border-blue-200">
               <div className="flex flex-col lg:flex-row gap-8">
-                {/* Photo du témoin (placeholder) */}
                 <div className="lg:w-1/3 flex-shrink-0">
                   <div className="bg-gradient-to-br from-blue-100 to-emerald-100 rounded-2xl p-8 flex items-center justify-center">
                     <div className="text-center">
@@ -643,7 +596,6 @@ function Mths() {
                   </div>
                 </div>
 
-                {/* Contenu du témoignage */}
                 <div className="lg:w-2/3">
                   <div className="mb-6">
                     <div className="flex items-center gap-2 mb-4">
@@ -660,7 +612,6 @@ function Mths() {
                     </div>
                   </div>
 
-                  {/* Navigation */}
                   <div className="flex items-center justify-between">
                     <button
                       onClick={prevTestimony}
@@ -840,17 +791,11 @@ function Mths() {
         </div>
       </section>
 
-      <Footer />
-
       {/* Styles Animations */}
       <style jsx>{`
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
 
         @keyframes slideInUp {
@@ -874,13 +819,8 @@ function Mths() {
         }
 
         @keyframes pulse {
-          0%,
-          100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
         }
 
         .animate-pulse {

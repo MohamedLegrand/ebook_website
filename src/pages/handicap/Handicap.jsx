@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import { 
   AlertCircle, 
   Brain, 
@@ -180,8 +178,6 @@ function HandicapSpirituel() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-emerald-50">
-      <Header />
-
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 text-white">
         <div className="absolute inset-0 opacity-10">
@@ -546,8 +542,6 @@ function HandicapSpirituel() {
           </div>
         </div>
       </section>
-
-      <Footer />
 
       <style jsx>{`
         @keyframes fadeIn {

@@ -1,6 +1,4 @@
 import React from "react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import { CalendarDays, BookOpen, Sparkles, MapPin, Clock, ArrowRight } from "lucide-react";
 
 function Actualites() {
@@ -78,8 +76,6 @@ function Actualites() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
-      <Header />
-
       <main className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* En-tête avec description */}
         <div className="text-center mb-12">
@@ -240,8 +236,6 @@ function Actualites() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

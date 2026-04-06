@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import HeaderConnected from "../../components/headerconnected/HeaderConnected";
-import Footer from "../../components/footer/Footer";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -126,8 +124,6 @@ function LivreConnected() {
         .add-btn:hover:not(:disabled) { transform: scale(1.03); }
         .add-btn:active:not(:disabled) { transform: scale(0.97); }
       `}</style>
-
-      <HeaderConnected />
 
       {/* Bandeau de bienvenue */}
       <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 text-white py-5 px-4">
@@ -463,8 +459,6 @@ function LivreConnected() {
           </div>
         </main>
       </div>
-
-      <Footer />
     </div>
   );
 }

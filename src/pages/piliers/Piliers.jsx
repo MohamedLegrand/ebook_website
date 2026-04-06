@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import {
   Compass,
   Leaf,
@@ -17,39 +15,54 @@ import {
   Quote,
 } from "lucide-react";
 
-/* ─── Hook: observe si l'élément est visible (pour animations de défilement) ─── */
+/* ─── Hook: observe si l'élément est visible (pour animations) ─── */
 function useInView(threshold = 0.15) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
+
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold });
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setInView(true);
+      },
+      { threshold }
+    );
+
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, [threshold]);
+
   return [ref, inView];
 }
 
-/* ─── Animated counter ─── */
+/* ─── Animated Counter ─── */
 function Counter({ target, suffix = "", duration = 1800 }) {
   const [count, setCount] = useState(0);
   const [ref, inView] = useInView(0.5);
+
   useEffect(() => {
     if (!inView) return;
+
     let start = 0;
     const step = Math.ceil(target / (duration / 16));
     const timer = setInterval(() => {
       start += step;
-      if (start >= target) { setCount(target); clearInterval(timer); }
-      else setCount(start);
+      if (start >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(start);
+      }
     }, 16);
+
     return () => clearInterval(timer);
   }, [inView, target, duration]);
+
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
 const Piliers = () => {
-
   const [activePillar, setActivePillar] = useState(0);
   const [heroRef, heroInView] = useInView(0.1);
 
@@ -173,7 +186,7 @@ const Piliers = () => {
 
   const ap = pillars[activePillar];
 
-  // Références pour les sections (scroll animations)
+  // Références pour les sections (animations scroll)
   const [introRef, introInView] = useInView(0.3);
   const [piliersSectionRef, piliersInView] = useInView(0.2);
   const [protocoleRef, protocoleInView] = useInView(0.2);
@@ -189,6 +202,7 @@ const Piliers = () => {
         @keyframes pulseGlow { 0%,100% { opacity:0.6; } 50% { opacity:1; } }
         @keyframes rotateSlow { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
         @keyframes bounceSoft { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-3px); } }
+        
         .anim-up { animation: fadeUp 0.7s ease both; }
         .anim-in { animation: fadeIn 0.9s ease both; }
         .line-grow { animation: slideRight 1s ease both; transform-origin: left; }
@@ -196,33 +210,35 @@ const Piliers = () => {
         .pulse-anim { animation: pulseGlow 2s ease-in-out infinite; }
         .rotate-anim { animation: rotateSlow 12s linear infinite; }
         .bounce-soft { animation: bounceSoft 2s ease-in-out infinite; }
+        
         .delay-1 { animation-delay: 0.1s; }
         .delay-2 { animation-delay: 0.2s; }
         .delay-3 { animation-delay: 0.3s; }
         .delay-4 { animation-delay: 0.4s; }
         .delay-5 { animation-delay: 0.5s; }
+        
         .pillar-btn { transition: all 0.25s ease; }
         .pillar-btn:hover { transform: translateX(4px); }
         .pillar-btn.active { transform: translateX(6px); }
+        
         .step-card { transition: all 0.3s ease; }
         .step-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(29,78,216,0.12); }
+        
         .hero-pattern {
           background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.06) 0%, transparent 50%),
             radial-gradient(circle at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 40%),
             repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 41px);
         }
+        
         .card-hover { transition: all 0.35s cubic-bezier(0.4,0,0.2,1); }
         .card-hover:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0,0,0,0.1); }
+        
         .stat-divider { background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3), transparent); }
         .icon-hover { transition: transform 0.3s ease; }
         .icon-hover:hover { transform: rotate(8deg) scale(1.1); }
       `}</style>
 
-      <Header />
-
-      {/* ════════════════════════════════════════════
-          HERO
-      ════════════════════════════════════════════ */}
+      {/* HERO SECTION */}
       <section
         ref={heroRef}
         className="relative bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 text-white overflow-hidden"
@@ -230,14 +246,14 @@ const Piliers = () => {
       >
         <div className="hero-pattern absolute inset-0" />
 
-        {/* Decorative circles avec animations */}
+        {/* Decorative circles */}
         <div className="absolute top-20 right-16 w-80 h-80 bg-blue-700/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
         <div className="absolute -bottom-20 left-10 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl rotate-anim" />
         <div className="absolute top-40 left-1/3 w-64 h-64 bg-indigo-600/10 rounded-full blur-2xl float-anim" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-24 lg:py-32 flex flex-col lg:flex-row items-center gap-16 min-h-[88vh]">
 
-          {/* Left text */}
+          {/* Left Content */}
           <div className={`flex-1 max-w-2xl ${heroInView ? "anim-up" : "opacity-0"}`}>
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-blue-200 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full mb-8 backdrop-blur-sm hover:bg-white/20 transition-colors">
               <Star className="w-3.5 h-3.5 text-yellow-400 bounce-soft" />
@@ -269,18 +285,22 @@ const Piliers = () => {
             </div>
           </div>
 
-          {/* Right — 5 pillar pills */}
+          {/* Right — Quick access to pillars */}
           <div className={`flex-shrink-0 w-full lg:w-80 ${heroInView ? "anim-up delay-3" : "opacity-0"}`}>
             <p className="text-blue-300 text-xs font-semibold uppercase tracking-widest mb-5">Les 5 dimensions thérapeutiques</p>
             <div className="space-y-3">
               {pillars.map((p, i) => (
                 <button
                   key={p.id}
-                  onClick={() => { setActivePillar(i); document.getElementById("piliers")?.scrollIntoView({ behavior: "smooth" }); }}
+                  onClick={() => {
+                    setActivePillar(i);
+                    document.getElementById("piliers")?.scrollIntoView({ behavior: "smooth" });
+                  }}
                   className="w-full flex items-center gap-4 bg-white/8 border border-white/15 rounded-2xl px-5 py-4 text-left hover:bg-white/15 hover:border-white/30 transition-all group backdrop-blur-sm"
                 >
                   <span className="text-xs font-bold text-blue-400 w-6 flex-shrink-0">{p.number}</span>
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110" style={{ backgroundColor: p.color + "33", color: "#93c5fd" }}>
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110" 
+                       style={{ backgroundColor: p.color + "33", color: "#93c5fd" }}>
                     {p.icon}
                   </div>
                   <span className="text-sm font-semibold text-white/90 leading-snug">{p.title}</span>
@@ -291,16 +311,14 @@ const Piliers = () => {
           </div>
         </div>
 
-        {/* Scroll cue avec animation plus dynamique */}
+        {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40 animate-bounce">
           <span className="text-xs tracking-widest uppercase">Défiler</span>
           <ChevronDown className="w-5 h-5" />
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════
-          STATS BAND
-      ════════════════════════════════════════════ */}
+      {/* STATS BAND */}
       <section className="bg-blue-900 text-white py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-0">
@@ -320,9 +338,7 @@ const Piliers = () => {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════
-          INTRO — La vision
-      ════════════════════════════════════════════ */}
+      {/* INTRODUCTION */}
       <section ref={introRef} className="py-20 lg:py-28 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className={`grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 items-center transition-all duration-1000 ${introInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
@@ -352,9 +368,7 @@ const Piliers = () => {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════
-          LES CINQ PILIERS — Interactive
-      ════════════════════════════════════════════ */}
+      {/* LES CINQ PILIERS — Interactive */}
       <section id="piliers" ref={piliersSectionRef} className="py-20 lg:py-28 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
@@ -366,7 +380,7 @@ const Piliers = () => {
             <div className="w-16 h-1 bg-blue-600 mx-auto mt-5 rounded-full line-grow" style={{ animationPlayState: piliersInView ? 'running' : 'paused' }} />
           </div>
 
-          {/* Selector tabs — desktop */}
+          {/* Desktop Selector */}
           <div className="hidden lg:flex items-stretch gap-1 bg-white rounded-2xl p-2 shadow-sm border border-slate-200 mb-10">
             {pillars.map((p, i) => (
               <button
@@ -384,11 +398,10 @@ const Piliers = () => {
             ))}
           </div>
 
-          {/* Active pillar detail avec animation de transition */}
+          {/* Active Pillar Detail */}
           <div key={activePillar} className="anim-up bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-500 hover:shadow-xl">
             <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr]">
-
-              {/* Left visual panel */}
+              {/* Visual Panel */}
               <div className="relative p-10 flex flex-col justify-between min-h-[360px] transition-colors duration-300"
                 style={{ backgroundColor: ap.color }}>
                 <div>
@@ -409,17 +422,15 @@ const Piliers = () => {
                   <p className="text-white/70 text-sm italic mb-6">{ap.subtitle}</p>
                 </div>
 
-                {/* Quote */}
                 <div className="border-t border-white/20 pt-5">
                   <div className="text-white leading-none mb-1 text-5xl opacity-30">"</div>
                   <p className="text-white/90 text-sm leading-relaxed italic">{ap.quote}</p>
                 </div>
 
-                {/* Decorative */}
                 <div className="absolute bottom-0 right-0 w-40 h-40 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.05)", transform: "translate(30%, 30%)" }} />
               </div>
 
-              {/* Right content */}
+              {/* Content */}
               <div className="p-8 sm:p-10 lg:p-12">
                 <p className="text-slate-700 text-base sm:text-lg leading-relaxed mb-6">
                   {ap.description}
@@ -449,24 +460,30 @@ const Piliers = () => {
               </div>
             </div>
 
-            {/* Mobile tabs — scroll buttons */}
+            {/* Mobile Selector */}
             <div className="lg:hidden border-t border-slate-100 flex overflow-x-auto gap-2 p-4 snap-x snap-mandatory">
               {pillars.map((p, i) => (
-                <button key={p.id} onClick={() => setActivePillar(i)} snap-align="start"
+                <button 
+                  key={p.id} 
+                  onClick={() => setActivePillar(i)}
                   className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${activePillar === i ? "text-white scale-105" : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}
-                  style={activePillar === i ? { backgroundColor: p.color } : {}}>
+                  style={activePillar === i ? { backgroundColor: p.color } : {}}
+                >
                   {p.number} — {p.title.split(" ").slice(0, 3).join(" ")}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Overview cards — all 5 visible at bottom */}
+          {/* Overview Cards */}
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {pillars.map((p, i) => (
-              <button key={p.id} onClick={() => setActivePillar(i)}
+              <button 
+                key={p.id} 
+                onClick={() => setActivePillar(i)}
                 className={`card-hover bg-white rounded-2xl p-5 text-left border-2 transition-all ${activePillar === i ? "shadow-lg" : "border-slate-200 hover:border-slate-300"}`}
-                style={activePillar === i ? { borderColor: p.color } : {}}>
+                style={activePillar === i ? { borderColor: p.color } : {}}
+              >
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 icon-hover" style={{ backgroundColor: p.colorLight }}>
                   <div style={{ color: p.color }}>{p.icon}</div>
                 </div>
@@ -479,12 +496,9 @@ const Piliers = () => {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════
-          LE PROTOCOLE EN 5 ÉTAPES
-      ════════════════════════════════════════════ */}
+      {/* PROTOCOLE EN 5 ÉTAPES */}
       <section id="protocole" ref={protocoleRef} className="py-20 lg:py-28 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-14 items-start">
             <div className={`lg:sticky lg:top-24 transition-all duration-700 ${protocoleInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}`}>
               <span className="text-blue-600 text-xs font-bold uppercase tracking-widest">Notre méthode</span>
@@ -504,7 +518,6 @@ const Piliers = () => {
               {steps.map((step, i) => (
                 <div key={step.id} className="step-card bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm group hover:shadow-lg">
                   <div className="flex items-stretch">
-                    {/* Number */}
                     <div className="flex-shrink-0 w-16 sm:w-20 flex items-center justify-center bg-gradient-to-b from-blue-600 to-blue-700 text-white transition-all group-hover:from-blue-700 group-hover:to-blue-800">
                       <div className="text-center">
                         <div className="text-2xl font-bold">{step.id}</div>
@@ -513,7 +526,6 @@ const Piliers = () => {
                       </div>
                     </div>
 
-                    {/* Content */}
                     <div className="flex-1 p-5 sm:p-6">
                       <div className="flex items-start justify-between gap-4 flex-wrap">
                         <div>
@@ -538,9 +550,7 @@ const Piliers = () => {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════
-          TÉMOIGNAGE / CITATION CENTRALE
-      ════════════════════════════════════════════ */}
+      {/* CITATION CENTRALE */}
       <section className="py-20 bg-gradient-to-br from-blue-950 to-blue-900 text-white relative overflow-hidden">
         <div className="hero-pattern absolute inset-0" />
         <div className="absolute top-10 left-20 w-64 h-64 bg-blue-700/20 rounded-full blur-3xl pulse-anim" />
@@ -559,9 +569,7 @@ const Piliers = () => {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════
-          CTA
-      ════════════════════════════════════════════ */}
+      {/* CTA FINAL */}
       <section ref={ctaRef} className="py-20 lg:py-28 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className={`bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl border border-blue-100 p-10 sm:p-14 lg:p-20 relative overflow-hidden transition-all duration-1000 ${ctaInView ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
@@ -591,21 +599,21 @@ const Piliers = () => {
               </div>
 
               <div className="flex flex-col gap-4 flex-shrink-0">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold text-base transition-all shadow-lg hover:shadow-xl active:scale-[0.97] flex items-center justify-center gap-2 group">
+                <a href="/contact"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold text-base transition-all shadow-lg hover:shadow-xl active:scale-[0.97] flex items-center justify-center gap-2 group">
                   Demander un accompagnement
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-                <button className="border-2 border-blue-200 text-blue-700 hover:bg-blue-50 px-8 py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 group">
+                </a>
+                <a href="/publications"
+                  className="border-2 border-blue-200 text-blue-700 hover:bg-blue-50 px-8 py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 group">
                   Consulter nos publications
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

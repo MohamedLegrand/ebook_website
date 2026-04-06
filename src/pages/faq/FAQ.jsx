@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, BookOpen, Cross, Heart, Shield, Mail, Clock, Users, MapPin, Phone, AlertCircle } from "lucide-react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 
 function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -153,9 +151,6 @@ function FAQ() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Header */}
-      <Header />
-
       {/* Contenu principal */}
       <main className="flex-1">
         {/* Hero Section */}
@@ -434,9 +429,6 @@ function FAQ() {
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <Footer />
 
       <style jsx>{`
         @keyframes fadeIn {

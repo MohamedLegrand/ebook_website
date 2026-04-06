@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import { useCart } from "../../context/CartContext";
 import {
   ArrowLeft,
@@ -738,7 +736,7 @@ Ce guide thérapeutique d'une précision remarquable compile quarante-sept proto
 
 Ce qui rend ce livre unique : il ne vous traite pas comme un patient passif. Il vous explique ce que vous traversez, pourquoi, et comment vous pouvez devenir acteur de votre propre libération. Parce que dans la vision MTHS, la guérison n'est pas un événement qui vous arrive — c'est une transformation que vous choisissez.
 
-Les dosages sont indiqués avec précision. Les signes de guérison progressive sont décrits. Les contre-indications sont signalées. Vous avez entre les mains un vrai manuel clinique — pas des vœux pieux.
+Les dosages sont indiqués avec précision. Les signes de guérison progressive sont décrits. Les contre-indications sont signalés. Vous avez entre les mains un vrai manuel clinique — pas des vœux pieux.
 
 Si vous souffrez ou si vous accompagnez quelqu'un qui souffre, ce livre peut changer la donne. Lisez-le avec un crayon en main.`
   },
@@ -1294,8 +1292,8 @@ La délivrance n'est pas un événement. C'est un processus. Et ce processus peu
   langue: "Français",
   pointsCles: [
     "Comprendre la nature de l'oppression spirituelle : modes opératoires du diable, des démons et des sorciers",
-    "Identifier les influences spirituelles étrangères et leurs impacts dans la vie d’un individu",
-    "Reconnaître les portes d’entrée liées à certaines pratiques spirituelles (rituels, initiations, pactes)",
+    "Identifier les influences spirituelles étrangères et leurs impacts dans la vie d'un individu",
+    "Reconnaître les portes d'entrée liées à certaines pratiques spirituelles (rituels, initiations, pactes)",
     "Protocole de délivrance en trois phases : rupture des liens, purification intérieure, restauration",
     "Stratégies concrètes pour se préserver et maintenir une stabilité spirituelle durable"
   ],
@@ -1304,13 +1302,13 @@ La délivrance n'est pas un événement. C'est un processus. Et ce processus peu
     "Accompagnateurs et responsables spirituels",
     "Tout chrétien désirant approfondir le discernement spirituel"
   ],
-  resume: `À une époque où les pratiques spirituelles se diversifient et s’entremêlent, le discernement devient indispensable. Cet ouvrage explore les dérives spirituelles associées à certaines pratiques issues de l’hindouisme, en les confrontant à une approche chrétienne de la délivrance.
+  resume: `À une époque où les pratiques spirituelles se diversifient et s'entremêlent, le discernement devient indispensable. Cet ouvrage explore les dérives spirituelles associées à certaines pratiques issues de l'hindouisme, en les confrontant à une approche chrétienne de la délivrance.
 
 À travers des enseignements accessibles et des situations concrètes, il met en évidence comment certaines influences peuvent ouvrir des portes à des oppressions invisibles, entraînant blocages, troubles et déséquilibres dans la vie quotidienne.
 
-S’appuyant sur l’expérience du Centre MTHS, ce guide propose un chemin progressif de restauration : identifier les sources d’influence, rompre les liens néfastes et retrouver une stabilité spirituelle durable.
+S'appuyant sur l'expérience du Centre MTHS, ce guide propose un chemin progressif de restauration : identifier les sources d'influence, rompre les liens néfastes et retrouver une stabilité spirituelle durable.
 
-Plus qu’un simple constat, ce livre offre des repères pratiques pour comprendre, se protéger et avancer vers une liberté intérieure authentique.`
+Plus qu'un simple constat, ce livre offre des repères pratiques pour comprendre, se protéger et avancer vers une liberté intérieure authentique.`
 },
 {
   id: 26,
@@ -1327,9 +1325,9 @@ Plus qu’un simple constat, ce livre offre des repères pratiques pour comprend
   datePublication: "2023",
   langue: "Français",
   pointsCles: [
-    "Comprendre l’impact spirituel des relations sexuelles et les liens invisibles qu’elles peuvent créer",
-    "Identifier les portes d’entrée liées aux pratiques sexuelles désordonnées ou non maîtrisées",
-    "Reconnaître les conséquences spirituelles : blocages, oppressions, répétitions d’échecs",
+    "Comprendre l'impact spirituel des relations sexuelles et les liens invisibles qu'elles peuvent créer",
+    "Identifier les portes d'entrée liées aux pratiques sexuelles désordonnées ou non maîtrisées",
+    "Reconnaître les conséquences spirituelles : blocages, oppressions, répétitions d'échecs",
     "Protocole de délivrance en trois phases : rupture des liens, purification intérieure, restauration",
     "Stratégies concrètes pour préserver sa vie spirituelle et éviter les rechutes"
   ],
@@ -1340,11 +1338,11 @@ Plus qu’un simple constat, ce livre offre des repères pratiques pour comprend
   ],
   resume: `La sexualité ne se limite pas à un simple acte physique. Elle possède une dimension spirituelle profonde, souvent ignorée, mais dont les conséquences peuvent marquer toute une vie.
 
-Cet ouvrage met en lumière l’influence spirituelle des relations sexuelles, en révélant comment certains choix et pratiques peuvent créer des liens invisibles, ouvrir des portes à des oppressions et provoquer des blocages répétés dans différents domaines de la vie.
+Cet ouvrage met en lumière l'influence spirituelle des relations sexuelles, en révélant comment certains choix et pratiques peuvent créer des liens invisibles, ouvrir des portes à des oppressions et provoquer des blocages répétés dans différents domaines de la vie.
 
-À partir de l’expérience du Centre MTHS, ce guide propose une compréhension claire des mécanismes en jeu, ainsi qu’un chemin structuré de restauration : identifier les sources d’impact, rompre les liens néfastes et retrouver une stabilité spirituelle durable.
+À partir de l'expérience du Centre MTHS, ce guide propose une compréhension claire des mécanismes en jeu, ainsi qu'un chemin structuré de restauration : identifier les sources d'impact, rompre les liens néfastes et retrouver une stabilité spirituelle durable.
 
-Plus qu’un enseignement, ce livre offre des clés pratiques pour vivre une vie équilibrée, préserver son intégrité spirituelle et avancer vers une véritable liberté intérieure.`
+Plus qu'un enseignement, ce livre offre des clés pratiques pour vivre une vie équilibrée, préserver son intégrité spirituelle et avancer vers une véritable liberté intérieure.`
 },
 {
   id: 27,
@@ -1403,14 +1401,14 @@ Un guide essentiel pour comprendre les véritables enjeux spirituels derrière l
   datePublication: "2024",
   langue: "Français",
   pointsCles: [
-    "Comprendre les principes fondamentaux de l’hygiène spirituelle de l’âme",
-    "Identifier les influences négatives qui polluent l’âme",
+    "Comprendre les principes fondamentaux de l'hygiène spirituelle de l'âme",
+    "Identifier les influences négatives qui polluent l'âme",
     "Mettre en place des pratiques quotidiennes de purification intérieure",
-    "Développer une discipline spirituelle pour maintenir l’équilibre intérieur",
+    "Développer une discipline spirituelle pour maintenir l'équilibre intérieur",
     "Apprendre à restaurer une âme affaiblie ou blessée"
   ],
   publicCible: [
-    "Personnes en quête de paix intérieure et d’équilibre spirituel",
+    "Personnes en quête de paix intérieure et d'équilibre spirituel",
     "Responsables spirituels et accompagnateurs",
     "Toute personne souhaitant approfondir sa relation avec Dieu",
     "Lecteurs intéressés par le développement personnel et spirituel"
@@ -1445,10 +1443,10 @@ Une approche holistique intégrant psychologie moderne et spiritualité africain
     "Identifier les schémas de dépendance et leurs conséquences sur la vie quotidienne",
     "Reconnaître les effets sur les relations, la discipline et la croissance personnelle",
     "Découvrir des principes de libération et de restauration intérieure",
-    "Mettre en place des stratégies concrètes pour retrouver le contrôle et l’équilibre"
+    "Mettre en place des stratégies concrètes pour retrouver le contrôle et l'équilibre"
   ],
   publicCible: [
-    "Personnes confrontées à des luttes dans ce domaine et cherchant à s’en libérer",
+    "Personnes confrontées à des luttes dans ce domaine et cherchant à s'en libérer",
     "Jeunes adultes et adolescents en quête de repères",
     "Accompagnateurs et responsables spirituels",
     "Toute personne souhaitant comprendre ces enjeux et évoluer"
@@ -1562,13 +1560,11 @@ function Produitdetail() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
-        <Header />
         <div className="flex flex-col items-center justify-center min-h-[60vh] p-8">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600 mb-6" />
           <h2 className="text-2xl font-bold text-blue-900 mb-2">Chargement du produit…</h2>
           <p className="text-gray-500">Veuillez patienter</p>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -1577,7 +1573,6 @@ function Produitdetail() {
   if (!product) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
-        <Header />
         <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center">
           <BookOpen className="w-24 h-24 text-blue-200 mb-6" />
           <h2 className="text-2xl font-bold text-blue-900 mb-4">Produit introuvable</h2>
@@ -1590,7 +1585,6 @@ function Produitdetail() {
             Retour à la boutique
           </button>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -1599,7 +1593,6 @@ function Produitdetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
-      <Header />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <button
@@ -1925,7 +1918,6 @@ function Produitdetail() {
         </div>
       </div>
 
-      <Footer />
     </div>
   );
 }

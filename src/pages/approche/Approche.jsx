@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import { 
   Stethoscope, 
   Leaf, 
@@ -230,8 +228,6 @@ function Approche() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-emerald-50">
-      <Header />
-
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-emerald-800 to-teal-900 text-white">
         <div className="absolute inset-0 opacity-10">
@@ -577,8 +573,6 @@ function Approche() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

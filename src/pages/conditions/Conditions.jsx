@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { CheckCircle, AlertTriangle, FileText, Shield, User, Heart, Globe, Lock, Calendar, Mail, ChevronDown, ChevronUp, Cross, Book } from "lucide-react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 
 function Conditions() {
   const [openSections, setOpenSections] = useState({});
@@ -45,8 +43,6 @@ function Conditions() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Header */}
-      <Header />
 
       {/* Contenu principal */}
       <main className="flex-1">
@@ -715,9 +711,6 @@ function Conditions() {
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <Footer />
 
       <style jsx>{`
         @keyframes fadeIn {

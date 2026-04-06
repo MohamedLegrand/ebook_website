@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import { 
   AlertCircle, Moon, Heart, Lock, Baby, Zap, Users, 
   Pill, Brain, Activity, ShieldOff, Droplets, AlertTriangle,
@@ -207,7 +205,6 @@ function Pathologies() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
-      <Header />
 
       <main className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Hero Section */}
@@ -457,9 +454,13 @@ function Pathologies() {
                 <div className="text-blue-600 mb-4">{ressource.icon}</div>
                 <h3 className="font-bold text-gray-900 mb-2">{ressource.title}</h3>
                 <p className="text-gray-600 text-sm mb-4">{ressource.desc}</p>
-                <a href={ressource.action === "Voir les témoignages" ? "/temoignages" : 
-                         ressource.action === "En savoir plus" ? "/approche" : "/contact"} 
-                   className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2">
+                <a 
+                  href={
+                    ressource.action === "Voir les témoignages" ? "/temoignages" : 
+                    ressource.action === "En savoir plus" ? "/approche" : "/contact"
+                  } 
+                  className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2"
+                >
                   {ressource.action}
                   <ChevronRight className="w-4 h-4" />
                 </a>
@@ -500,7 +501,6 @@ function Pathologies() {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 }

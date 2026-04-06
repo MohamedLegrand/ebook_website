@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import { 
   Heart, Sparkles, Quote, MapPin, Star, Calendar,
   PlayCircle, Share2, Filter, MessageCircle, Award,
@@ -156,8 +154,6 @@ function Temoignages() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
-      <Header />
-
       <main className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-12">
@@ -439,7 +435,7 @@ function Temoignages() {
               <h3 className="text-xl font-bold text-gray-900">Témoignage vidéo</h3>
               <button
                 onClick={() => setShowVideoModal(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
               >
                 ×
               </button>
@@ -447,13 +443,13 @@ function Temoignages() {
             <div className="aspect-video bg-gray-900 rounded-lg flex items-center justify-center">
               <div className="text-center">
                 <Volume2 className="w-16 h-16 text-white/50 mx-auto mb-4" />
-                <p className="text-white">Lecture du témoignage vidéo</p>
+                <p className="text-white text-lg">Lecture du témoignage vidéo</p>
                 <p className="text-white/70 text-sm mt-2">
                   (Le témoignage vidéo serait intégré ici)
                 </p>
               </div>
             </div>
-            <div className="mt-6 flex justify-end gap-4">
+            <div className="mt-6 flex justify-end">
               <button
                 onClick={() => setShowVideoModal(false)}
                 className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
@@ -464,8 +460,6 @@ function Temoignages() {
           </div>
         </div>
       )}
-
-      <Footer />
     </div>
   );
 }

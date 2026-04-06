@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import { 
   Sparkles, Heart, BookOpen, Users, Shield, Leaf, 
   Cross, Droplets, Star, Target, Zap, Globe, 
@@ -174,8 +172,6 @@ function Rites() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
-      <Header />
-
       <main className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-16">
@@ -328,7 +324,7 @@ function Rites() {
           ))}
         </div>
 
-        {/* Section supplémentaire : Processus d'accompagnement */}
+        {/* Section Processus d'accompagnement */}
         <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-8 text-white mb-16">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 text-center">
@@ -417,8 +413,6 @@ function Rites() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

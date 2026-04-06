@@ -6,7 +6,6 @@ import {
   BookOpen, Headphones, Package, CheckCircle, X
 } from "lucide-react";
 import { useCart } from "../../context/CartContext";
-import Header from "../../components/header/Header";
 
 /* ──────────────────────────────────────────
    Currency config
@@ -266,7 +265,6 @@ function Cart() {
   if (cart.length === 0) {
     return (
       <div style={{ minHeight: "100vh", background: "linear-gradient(160deg,#f8faff 0%,#fff 60%,#f0f7ff 100%)" }}>
-        <Header />
         <div style={{ paddingTop: 100, paddingBottom: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ textAlign: "center", maxWidth: 440 }}>
             <div style={{
@@ -321,7 +319,6 @@ function Cart() {
           margin: 0 auto;
           padding: 100px 32px 80px;
         }
-        /* Header row */
         .cart-hdr {
           display: flex; align-items: center; justify-content: space-between;
           gap: 16px; margin-bottom: 32px; flex-wrap: wrap;
@@ -332,14 +329,14 @@ function Cart() {
           margin: 0 0 4px; letter-spacing: -0.025em;
         }
         .cart-hdr-left p { margin:0; font-size:13.5px; color:#64748b; }
-        /* Layout */
+        
         .cart-layout {
           display: grid;
           grid-template-columns: 1fr 360px;
           gap: 24px;
           align-items: start;
         }
-        /* Left panel */
+        
         .cart-panel {
           background: #fff;
           border: 1.5px solid #e8edf3;
@@ -364,7 +361,6 @@ function Cart() {
           flex-wrap: wrap; gap: 8px;
         }
 
-        /* Guarantees */
         .guarantees {
           display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
           margin-top: 16px;
@@ -385,7 +381,6 @@ function Cart() {
         .guarantee-card h4 { margin:0 0 2px; font-size:13px; font-weight:700; color:#0f172a; }
         .guarantee-card p  { margin:0; font-size:11.5px; color:#64748b; }
 
-        /* Summary panel */
         .summary-panel {
           background: #fff;
           border: 1.5px solid #e8edf3;
@@ -419,7 +414,6 @@ function Cart() {
         .summary-total-val   { font-size:22px; font-weight:800; color:#2563eb; text-align:right; line-height:1; }
         .summary-total-equiv { font-size:11px; color:#94a3b8; margin-top:3px; }
 
-        /* Currency mini cards */
         .currency-mini {
           display: grid; grid-template-columns: repeat(3,1fr); gap: 8px;
           margin-top: 10px;
@@ -435,7 +429,6 @@ function Cart() {
           background: #eff6ff; border-color: #93c5fd;
         }
 
-        /* Promo */
         .promo-wrap { margin-bottom: 16px; }
         .promo-input-row { display:flex; gap:8px; }
         .promo-input {
@@ -452,7 +445,6 @@ function Cart() {
         }
         .promo-btn:hover { background:#1e293b; }
 
-        /* Checkout btn */
         .checkout-btn {
           width:100%; padding:15px; border-radius:12px;
           border:none; cursor:pointer;
@@ -468,7 +460,6 @@ function Cart() {
           font-size:11.5px; color:#94a3b8;
         }
 
-        /* Register box */
         .register-box {
           margin-top: 16px;
           background: #fff;
@@ -493,7 +484,6 @@ function Cart() {
           text-decoration:none; margin-top:5px;
         }
 
-        /* Responsive */
         @media (max-width: 960px) {
           .cart-layout { grid-template-columns: 1fr; }
           .summary-panel { position: static; }
@@ -509,10 +499,9 @@ function Cart() {
       `}</style>
 
       <div className="cart-page">
-        <Header />
         <div className="cart-wrap">
 
-          {/* ── Page header ── */}
+          {/* Page header */}
           <div className="cart-hdr">
             <div className="cart-hdr-left">
               <h1>Mon Panier</h1>
@@ -523,10 +512,9 @@ function Cart() {
 
           <div className="cart-layout">
 
-            {/* ── LEFT : Items ── */}
+            {/* LEFT : Items */}
             <div>
               <div className="cart-panel">
-                {/* Panel header */}
                 <div className="cart-panel-hdr">
                   <div className="cart-panel-hdr-title">
                     <ShoppingCart size={16} color="#2563eb" />
@@ -556,7 +544,6 @@ function Cart() {
                   </button>
                 </div>
 
-                {/* Items */}
                 <div className="cart-items-wrap">
                   {cart.map(item => (
                     <CartItem
@@ -570,7 +557,6 @@ function Cart() {
                   ))}
                 </div>
 
-                {/* Footer */}
                 <div className="cart-footer">
                   <Link to="/categories" style={{
                     display: "inline-flex", alignItems: "center", gap: 6,
@@ -604,17 +590,15 @@ function Cart() {
               </div>
             </div>
 
-            {/* ── RIGHT : Summary ── */}
+            {/* RIGHT : Summary */}
             <div>
               <div className="summary-panel">
-                {/* Summary header with currency */}
                 <div className="summary-hdr">
                   <h2>Récapitulatif</h2>
                   <CurrencyTabs value={currency} onChange={setCurrency} />
                 </div>
 
                 <div className="summary-body">
-                  {/* Rows */}
                   <div className="summary-row">
                     <span className="summary-row-label">
                       Sous-total ({cart.length} article{cart.length > 1 ? "s" : ""})
@@ -647,7 +631,6 @@ function Cart() {
 
                   <div className="summary-sep" />
 
-                  {/* Total */}
                   <div className="summary-total">
                     <span className="summary-total-label">Total</span>
                     <div>
@@ -660,7 +643,6 @@ function Cart() {
                     </div>
                   </div>
 
-                  {/* Currency mini cards */}
                   <div className="currency-mini">
                     {Object.entries(CURRENCIES).map(([key, c]) => (
                       <div
@@ -681,7 +663,7 @@ function Cart() {
 
                   <div className="summary-sep" />
 
-                  {/* Promo */}
+                  {/* Promo Code */}
                   <div className="promo-wrap">
                     <div style={{ fontSize: "12.5px", fontWeight: 600, color: "#0f172a", marginBottom: 8, display: "flex", alignItems: "center", gap: 5 }}>
                       <Tag size={13} color="#2563eb" /> Code promo
@@ -699,8 +681,8 @@ function Cart() {
                       </button>
                     </div>
                     {promoApplied && (
-                      <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 7, fontSize: "12px", color: "#15803d" }}>
-                        <CheckCircle size={13} /> Code appliqué — réduction de {fmt(discount, currency)}
+                      <div style={{ marginTop: 7, fontSize: "12px", color: "#15803d" }}>
+                        Code appliqué — réduction de {fmt(discount, currency)}
                       </div>
                     )}
                     {promoError && (
@@ -710,8 +692,11 @@ function Cart() {
                     )}
                   </div>
 
-                  {/* Checkout */}
-                  <button className="checkout-btn" onClick={() => navigate("/login", { state: { from: "cart" } })}>
+                  {/* Checkout Button */}
+                  <button 
+                    className="checkout-btn" 
+                    onClick={() => navigate("/login", { state: { from: "cart" } })}
+                  >
                     <LogIn size={17} />
                     Se connecter pour payer
                     <ChevronRight size={16} />
@@ -724,7 +709,7 @@ function Cart() {
                 </div>
               </div>
 
-              {/* Register */}
+              {/* Register suggestion */}
               <div className="register-box">
                 <h3>Pas encore de compte ?</h3>
                 <div className="register-inner">
@@ -740,7 +725,6 @@ function Cart() {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

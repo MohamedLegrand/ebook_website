@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
-import HeaderConnected from "../../components/headerconnected/HeaderConnected";
 
 /* ──────────────────────────────────────────
    Currency config
@@ -71,7 +70,7 @@ function CartItem({ item, currency, onIncrease, onDecrease, onRemove }) {
     setTimeout(() => onRemove(item.id, item.type), 280);
   };
 
-  // Fonctions hover sécurisées pour éviter l'erreur de parsing
+  // Fonctions hover sécurisées
   const handleMouseEnter = (e) => { e.currentTarget.style.background = "#f1f5f9"; };
   const handleMouseLeave = (e) => { e.currentTarget.style.background = "transparent"; };
 
@@ -138,7 +137,7 @@ function CartItem({ item, currency, onIncrease, onDecrease, onRemove }) {
         )}
       </div>
 
-      {/* Qty stepper - CORRIGÉ */}
+      {/* Qty stepper */}
       <div style={{
         display: "flex", alignItems: "center", gap: 0,
         border: "1.5px solid #e2e8f0", borderRadius: "10px",
@@ -179,7 +178,7 @@ function CartItem({ item, currency, onIncrease, onDecrease, onRemove }) {
         </button>
       </div>
 
-      {/* Price + remove - CORRIGÉ */}
+      {/* Price + remove */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: "16px", fontWeight: 800, color: "#2563eb" }}>
@@ -355,7 +354,6 @@ function CartConnected() {
     // Simulation d'appel API de paiement
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    // Ici, intégrer l'API de paiement réelle (CinetPay, Stripe, etc.)
     const paymentData = {
       orderId: `MTHS-${Date.now()}`,
       amount: total,
@@ -370,7 +368,6 @@ function CartConnected() {
       }))
     };
     
-    // Redirection vers page de confirmation
     clearCart();
     navigate("/commande-confirmee", { 
       state: { 
@@ -387,7 +384,6 @@ function CartConnected() {
   if (cart.length === 0) {
     return (
       <div style={{ minHeight: "100vh", background: "linear-gradient(160deg,#f8faff 0%,#fff 60%,#f0f7ff 100%)" }}>
-        <HeaderConnected />
         <div style={{ paddingTop: 100, paddingBottom: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ textAlign: "center", maxWidth: 440, padding: "0 20px" }}>
             <div style={{
@@ -442,7 +438,6 @@ function CartConnected() {
           margin: 0 auto;
           padding: 24px 32px 80px;
         }
-        /* Header row */
         .cart-hdr {
           display: flex; align-items: center; justify-content: space-between;
           gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
@@ -478,14 +473,13 @@ function CartConnected() {
         .step-dot.completed { background: #15803d; color: #fff; }
         .step-sep { width: 20px; height: 2px; background: #e2e8f0; }
         
-        /* Layout */
         .cart-layout {
           display: grid;
           grid-template-columns: 1fr 400px;
           gap: 24px;
           align-items: start;
         }
-        /* Left panel */
+        
         .cart-panel {
           background: #fff;
           border: 1.5px solid #e8edf3;
@@ -510,7 +504,6 @@ function CartConnected() {
           flex-wrap: wrap; gap: 8px;
         }
 
-        /* Guarantees */
         .guarantees {
           display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
           margin-top: 16px;
@@ -531,23 +524,6 @@ function CartConnected() {
         .guarantee-card h4 { margin:0 0 2px; font-size:13px; font-weight:700; color:#0f172a; }
         .guarantee-card p  { margin:0; font-size:11.5px; color:#64748b; }
 
-        /* Summary panel */
-        .summary-panel {
-          background: #fff;
-          border: 1.5px solid #e8edf3;
-          border-radius: 18px;
-          overflow: hidden;
-          position: sticky;
-          top: 24px;
-        }
-        .summary-hdr {
-          padding: 18px 22px 14px;
-          border-bottom: 1px solid #f1f5f9;
-        }
-        .summary-hdr h2 { margin:0 0 12px; font-size:15px; font-weight:800; color:#0f172a; }
-        .summary-body { padding: 18px 22px; }
-        
-        /* Client info card */
         .client-card {
           background: #f8faff;
           border: 1px solid #bfdbfe;
@@ -572,6 +548,20 @@ function CartConnected() {
           text-decoration: none; margin-left: auto;
         }
         
+        .summary-panel {
+          background: #fff;
+          border: 1.5px solid #e8edf3;
+          border-radius: 18px;
+          overflow: hidden;
+          position: sticky;
+          top: 24px;
+        }
+        .summary-hdr {
+          padding: 18px 22px 14px;
+          border-bottom: 1px solid #f1f5f9;
+        }
+        .summary-body { padding: 18px 22px; }
+        
         .summary-row {
           display: flex; align-items: flex-start; justify-content: space-between;
           margin-bottom: 12px;
@@ -593,14 +583,12 @@ function CartConnected() {
         .summary-total-val   { font-size:22px; font-weight:800; color:#2563eb; text-align:right; line-height:1; }
         .summary-total-equiv { font-size:11px; color:#64748b; margin-top:3px; }
 
-        /* Payment section */
         .payment-section { margin-bottom: 16px; }
         .payment-section-title {
           font-size: 13px; font-weight: 700; color: #0f172a;
           margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
         }
         
-        /* Promo */
         .promo-wrap { margin-bottom: 16px; }
         .promo-input-row { display:flex; gap:8px; }
         .promo-input {
@@ -617,7 +605,6 @@ function CartConnected() {
         }
         .promo-btn:hover { background:#1e293b; }
 
-        /* Checkout btn */
         .checkout-btn {
           width:100%; padding:16px; border-radius:12px;
           border:none; cursor:pointer;
@@ -634,7 +621,6 @@ function CartConnected() {
           font-size:11.5px; color:#64748b;
         }
         
-        /* Order note */
         .order-note {
           background: #fffbeb;
           border: 1px solid #fcd34d;
@@ -650,7 +636,6 @@ function CartConnected() {
         }
         .order-note-text { font-size: 12px; color: #92400e; line-height: 1.5; }
 
-        /* Responsive */
         @media (max-width: 960px) {
           .cart-connected-wrap { padding: 24px 16px 60px; }
           .cart-layout { grid-template-columns: 1fr; }
@@ -667,10 +652,9 @@ function CartConnected() {
       `}</style>
 
       <div className="cart-connected-page">
-        <HeaderConnected />
         <div className="cart-connected-wrap">
 
-          {/* ── Page header ── */}
+          {/* Page header */}
           <div className="cart-hdr">
             <div className="cart-hdr-left">
               <h1>Finaliser votre commande</h1>
@@ -679,7 +663,7 @@ function CartConnected() {
             <CurrencyTabs value={currency} onChange={setCurrency} compact />
           </div>
 
-          {/* ── Progress steps ── */}
+          {/* Progress steps */}
           <div className="progress-steps">
             <div className="step completed">
               <div className="step-dot completed">✓</div>
@@ -699,10 +683,9 @@ function CartConnected() {
 
           <div className="cart-layout">
 
-            {/* ── LEFT : Items ── */}
+            {/* LEFT : Items */}
             <div>
               <div className="cart-panel">
-                {/* Panel header */}
                 <div className="cart-panel-hdr">
                   <div className="cart-panel-hdr-title">
                     <ShoppingCart size={16} color="#2563eb" />
@@ -732,7 +715,6 @@ function CartConnected() {
                   </button>
                 </div>
 
-                {/* Items */}
                 <div className="cart-items-wrap">
                   {cart.map(item => (
                     <CartItem
@@ -746,7 +728,6 @@ function CartConnected() {
                   ))}
                 </div>
 
-                {/* Footer */}
                 <div className="cart-footer">
                   <Link to="/categories" style={{
                     display: "inline-flex", alignItems: "center", gap: 6,
@@ -780,7 +761,7 @@ function CartConnected() {
               </div>
             </div>
 
-            {/* ── RIGHT : Payment Summary ── */}
+            {/* RIGHT : Payment Summary */}
             <div>
               <div className="summary-panel">
                 <div className="summary-hdr">
@@ -901,8 +882,8 @@ function CartConnected() {
                       </button>
                     </div>
                     {promoApplied && (
-                      <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 7, fontSize: "12px", color: "#15803d" }}>
-                        <CheckCircle size={13} /> −{fmt(discount, currency)} appliqué
+                      <div style={{ marginTop: 7, fontSize: "12px", color: "#15803d" }}>
+                        −{fmt(discount, currency)} appliqué
                       </div>
                     )}
                     {promoError && (
@@ -984,7 +965,7 @@ function CartConnected() {
         </div>
       </div>
 
-      {/* ── Payment Confirmation Modal ── */}
+      {/* Payment Confirmation Modal */}
       {showConfirm && (
         <div style={{
           position: "fixed", inset: 0, zIndex: 100,

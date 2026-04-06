@@ -18,8 +18,6 @@ import {
   Cross,
   Users
 } from "lucide-react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 
 function Confidentialite() {
   const [openSections, setOpenSections] = useState({});
@@ -100,8 +98,6 @@ function Confidentialite() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Header */}
-      <Header />
 
       {/* Contenu principal */}
       <main className="flex-1">
@@ -825,9 +821,6 @@ function Confidentialite() {
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <Footer />
 
       <style jsx>{`
         @keyframes fadeIn {

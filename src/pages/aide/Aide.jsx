@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Search, BookOpen, Headphones, Download, CreditCard, Smartphone, Shield, MessageSquare, Phone, Mail, FileText, Video, Users, ChevronRight, ExternalLink, CheckCircle } from "lucide-react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 
 function Aide() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -139,9 +137,6 @@ function Aide() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Header */}
-      <Header />
-
       {/* Contenu principal */}
       <main className="flex-1">
         {/* Hero Section */}
@@ -454,9 +449,6 @@ function Aide() {
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <Footer />
 
       <style jsx>{`
         @keyframes fadeIn {

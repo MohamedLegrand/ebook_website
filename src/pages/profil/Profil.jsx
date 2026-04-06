@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import HeaderConnected from "../../components/headerconnected/HeaderConnected";
-import Footer from "../../components/footer/Footer";
 import {
   User, Mail, Lock, Save, X, Eye, EyeOff, CheckCircle,
   AlertCircle, Edit3, ArrowLeft, Package, Clock, ChevronRight, 
@@ -14,7 +12,7 @@ function Profil() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
-  // États du formulaire profil (nom + email + avatar)
+  // États du formulaire profil
   const [formData, setFormData] = useState({
     fullName: "",
     email: ""
@@ -43,7 +41,7 @@ function Profil() {
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarError, setAvatarError] = useState("");
 
-  // Initialisation des données au chargement
+  // Initialisation des données
   useEffect(() => {
     if (client) {
       setFormData({
@@ -87,18 +85,16 @@ function Profil() {
     
     if (!file) return;
     
-    // Validation du fichier
     if (!file.type.startsWith("image/")) {
       setAvatarError("Veuillez sélectionner une image valide");
       return;
     }
     
-    if (file.size > 5 * 1024 * 1024) { // 5MB max
+    if (file.size > 5 * 1024 * 1024) {
       setAvatarError("L'image ne doit pas dépasser 5 Mo");
       return;
     }
     
-    // Création de la preview
     const reader = new FileReader();
     reader.onloadend = () => {
       setAvatarPreview(reader.result);
@@ -138,10 +134,10 @@ function Profil() {
     } else if (passwordData.newPassword.length < 8) {
       errors.newPassword = "Min. 8 caractères";
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(passwordData.newPassword)) {
-      errors.newPassword = "Maj, min et chiffre requis";
+      errors.newPassword = "Majuscule, minuscule et chiffre requis";
     }
     if (passwordData.newPassword !== passwordData.confirmNewPassword) {
-      errors.confirmNewPassword = "Mots de passe différents";
+      errors.confirmNewPassword = "Les mots de passe ne correspondent pas";
     }
     return errors;
   };
@@ -164,19 +160,18 @@ function Profil() {
       
       const updateData = {
         full_name: formData.fullName
-        // Pour l'avatar : à implémenter avec upload vers serveur
-        // avatar: avatarFile (à envoyer via FormData)
+        // Avatar : à implémenter avec upload réel via FormData
       };
 
       await updateClient(updateData);
       
       setSuccessMessage("✅ Profil mis à jour avec succès !");
       setIsEditing(false);
-      setAvatarFile(null); // Reset du fichier après succès
+      setAvatarFile(null);
       setTimeout(() => setSuccessMessage(""), 4000);
       
     } catch (error) {
-      setFormErrors({ general: "Erreur lors de la mise à jour. Réessayez." });
+      setFormErrors({ general: "Erreur lors de la mise à jour. Veuillez réessayer." });
     } finally {
       setIsSaving(false);
     }
@@ -240,13 +235,13 @@ function Profil() {
     return name.charAt(0).toUpperCase();
   };
 
-  // Loading state
+  // État de chargement
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-emerald-50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement...</p>
+          <p className="text-gray-600">Chargement du profil...</p>
         </div>
       </div>
     );
@@ -268,8 +263,6 @@ function Profil() {
         .avatar-container:hover .avatar-overlay { opacity: 1; }
         .avatar-container:hover .avatar-camera { transform: scale(1.1); }
       `}</style>
-
-      <HeaderConnected />
 
       {/* Bandeau de bienvenue */}
       <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 text-white py-5 px-4">
@@ -386,10 +379,9 @@ function Profil() {
                 </div>
               )}
 
-              {/* Section Avatar - Centrée et mise en valeur */}
+              {/* Avatar */}
               <div className="flex flex-col items-center pt-2 pb-4 border-b border-gray-100">
                 <div className="relative">
-                  {/* Conteneur avatar avec effet hover */}
                   <div 
                     className={`avatar-container relative w-28 h-28 rounded-full overflow-hidden cursor-pointer transition-all duration-300 ${
                       isEditing 
@@ -398,7 +390,6 @@ function Profil() {
                     }`}
                     onClick={handleAvatarClick}
                   >
-                    {/* Image ou initiales */}
                     {avatarPreview ? (
                       <img 
                         src={avatarPreview} 
@@ -411,7 +402,6 @@ function Profil() {
                       </div>
                     )}
                     
-                    {/* Overlay au hover (uniquement en mode édition) */}
                     {isEditing && (
                       <>
                         <div className="avatar-overlay absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 transition-opacity duration-200">
@@ -424,7 +414,6 @@ function Profil() {
                     )}
                   </div>
                   
-                  {/* Badge "Nouvelle photo" si fichier sélectionné */}
                   {avatarFile && isEditing && (
                     <div className="absolute -top-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center shadow-md border-2 border-white">
                       <CheckCircle className="w-4 h-4 text-white" />
@@ -432,7 +421,6 @@ function Profil() {
                   )}
                 </div>
                 
-                {/* Input fichier caché */}
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -442,13 +430,10 @@ function Profil() {
                   disabled={!isEditing}
                 />
                 
-                {/* Texte d'aide */}
                 <div className="mt-4 text-center">
                   {isEditing ? (
                     <>
-                      <p className="text-sm font-medium text-gray-700">
-                        Photo de profil
-                      </p>
+                      <p className="text-sm font-medium text-gray-700">Photo de profil</p>
                       <p className="text-xs text-gray-500 mt-1">
                         Cliquez pour changer • JPG, PNG • Max 5 Mo
                       </p>
@@ -470,7 +455,6 @@ function Profil() {
                   )}
                 </div>
                 
-                {/* Message d'erreur avatar */}
                 {avatarError && (
                   <p className="mt-2 text-xs text-red-500 flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" />
@@ -491,7 +475,7 @@ function Profil() {
                   value={formData.fullName}
                   onChange={handleProfileChange}
                   disabled={!isEditing}
-                  placeholder="Votre nom"
+                  placeholder="Votre nom complet"
                   className={`w-full px-3 py-2.5 rounded-lg border text-sm transition-all outline-none ${
                     formErrors.fullName 
                       ? "border-red-300 bg-red-50 focus:ring-2 focus:ring-red-200" 
@@ -515,10 +499,8 @@ function Profil() {
                 <div className="relative">
                   <input
                     type="email"
-                    name="email"
                     value={formData.email}
                     disabled
-                    placeholder="votre@email.com"
                     className="w-full px-3 py-2.5 rounded-lg border border-gray-200 bg-gray-100 text-gray-500 text-sm cursor-not-allowed"
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">
@@ -530,7 +512,6 @@ function Profil() {
                 </p>
               </div>
 
-              {/* Badge info */}
               {!isEditing && (
                 <div className="pt-2 max-w-md mx-auto">
                   <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
@@ -762,8 +743,6 @@ function Profil() {
         )}
 
       </div>
-
-      <Footer />
     </div>
   );
 }

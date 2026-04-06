@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
+import SmartHeader from "./components/smartheader/SmartHeader";
+import Footer from "./components/footer/Footer"; // ✅ AJOUT
 
 import Accueil from "./pages/accueil/Accueil";
 import Categories from "./pages/categories/Categories";
@@ -32,7 +34,6 @@ import Profil from "./pages/profil/Profil";
 
 import ScrollToTop from "./components/scrolltotop/ScrollToTop";
 
-
 function App() {
   return (
     <BrowserRouter>
@@ -40,37 +41,45 @@ function App() {
       <AuthProvider>
         <CartProvider>
 
-       
           
+          <div className="flex flex-col min-h-screen">
 
-          <Routes>
-            <Route path="/" element={<Accueil />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/audio" element={<Audio />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/aide" element={<Aide />} />
-            <Route path="/conditions" element={<Conditions />} />
-            <Route path="/confidentialite" element={<Confidentialite />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/mths" element={<Mths />} />
-            <Route path="/handicap" element={<Handicap />} />
-            <Route path="/approche" element={<Approche />} />
-            <Route path="/pathologies" element={<Pathologies />} />
-            <Route path="/parcours" element={<Parcours />} />
-            <Route path="/rites" element={<Rites />} />
-            <Route path="/temoignages" element={<Temoignages />} />
-            <Route path="/boutique" element={<Boutique />} />
-            <Route path="/actualites" element={<Actualites />} />
-            <Route path="/produit/:id" element={<Produitdetail />} />
-            <Route path="/piliers" element={<Piliers />} />
-            <Route path="/livreconnected" element={<LivreConnected />} />
-            <Route path="/cartconnected" element={<Cartconnected />} />
-            <Route path="/profil" element={<Profil />} />
-          </Routes>
+            <SmartHeader />
+
+            <main className="flex-grow">
+              <Routes>
+                <Route path="/" element={<Accueil />} />
+                <Route path="/categories" element={<Categories />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/audio" element={<Audio />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/aide" element={<Aide />} />
+                <Route path="/conditions" element={<Conditions />} />
+                <Route path="/confidentialite" element={<Confidentialite />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/mths" element={<Mths />} />
+                <Route path="/handicap" element={<Handicap />} />
+                <Route path="/approche" element={<Approche />} />
+                <Route path="/pathologies" element={<Pathologies />} />
+                <Route path="/parcours" element={<Parcours />} />
+                <Route path="/rites" element={<Rites />} />
+                <Route path="/temoignages" element={<Temoignages />} />
+                <Route path="/boutique" element={<Boutique />} />
+                <Route path="/actualites" element={<Actualites />} />
+                <Route path="/produit/:id" element={<Produitdetail />} />
+                <Route path="/piliers" element={<Piliers />} />
+                <Route path="/livreconnected" element={<LivreConnected />} />
+                <Route path="/cartconnected" element={<Cartconnected />} />
+                <Route path="/profil" element={<Profil />} />
+              </Routes>
+            </main>
+
+            <Footer /> 
+
+          </div>
 
         </CartProvider>
       </AuthProvider>

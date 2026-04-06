@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import { 
   Heart, Users, Ear, Search, ArrowRightCircle, Stethoscope, 
   CheckCircle, Calendar, Clock, Shield, BookOpen, Target,
@@ -10,7 +8,6 @@ import {
 
 function Parcours() {
   const [activeStep, setActiveStep] = useState(0);
-  const [expandedDetails, setExpandedDetails] = useState(false);
 
   const etapes = [
     {
@@ -156,7 +153,6 @@ function Parcours() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
-      <Header />
 
       <main className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Hero Section */}
@@ -207,19 +203,18 @@ function Parcours() {
           </div>
         </div>
 
-        {/* Étapes du parcours - Version améliorée */}
+        {/* Étapes du parcours */}
         <div className="mb-16">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Les 6 Étapes de Votre Parcours
           </h2>
           
-          {/* Timeline desktop */}
+          {/* Timeline version Desktop */}
           <div className="hidden lg:block">
             <div className="relative">
-              {/* Ligne de timeline */}
+              {/* Ligne verticale de la timeline */}
               <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-400 to-blue-900"></div>
               
-              {/* Étapes */}
               <div className="space-y-12">
                 {etapes.map((etape, index) => (
                   <div 
@@ -245,7 +240,6 @@ function Parcours() {
                         </div>
                         <p className="text-gray-700">{etape.description}</p>
                         
-                        {/* Info rapide */}
                         <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
                           <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4" />
@@ -266,7 +260,6 @@ function Parcours() {
                       } transition-all duration-300`}></div>
                     </div>
 
-                    {/* Espace vide de l'autre côté */}
                     <div className="w-1/2"></div>
                   </div>
                 ))}
@@ -274,7 +267,7 @@ function Parcours() {
             </div>
           </div>
 
-          {/* Version mobile/tablette */}
+          {/* Version Mobile et Tablette */}
           <div className="lg:hidden">
             <div className="space-y-6">
               {etapes.map((etape, index) => (
@@ -304,7 +297,7 @@ function Parcours() {
                   
                   <p className="text-gray-700 mt-4">{etape.description}</p>
                   
-                  {/* Détails expandés */}
+                  {/* Détails développés */}
                   {activeStep === index && (
                     <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
                       <div className="grid grid-cols-2 gap-4 mb-4">
@@ -347,7 +340,7 @@ function Parcours() {
           </div>
         </div>
 
-        {/* Section témoignages */}
+        {/* Section Témoignages */}
         <div className="mb-16">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Témoignages de Parcours Accomplis
@@ -378,7 +371,7 @@ function Parcours() {
           </div>
         </div>
 
-        {/* Section ressources */}
+        {/* Section Ressources */}
         <div className="mb-16">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Prêt à Commencer Votre Parcours ?
@@ -423,7 +416,7 @@ function Parcours() {
           </div>
         </div>
 
-        {/* CTA final */}
+        {/* CTA Final */}
         <div className="text-center">
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-8 text-white">
             <div className="max-w-3xl mx-auto">
@@ -459,7 +452,6 @@ function Parcours() {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 }

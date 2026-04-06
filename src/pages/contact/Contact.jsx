@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle, AlertCircle, User, MessageSquare, Smartphone, Heart, Shield, ArrowRight, Cross, AlertTriangle } from "lucide-react";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -32,7 +30,6 @@ function Contact() {
     e.preventDefault();
     setFormStatus({ submitted: false, submitting: true, error: false });
 
-    // Simuler l'envoi du formulaire
     setTimeout(() => {
       setFormStatus({ submitted: true, submitting: false, error: false });
       setFormData({
@@ -109,8 +106,6 @@ function Contact() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Header */}
-      <Header />
 
       {/* Contenu principal */}
       <main className="flex-1">
@@ -648,9 +643,6 @@ function Contact() {
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <Footer />
 
       <style jsx>{`
         @keyframes fadeIn {
