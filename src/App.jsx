@@ -33,6 +33,10 @@ import Cartconnected from "./pages/cartconnected/Cartconnected";
 import Profil from "./pages/profil/Profil";
 
 import ScrollToTop from "./components/scrolltotop/ScrollToTop";
+import Paiement from "./pages/paiement/Paiement";
+import Paiementreussi from "./pages/paiementreussi/Paiementreussi";
+
+
 
 function App() {
   return (
@@ -74,6 +78,9 @@ function App() {
                 <Route path="/livreconnected" element={<LivreConnected />} />
                 <Route path="/cartconnected" element={<Cartconnected />} />
                 <Route path="/profil" element={<Profil />} />
+                <Route path="/paiement" element={<Paiement />} />
+                <Route path="/paiementreussi" element={<Paiementreussi />} />
+              
               </Routes>
             </main>
 

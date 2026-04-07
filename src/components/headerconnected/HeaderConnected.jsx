@@ -256,7 +256,7 @@ function HeaderConnected() {
 
           {/* Lien Livres (visible desktop) */}
           <Link
-            to="/livres"
+            to="/livreconnected"
             className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-blue-700 hover:text-blue-900 hover:bg-blue-50 transition-all"
           >
             <BookOpen className="w-4 h-4" />
@@ -446,7 +446,7 @@ function HeaderConnected() {
                               {lang.cart.view}
                             </Link>
                             <Link
-                              to="/checkout"
+                              to="/cartconnected"
                               onClick={() => setIsCartOpen(false)}
                               className="flex-1 py-2.5 text-center text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg shadow-blue-500/30"
                             >

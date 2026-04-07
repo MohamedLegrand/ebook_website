@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ShoppingCart, Trash2, Plus, Minus, ArrowLeft,
-  Shield, Truck, RotateCcw, Tag, ChevronRight, CheckCircle,
-  BookOpen, Headphones, Package, X, CreditCard, Smartphone,
-  Lock, User, Mail, MapPin, Phone, Calendar, ArrowRight,
-  Zap, BadgeCheck, RefreshCw, Info
+  Shield, Truck, RotateCcw, Tag, CheckCircle,
+  BookOpen, Headphones, X, CreditCard, Smartphone,
+  Lock, Mail, MapPin, Phone, ArrowRight,
+  BadgeCheck, Info, AlertCircle
 } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
@@ -70,7 +70,6 @@ function CartItem({ item, currency, onIncrease, onDecrease, onRemove }) {
     setTimeout(() => onRemove(item.id, item.type), 280);
   };
 
-  // Fonctions hover sécurisées
   const handleMouseEnter = (e) => { e.currentTarget.style.background = "#f1f5f9"; };
   const handleMouseLeave = (e) => { e.currentTarget.style.background = "transparent"; };
 
@@ -86,7 +85,6 @@ function CartItem({ item, currency, onIncrease, onDecrease, onRemove }) {
       transform: removing ? "translateX(12px)" : "none",
       transition: "opacity 0.28s, transform 0.28s",
     }}>
-      {/* Cover */}
       <div style={{ position: "relative", flexShrink: 0 }}>
         <img
           src={item.cover || "/images/default-book.jpg"}
@@ -109,7 +107,6 @@ function CartItem({ item, currency, onIncrease, onDecrease, onRemove }) {
         </div>
       </div>
 
-      {/* Info */}
       <div style={{ minWidth: 0 }}>
         <h4 style={{
           margin: "0 0 4px", fontSize: "14px", fontWeight: 700,
@@ -137,7 +134,6 @@ function CartItem({ item, currency, onIncrease, onDecrease, onRemove }) {
         )}
       </div>
 
-      {/* Qty stepper */}
       <div style={{
         display: "flex", alignItems: "center", gap: 0,
         border: "1.5px solid #e2e8f0", borderRadius: "10px",
@@ -178,15 +174,14 @@ function CartItem({ item, currency, onIncrease, onDecrease, onRemove }) {
         </button>
       </div>
 
-      {/* Price + remove */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: "16px", fontWeight: 800, color: "#2563eb" }}>
-            {fmt(item.price * qty, currency)}
+            {fmt((item.unitPrice ?? item.price) * qty, currency)}
           </div>
           {qty > 1 && (
             <div style={{ fontSize: "11px", color: "#94a3b8" }}>
-              {fmt(item.price, currency)} / u
+              {fmt(item.unitPrice ?? item.price, currency)} / u
             </div>
           )}
         </div>
@@ -317,13 +312,50 @@ function CartConnected() {
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoError, setPromoError] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("momo");
+  const [paymentNumber, setPaymentNumber] = useState("");
+  const [paymentNumberError, setPaymentNumberError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
 
+  // ====================== CALCULS CORRIGÉS ======================
   const subtotal = getCartTotal();
-  const shipping = subtotal > 30000 ? 0 : 1500;
-  const paymentFee = paymentMethod === "card" ? subtotal * 0.025 : 0;
-  const total = subtotal + shipping - discount + paymentFee;
+  const shipping = 0;                                 // Livraison numérique toujours gratuite
+  const paymentFee = paymentMethod === "card" 
+    ? Math.round(subtotal * 0.025)                    // Arrondi propre
+    : 0;
+  const total = subtotal - discount + paymentFee;
+  // ============================================================
+
+  const validatePaymentNumber = () => {
+    const trimmed = paymentNumber.trim();
+    if (!trimmed) {
+      setPaymentNumberError("Veuillez saisir votre numéro de paiement");
+      return false;
+    }
+    if (paymentMethod === "momo" || paymentMethod === "orange") {
+      const phoneRegex = /^[0-9]{9}$/;
+      if (!phoneRegex.test(trimmed)) {
+        setPaymentNumberError("Numéro invalide (9 chiffres requis)");
+        return false;
+      }
+    } else if (paymentMethod === "card") {
+      const cardRegex = /^[0-9]{16}$/;
+      if (!cardRegex.test(trimmed.replace(/\s/g, ""))) {
+        setPaymentNumberError("Numéro de carte invalide (16 chiffres)");
+        return false;
+      }
+    }
+    setPaymentNumberError("");
+    return true;
+  };
+
+  const handlePayment = async () => {
+    if (!validatePaymentNumber()) return;
+    setIsProcessing(true);
+    await new Promise(resolve => setTimeout(resolve, 800));
+    clearCart();
+    navigate("/paiementreussi");
+    setIsProcessing(false);
+  };
 
   const inc = (id, type) => {
     const item = cart.find(i => i.id === id && i.type === type);
@@ -346,38 +378,6 @@ function CartConnected() {
       setPromoApplied(false);
       setDiscount(0);
     }
-  };
-
-  const handlePayment = async () => {
-    setIsProcessing(true);
-    
-    // Simulation d'appel API de paiement
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const paymentData = {
-      orderId: `MTHS-${Date.now()}`,
-      amount: total,
-      currency: currency,
-      method: paymentMethod,
-      client: client?.id,
-      items: cart.map(item => ({
-        id: item.id,
-        title: item.title,
-        quantity: item.quantity,
-        price: item.price
-      }))
-    };
-    
-    clearCart();
-    navigate("/commande-confirmee", { 
-      state: { 
-        orderId: paymentData.orderId,
-        amount: total,
-        items: cart.length
-      } 
-    });
-    
-    setIsProcessing(false);
   };
 
   /* ── EMPTY STATE ── */
@@ -450,7 +450,6 @@ function CartConnected() {
         }
         .cart-hdr-left p { margin:0; font-size:13.5px; color:#64748b; }
         
-        /* Progress steps */
         .progress-steps {
           display: flex; align-items: center; gap: 8px;
           padding: 12px 20px; background: #fff;
@@ -654,7 +653,6 @@ function CartConnected() {
       <div className="cart-connected-page">
         <div className="cart-connected-wrap">
 
-          {/* Page header */}
           <div className="cart-hdr">
             <div className="cart-hdr-left">
               <h1>Finaliser votre commande</h1>
@@ -663,7 +661,6 @@ function CartConnected() {
             <CurrencyTabs value={currency} onChange={setCurrency} compact />
           </div>
 
-          {/* Progress steps */}
           <div className="progress-steps">
             <div className="step completed">
               <div className="step-dot completed">✓</div>
@@ -743,7 +740,6 @@ function CartConnected() {
                 </div>
               </div>
 
-              {/* Guarantees */}
               <div className="guarantees">
                 {[
                   { icon: <Shield size={16} color="#2563eb" />, title: "Paiement crypté", sub: "SSL 256-bit • PCI DSS" },
@@ -770,7 +766,6 @@ function CartConnected() {
                 </div>
 
                 <div className="summary-body">
-                  {/* Client info */}
                   <div className="client-card">
                     <div className="client-card-header">
                       <div className="client-avatar">
@@ -782,29 +777,8 @@ function CartConnected() {
                       </div>
                       <Link to="/profil" className="client-edit">Modifier</Link>
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                      <div style={{ fontSize: "11px", color: "#64748b" }}>
-                        <Phone size={10} style={{ verticalAlign: "middle", marginRight: 3 }} />
-                        {client?.phone || "+237 XXX XXX XXX"}
-                      </div>
-                      <div style={{ fontSize: "11px", color: "#64748b" }}>
-                        <MapPin size={10} style={{ verticalAlign: "middle", marginRight: 3 }} />
-                        {client?.city || "Ville"}
-                      </div>
-                    </div>
                   </div>
 
-                  {/* Order note */}
-                  <div className="order-note">
-                    <div className="order-note-icon">
-                      <Info size={14} color="#92400e" />
-                    </div>
-                    <div className="order-note-text">
-                      <strong>Livraison numérique :</strong> Vos livres seront disponibles immédiatement après paiement dans votre espace membre.
-                    </div>
-                  </div>
-
-                  {/* Price breakdown */}
                   <div className="summary-row">
                     <span className="summary-row-label">
                       Sous-total ({cart.length} article{cart.length > 1 ? "s" : ""})
@@ -839,7 +813,6 @@ function CartConnected() {
 
                   <div className="summary-sep" />
 
-                  {/* Total */}
                   <div className="summary-total">
                     <span className="summary-total-label">Total à payer</span>
                     <div>
@@ -853,72 +826,39 @@ function CartConnected() {
                   </div>
 
                   {/* Payment method */}
-                  <div className="payment-section">
-                    <div className="payment-section-title">
-                      <CreditCard size={14} color="#2563eb" />
-                      Moyen de paiement
-                    </div>
-                    <PaymentMethodSelector 
-                      selected={paymentMethod} 
-                      onChange={setPaymentMethod} 
-                    />
-                  </div>
+                  
 
-                  {/* Promo code */}
-                  <div className="promo-wrap">
-                    <div style={{ fontSize: "12.5px", fontWeight: 600, color: "#0f172a", marginBottom: 8, display: "flex", alignItems: "center", gap: 5 }}>
-                      <Tag size={13} color="#2563eb" /> Code promo
-                    </div>
-                    <div className="promo-input-row">
-                      <input
-                        className="promo-input"
-                        value={promoCode}
-                        onChange={e => { setPromoCode(e.target.value); setPromoError(false); }}
-                        placeholder="ex : LIVRE10"
-                        onKeyDown={e => e.key === "Enter" && applyPromo()}
-                      />
-                      <button className="promo-btn" onClick={applyPromo}>
-                        Appliquer
-                      </button>
-                    </div>
-                    {promoApplied && (
-                      <div style={{ marginTop: 7, fontSize: "12px", color: "#15803d" }}>
-                        −{fmt(discount, currency)} appliqué
-                      </div>
-                    )}
-                    {promoError && (
-                      <div style={{ marginTop: 7, fontSize: "12px", color: "#dc2626" }}>
-                        Code invalide. Essayez : LIVRE10, READ20, MTHS25
-                      </div>
-                    )}
-                  </div>
+                  {/* Champ numéro de paiement */}
+                  
+
+                  {/* Promo code - AJOUTÉ */}
+                  
 
                   <div className="summary-sep" />
 
-                  {/* Pay button */}
-                  <button 
-                    className="checkout-btn" 
-                    onClick={() => setShowConfirm(true)}
-                    disabled={isProcessing}
-                  >
-                    {isProcessing ? (
-                      <>
-                        <div style={{
-                          width: 17, height: 17, borderRadius: "50%",
-                          border: "2px solid rgba(255,255,255,0.3)",
-                          borderTopColor: "#fff",
-                          animation: "spin 0.8s linear infinite"
-                        }} />
-                        Traitement en cours...
-                      </>
-                    ) : (
-                      <>
-                        <Lock size={17} />
-                        Payer {fmt(total, currency)} maintenant
-                        <ArrowRight size={16} />
-                      </>
-                    )}
-                  </button>
+                  <button
+  className="checkout-btn"
+  onClick={() => navigate("/paiement")}
+  disabled={isProcessing}
+>
+  {isProcessing ? (
+    <>
+      <div style={{
+        width: 17, height: 17, borderRadius: "50%",
+        border: "2px solid rgba(255,255,255,0.3)",
+        borderTopColor: "#fff",
+        animation: "spin 0.8s linear infinite"
+      }} />
+      Traitement en cours...
+    </>
+  ) : (
+    <>
+      <Lock size={17} />
+      Payer {fmt(total, currency)} maintenant
+      <ArrowRight size={16} />
+    </>
+  )}
+</button>
 
                   <div className="security-note">
                     <Shield size={12} />
@@ -927,7 +867,6 @@ function CartConnected() {
                 </div>
               </div>
 
-              {/* Help box */}
               <div style={{
                 marginTop: 16,
                 background: "#fff",
@@ -965,106 +904,6 @@ function CartConnected() {
         </div>
       </div>
 
-      {/* Payment Confirmation Modal */}
-      {showConfirm && (
-        <div style={{
-          position: "fixed", inset: 0, zIndex: 100,
-          background: "rgba(0,0,0,0.6)",
-          backdropFilter: "blur(4px)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          padding: 20,
-        }} onClick={() => setShowConfirm(false)}>
-          <div style={{
-            background: "#fff", borderRadius: 20, padding: 24,
-            maxWidth: 420, width: "100%", boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
-            animation: "fadeInUp 0.3s ease-out",
-          }} onClick={e => e.stopPropagation()}>
-            <div style={{ textAlign: "center", marginBottom: 20 }}>
-              <div style={{
-                width: 60, height: 60, borderRadius: "50%",
-                background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                margin: "0 auto 16px",
-              }}>
-                <Lock size={24} color="#fff" />
-              </div>
-              <h3 style={{ margin: "0 0 8px", fontSize: "18px", fontWeight: 800, color: "#0f172a" }}>
-                Confirmer le paiement
-              </h3>
-              <p style={{ margin: 0, fontSize: "13px", color: "#64748b" }}>
-                Vous êtes sur le point de payer <strong>{fmt(total, currency)}</strong> via{" "}
-                <strong>
-                  {paymentMethod === "momo" ? "MTN Mobile Money" : 
-                   paymentMethod === "orange" ? "Orange Money" : "Carte Bancaire"}
-                </strong>
-              </p>
-            </div>
-
-            <div style={{
-              background: "#f8faff", borderRadius: 12, padding: 14,
-              marginBottom: 20, border: "1px solid #bfdbfe",
-            }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                <span style={{ fontSize: "12px", color: "#64748b" }}>Articles</span>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: "#0f172a" }}>{cart.length}</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                <span style={{ fontSize: "12px", color: "#64748b" }}>Sous-total</span>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: "#0f172a" }}>{fmt(subtotal, currency)}</span>
-              </div>
-              {discount > 0 && (
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                  <span style={{ fontSize: "12px", color: "#64748b" }}>Réduction</span>
-                  <span style={{ fontSize: "12px", fontWeight: 600, color: "#15803d" }}>−{fmt(discount, currency)}</span>
-                </div>
-              )}
-              {paymentFee > 0 && (
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                  <span style={{ fontSize: "12px", color: "#64748b" }}>Frais</span>
-                  <span style={{ fontSize: "12px", fontWeight: 600, color: "#d97706" }}>+{fmt(paymentFee, currency)}</span>
-                </div>
-              )}
-              <div style={{ height: 1, background: "#e2e8f0", margin: "10px 0" }} />
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "14px", fontWeight: 700, color: "#0f172a" }}>Total</span>
-                <span style={{ fontSize: "18px", fontWeight: 800, color: "#2563eb" }}>{fmt(total, currency)}</span>
-              </div>
-            </div>
-
-            <div style={{ display: "flex", gap: 10 }}>
-              <button
-                onClick={() => setShowConfirm(false)}
-                style={{
-                  flex: 1, padding: "14px", borderRadius: 12,
-                  border: "1.5px solid #e2e8f0", background: "#fff",
-                  color: "#64748b", fontSize: "14px", fontWeight: 600,
-                  cursor: "pointer", transition: "background 0.2s",
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = "#f8faff"}
-                onMouseLeave={e => e.currentTarget.style.background = "#fff"}
-              >
-                Annuler
-              </button>
-              <button
-                onClick={handlePayment}
-                style={{
-                  flex: 2, padding: "14px", borderRadius: 12,
-                  border: "none", background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
-                  color: "#fff", fontSize: "14px", fontWeight: 700,
-                  cursor: "pointer", display: "flex", alignItems: "center",
-                  justifyContent: "center", gap: 8,
-                  boxShadow: "0 4px 14px rgba(37,99,235,0.3)",
-                }}
-              >
-                <CheckCircle size={16} />
-                Confirmer et payer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Animation keyframes */}
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes fadeInUp {
