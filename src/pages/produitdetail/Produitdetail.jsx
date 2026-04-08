@@ -1456,6 +1456,81 @@ Une approche holistique intégrant psychologie moderne et spiritualité africain
 Découvrez les mécanismes occultes derrière l'addiction, les conséquences sur la vie conjugale, professionnelle et spirituelle, et surtout les voies de délivrance efficaces. L'ouvrage explore les racines spirituelles de ces comportements et propose des protocoles de délivrance bibliques éprouvés.
 
 Un guide courageux qui ose aborder un sujet tabou avec la franchise biblique nécessaire pour la vraie liberté spirituelle. Plus qu'une analyse, c'est un chemin vers la restauration complète et la victoire sur ces chaînes spirituelles.`,
+},
+{
+  id: 30,
+  titre: "Le bon choix de ton partenaire de mariage",
+  auteur: "Centre MTHS",
+  desc: "Un enseignement profond et pratique pour t’aider à faire le bon choix de ton partenaire de vie. Ce livre met en lumière les critères essentiels d’un mariage réussi, les erreurs à éviter et les fondements spirituels indispensables pour construire une relation solide et durable.",
+  prixFCFA: 6500,
+  images: [
+    "/images/livre30/livre30_1.png",
+    "/images/livre30/livre30_2.png",
+    "/images/livre30/livre30_4.png",
+    "/images/livre30/livre30_3.png"
+  ],
+  format: ["Papier", "PDF"],
+  pages: 320,
+  stock: 25,
+  type: "Livre",
+  isbn: "978-2-9541234-9-3",
+  datePublication: "2024",
+  langue: "Français",
+  pointsCles: [
+    "Identifier les critères essentiels pour choisir un bon partenaire de vie",
+    "Comprendre l’importance des valeurs spirituelles et de la vision commune",
+    "Reconnaître les signes d’une relation saine ou toxique",
+    "Éviter les erreurs fréquentes qui mènent à l’échec du mariage",
+    "Se préparer personnellement pour construire un foyer solide et durable"
+  ],
+  publicCible: [
+    "Jeunes adultes en quête de repères pour le mariage",
+    "Personnes engagées dans une relation amoureuse",
+    "Célibataires souhaitant faire un choix éclairé",
+    "Toute personne désirant bâtir un mariage stable et épanoui"
+  ],
+  resume: `LE BON CHOIX DE TON PARTENAIRE DE MARIAGE est un guide essentiel pour toute personne désireuse de réussir sa vie conjugale dès le départ. À travers des enseignements clairs et inspirés des principes bibliques, cet ouvrage met en évidence l'importance capitale du choix du partenaire dans la réussite ou l’échec du mariage.
+
+Il explore les critères fondamentaux à considérer, notamment la compatibilité spirituelle, les valeurs, la vision de vie et le caractère. Le livre met également en garde contre les illusions, les décisions émotionnelles et les pièges courants qui conduisent à des unions fragiles.
+
+En plus d’aider à discerner le bon partenaire, cet ouvrage accompagne le lecteur dans sa propre préparation intérieure, car un bon mariage commence par une personne prête. C’est un véritable outil de réflexion, de discernement et de construction pour bâtir une relation solide, équilibrée et durable selon les principes divins.`
+},
+{
+  id: 31,
+  titre: "La sorcellerie au-dessus de la foi ?",
+  auteur: "Centre MTHS",
+  desc: "Un enseignement puissant qui répond à une question troublante : la sorcellerie peut-elle réellement dominer la foi ? Ce livre apporte des réponses bibliques claires pour affermir le croyant, dissiper la peur et révéler la supériorité de la foi en Dieu sur toute puissance occulte.",
+  prixFCFA: 6500,
+  images: [
+    "/images/livre31/livre31_1.png",
+    "/images/livre31/livre31_2.png",
+    "/images/livre31/livre31_3.png"
+  ],
+  format: ["Papier", "PDF"],
+  pages: 310,
+  stock: 20,
+  type: "Livre",
+  isbn: "978-2-9541234-9-4",
+  datePublication: "2024",
+  langue: "Français",
+  pointsCles: [
+    "Comprendre la réalité spirituelle de la sorcellerie à la lumière de la Bible",
+    "Démystifier la peur et les croyances limitantes liées aux forces occultes",
+    "Découvrir l’autorité du croyant face aux puissances spirituelles",
+    "Renforcer sa foi pour vivre dans la victoire et la liberté",
+    "Apprendre des principes pratiques de protection et de fermeté spirituelle"
+  ],
+  publicCible: [
+    "Chrétiens confrontés à la peur de la sorcellerie",
+    "Personnes cherchant à affermir leur foi",
+    "Jeunes adultes en quête de compréhension spirituelle",
+    "Responsables spirituels et accompagnateurs"
+  ],
+  resume: `LA SORCELLERIE AU-DESSUS DE LA FOI ? aborde une question essentielle qui suscite crainte et confusion chez beaucoup : les forces occultes peuvent-elles réellement prendre le dessus sur la foi du croyant ?
+
+À travers des enseignements bibliques profonds et accessibles, ce livre démonte les idées reçues et rétablit la vérité sur l’autorité spirituelle du croyant en Dieu. Il met en lumière les mécanismes de la peur, souvent alimentée par l’ignorance, et montre comment une foi solide permet de vivre au-dessus de toute influence occulte.
+
+L’ouvrage propose également des clés pratiques pour affermir sa foi, résister aux attaques spirituelles et marcher dans une pleine assurance. Plus qu’un simple enseignement, c’est un appel à sortir de la peur pour entrer dans une vie de victoire, de paix et de confiance totale en Dieu.`
 }
 ];
 

@@ -48,6 +48,8 @@ function Hero() {
     { id: 27, titre: "Le Cameroun dans les flammes", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre27/livre27_1.png", type: "Délivrance", pages: 310, stock: 20 },
     { id: 28, titre: "L'Hygiène de l'âme", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre28/livre28_1.png", type: "Délivrance", pages: 310, stock: 20 },
     { id: 29, titre: "CONSEQUENCES SPIRITUELLES DE LA MASTURBATION ET DE LA PORNOGRAPHIE DANS TA VIE", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre29/livre29_1.png", type: "Délivrance", pages: 310, stock: 20 },
+    { id: 30, titre: "LE BON CHOIX DE TON PARTENAIRE DE MARIAGE ", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre30/livre30_1.png", type: "Délivrance", pages: 310, stock: 20 },
+    { id: 31, titre: "la Sorcellerie au Dessus de la foi", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre31/livre31_1.png", type: "Délivrance", pages: 310, stock: 20 },
   ];
 
   const colorPalette = [

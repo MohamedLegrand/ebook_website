@@ -574,6 +574,45 @@ function Boutique() {
           isbn: "978-2-954-12361-6",
           datePublication: "2023",
           langue: "Français"
+        },
+        {
+          id: 30,
+          titre: "LE BON CHOIX DE TON PARTENAIRE DE MARIAGE",
+          auteur: "Centre MTHS",
+          desc: "Un guide pratique et spirituel pour t’aider à faire le bon choix de ton partenaire de vie. Ce livre aborde les critères essentiels d’un mariage réussi selon les principes chrétiens, les erreurs à éviter, ainsi que les signes d’une relation saine et durable. À travers des conseils concrets et des enseignements bibliques, il t’accompagne dans une prise de décision éclairée pour bâtir un foyer solide et épanoui.",
+          prixFCFA: 6500,
+          image: [
+            "/images/livre30/livre30_1.png",
+            "/images/livre30/livre30_2.png",
+            "/images/livre30/livre30_3.png",
+            "/images/livre30/livre30_4.png"
+          ],
+          format: ["Papier", "PDF"],
+          pages: 320,
+          stock: 40,
+          type: "Livre",
+          isbn: "978-2-954-12362-3",
+          datePublication: "2023",
+          langue: "Français"
+        },
+        {
+          id: 31,
+          titre: "LA SORCELLERIE AU-DESSUS DE LA FOI ?",
+          auteur: "Centre MTHS",
+          desc: "Ce livre apporte un éclairage profond sur une question que beaucoup se posent : la sorcellerie peut-elle réellement dominer la foi ? À travers des enseignements bibliques clairs et accessibles, il démonte les idées reçues, fortifie la foi du croyant et révèle l’autorité spirituelle que Dieu accorde à ceux qui Lui font confiance. Un ouvrage puissant pour comprendre les réalités spirituelles, se libérer de la peur et marcher dans une foi ferme et victorieuse.",
+          prixFCFA: 6500,
+          image: [
+            "/images/livre31/livre31_1.png",
+            "/images/livre31/livre31_2.png",
+            "/images/livre31/livre31_3.png"
+          ],
+          format: ["Papier", "PDF"],
+          pages: 310,
+          stock: 30,
+          type: "Livre",
+          isbn: "978-2-954-12363-0",
+          datePublication: "2023",
+          langue: "Français"
         }
       ]
     },
