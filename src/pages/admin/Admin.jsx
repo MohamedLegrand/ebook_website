@@ -1,377 +1,643 @@
 import React, { useState, useEffect } from "react";
-import HeaderConnectedAdmin from "../../components/headerconnectedadmin/HeaderConnectedAdmn";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { 
+  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, 
+  Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell 
+} from "recharts";
+import { 
+  BookOpen, Users, Settings, LayoutDashboard, Trash2, Edit, 
+  Plus, LogOut, Bell, Menu, X, CheckCircle, AlertCircle 
+} from "lucide-react";
 
-// Composant Sidebar (menu de navigation)
-const Sidebar = ({ activeTab, setActiveTab, sidebarOpen }) => {
+// Composant Sidebar amélioré
+const Sidebar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }) => {
   const menuItems = [
-    { id: "dashboard", label: "Tableau de bord", icon: "📊" },
-    { id: "books", label: "Livres", icon: "📚" },
-    { id: "users", label: "Utilisateurs", icon: "👥" },
-    { id: "settings", label: "Paramètres", icon: "⚙️" },
+    { id: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
+    { id: "books", label: "Livres", icon: BookOpen },
+    { id: "users", label: "Utilisateurs", icon: Users },
+    { id: "settings", label: "Paramètres", icon: Settings },
   ];
 
   return (
-    <aside
-      className={`fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform ${
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      } bg-gray-800 text-white md:translate-x-0`}
-    >
-      <div className="h-full px-3 pb-4 overflow-y-auto">
-        <ul className="space-y-2 font-medium">
-          {menuItems.map((item) => (
-            <li key={item.id}>
-              <button
-                onClick={() => setActiveTab(item.id)}
-                className={`flex items-center p-2 rounded-lg w-full text-left ${
-                  activeTab === item.id
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-300 hover:bg-gray-700"
-                }`}
-              >
-                <span className="mr-3 text-xl">{item.icon}</span>
-                <span>{item.label}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </aside>
+    <>
+      {/* Overlay mobile */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-20 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
+      <aside className={`
+        fixed top-0 left-0 z-30 h-screen w-64 bg-white shadow-xl transition-transform duration-300 ease-in-out
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0
+      `}>
+        <div className="flex flex-col h-full">
+          {/* Logo / Brand */}
+          <div className="p-5 border-b border-blue-100">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+              Admin E-Book
+            </h1>
+            <p className="text-xs text-gray-400 mt-1">Panel de contrôle</p>
+          </div>
+          
+          {/* Navigation */}
+          <nav className="flex-1 p-4 space-y-1">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setSidebarOpen(false);
+                  }}
+                  className={`
+                    w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
+                    ${isActive 
+                      ? 'bg-blue-50 text-blue-600 shadow-sm' 
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    }
+                  `}
+                >
+                  <Icon size={20} />
+                  <span className="font-medium">{item.label}</span>
+                  {isActive && (
+                    <div className="ml-auto w-1.5 h-6 bg-blue-600 rounded-full" />
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+          
+          {/* Footer sidebar (déconnexion) */}
+          <div className="p-4 border-t border-gray-100">
+            <button
+              onClick={() => {
+                localStorage.clear();
+                window.location.href = "/login";
+              }}
+              className="w-full flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+            >
+              <LogOut size={20} />
+              <span>Déconnexion</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+    </>
   );
 };
 
-// Composant principal Admin
-const Admin = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("dashboard");
-  const [notificationCount, setNotificationCount] = useState(3);
-
-  // Données simulées pour les livres
-  const [books, setBooks] = useState([
-    { id: 1, title: "React Moderne", author: "Jean Dupont", price: 29.99, status: "publié" },
-    { id: 2, title: "Node.js Avancé", author: "Marie Curie", price: 34.99, status: "brouillon" },
-    { id: 3, title: "CSS Mastery", author: "John Doe", price: 24.99, status: "publié" },
-  ]);
-
-  const [newBook, setNewBook] = useState({ title: "", author: "", price: "" });
-
-  // Données simulées pour les utilisateurs
-  const [users, setUsers] = useState([
-    { id: 1, name: "Alice Martin", email: "alice@example.com", role: "admin" },
-    { id: 2, name: "Bob Durand", email: "bob@example.com", role: "user" },
-    { id: 3, name: "Charlie Ngoumou", email: "charlie@example.com", role: "user" },
-  ]);
-
-  // Formulaire paramètres
-  const [settings, setSettings] = useState({
-    siteName: "Ebook Admin",
-    contactEmail: "admin@example.com",
-    allowRegistration: true,
-  });
-
-  // Statistiques dashboard
-  const stats = {
-    totalBooks: books.length,
-    publishedBooks: books.filter((b) => b.status === "publié").length,
-    totalUsers: users.length,
-    admins: users.filter((u) => u.role === "admin").length,
-  };
-
-  // Gestion livre : ajout
-  const handleAddBook = (e) => {
-    e.preventDefault();
-    if (newBook.title && newBook.author && newBook.price) {
-      const newId = books.length + 1;
-      setBooks([
-        ...books,
-        {
-          id: newId,
-          title: newBook.title,
-          author: newBook.author,
-          price: parseFloat(newBook.price),
-          status: "brouillon",
-        },
-      ]);
-      setNewBook({ title: "", author: "", price: "" });
-      // Simuler une notification
-      setNotificationCount((prev) => prev + 1);
-    }
-  };
-
-  const handleDeleteBook = (id) => {
-    if (window.confirm("Supprimer ce livre ?")) {
-      setBooks(books.filter((book) => book.id !== id));
-      setNotificationCount((prev) => prev + 1);
-    }
-  };
-
-  // Gestion utilisateur : suppression
-  const handleDeleteUser = (id) => {
-    if (window.confirm("Supprimer cet utilisateur ?")) {
-      setUsers(users.filter((user) => user.id !== id));
-    }
-  };
-
-  // Graphique simple (courbe SVG) pour le dashboard
-  const Chart = () => (
-    <div className="bg-white p-4 rounded-xl shadow">
-      <h3 className="font-semibold text-gray-700 mb-2">Ventes mensuelles (simulées)</h3>
-      <svg width="100%" height="150" viewBox="0 0 300 100" preserveAspectRatio="none">
-        <polyline
-          points="0,80 30,60 60,70 90,40 120,50 150,30 180,45 210,20 240,35 270,25 300,10"
-          fill="none"
-          stroke="#3b82f6"
-          strokeWidth="2"
-        />
-        <circle cx="0" cy="80" r="2" fill="#3b82f6" />
-        <circle cx="30" cy="60" r="2" fill="#3b82f6" />
-        <circle cx="60" cy="70" r="2" fill="#3b82f6" />
-        <circle cx="90" cy="40" r="2" fill="#3b82f6" />
-        <circle cx="120" cy="50" r="2" fill="#3b82f6" />
-        <circle cx="150" cy="30" r="2" fill="#3b82f6" />
-        <circle cx="180" cy="45" r="2" fill="#3b82f6" />
-        <circle cx="210" cy="20" r="2" fill="#3b82f6" />
-        <circle cx="240" cy="35" r="2" fill="#3b82f6" />
-        <circle cx="270" cy="25" r="2" fill="#3b82f6" />
-        <circle cx="300" cy="10" r="2" fill="#3b82f6" />
-      </svg>
-    </div>
-  );
-
-  return (
-    <div className="bg-gray-100 min-h-screen">
-      {/* Header avec gestion de la sidebar et notifications */}
-      <HeaderConnectedAdmin
-        title={activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-        onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
-        notificationCount={notificationCount}
-      />
-
-      {/* Sidebar */}
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} sidebarOpen={sidebarOpen} />
-
-      {/* Overlay pour mobile quand sidebar ouverte */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-black bg-opacity-50 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        ></div>
-      )}
-
-      {/* Contenu principal */}
-      <div className="p-4 md:ml-64 pt-20">
-        {/* Dashboard */}
-        {activeTab === "dashboard" && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Tableau de bord</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white p-6 rounded-2xl shadow-md border-l-4 border-blue-500">
-                <p className="text-gray-500">Total livres</p>
-                <p className="text-3xl font-bold">{stats.totalBooks}</p>
-              </div>
-              <div className="bg-white p-6 rounded-2xl shadow-md border-l-4 border-green-500">
-                <p className="text-gray-500">Livres publiés</p>
-                <p className="text-3xl font-bold">{stats.publishedBooks}</p>
-              </div>
-              <div className="bg-white p-6 rounded-2xl shadow-md border-l-4 border-purple-500">
-                <p className="text-gray-500">Utilisateurs</p>
-                <p className="text-3xl font-bold">{stats.totalUsers}</p>
-              </div>
-              <div className="bg-white p-6 rounded-2xl shadow-md border-l-4 border-orange-500">
-                <p className="text-gray-500">Administrateurs</p>
-                <p className="text-3xl font-bold">{stats.admins}</p>
-              </div>
-            </div>
-            <Chart />
-          </div>
-        )}
-
-        {/* Gestion des livres */}
-        {activeTab === "books" && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Gestion des livres</h2>
-
-            {/* Formulaire d'ajout */}
-            <div className="bg-white p-6 rounded-2xl shadow-md mb-8">
-              <h3 className="text-lg font-semibold mb-4">Ajouter un nouveau livre</h3>
-              <form onSubmit={handleAddBook} className="flex flex-wrap gap-4">
-                <input
-                  type="text"
-                  placeholder="Titre"
-                  value={newBook.title}
-                  onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
-                  className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Auteur"
-                  value={newBook.author}
-                  onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
-                  className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="Prix (€)"
-                  value={newBook.price}
-                  onChange={(e) => setNewBook({ ...newBook, price: e.target.value })}
-                  className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-                >
-                  Ajouter
-                </button>
-              </form>
-            </div>
-
-            {/* Liste des livres */}
-            <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Titre</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Auteur</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prix</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {books.map((book) => (
-                    <tr key={book.id}>
-                      <td className="px-6 py-4">{book.title}</td>
-                      <td className="px-6 py-4">{book.author}</td>
-                      <td className="px-6 py-4">{book.price} €</td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs ${
-                            book.status === "publié"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          }`}
-                        >
-                          {book.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <button
-                          onClick={() => handleDeleteBook(book.id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          Supprimer
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* Gestion des utilisateurs */}
-        {activeTab === "users" && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Utilisateurs</h2>
-            <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rôle</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {users.map((user) => (
-                    <tr key={user.id}>
-                      <td className="px-6 py-4">{user.name}</td>
-                      <td className="px-6 py-4">{user.email}</td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs ${
-                            user.role === "admin"
-                              ? "bg-purple-100 text-purple-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          {user.role}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <button
-                          onClick={() => handleDeleteUser(user.id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          Supprimer
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* Paramètres */}
-        {activeTab === "settings" && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Paramètres généraux</h2>
-            <div className="bg-white p-6 rounded-2xl shadow-md max-w-xl">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  alert("Paramètres sauvegardés (simulation)");
-                  setNotificationCount((prev) => prev + 1);
-                }}
-              >
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Nom du site</label>
-                  <input
-                    type="text"
-                    value={settings.siteName}
-                    onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Email de contact</label>
-                  <input
-                    type="email"
-                    value={settings.contactEmail}
-                    onChange={(e) => setSettings({ ...settings, contactEmail: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="mb-4 flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    id="allowRegistration"
-                    checked={settings.allowRegistration}
-                    onChange={(e) => setSettings({ ...settings, allowRegistration: e.target.checked })}
-                    className="w-5 h-5"
-                  />
-                  <label htmlFor="allowRegistration" className="text-gray-700">
-                    Autoriser les nouvelles inscriptions
-                  </label>
-                </div>
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-                >
-                  Sauvegarder
-                </button>
-              </form>
-            </div>
-          </div>
+// Carte statistique
+const StatCard = ({ title, value, icon: Icon, color, change }) => (
+  <div className="bg-white rounded-2xl shadow-md p-5 hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+    <div className="flex justify-between items-start">
+      <div>
+        <p className="text-gray-500 text-sm">{title}</p>
+        <p className="text-3xl font-bold text-gray-800 mt-1">{value}</p>
+        {change && (
+          <p className={`text-xs mt-2 ${change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            {change >= 0 ? '↑' : '↓'} {Math.abs(change)}% depuis mois dernier
+          </p>
         )}
       </div>
+      <div className={`p-3 rounded-xl ${color}`}>
+        <Icon size={24} className="text-white" />
+      </div>
+    </div>
+  </div>
+);
+
+// Composant principal Admin
+const Admin = () => {
+  const { token, admin, logout } = useAuth();
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  
+  // États pour les données
+  const [stats, setStats] = useState({
+    totalBooks: 0,
+    totalUsers: 0,
+    totalOrders: 0,
+    revenue: 0
+  });
+  const [books, setBooks] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [settings, setSettings] = useState({
+    siteName: "E-Book Store",
+    contactEmail: "contact@ebook.com",
+    allowRegistration: true
+  });
+  
+  // États pour les formulaires
+  const [newBook, setNewBook] = useState({ title: "", author: "", price: "", description: "" });
+  const [editingBook, setEditingBook] = useState(null);
+  const [showBookModal, setShowBookModal] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+
+  // Données pour graphiques (simulées - à remplacer par API)
+  const [salesData, setSalesData] = useState([
+    { month: "Jan", ventes: 42 },
+    { month: "Fév", ventes: 58 },
+    { month: "Mar", ventes: 67 },
+    { month: "Avr", ventes: 89 },
+    { month: "Mai", ventes: 112 },
+    { month: "Juin", ventes: 145 },
+  ]);
+  
+  const [categoryData, setCategoryData] = useState([
+    { name: "Romans", value: 35 },
+    { name: "Science", value: 25 },
+    { name: "Histoire", value: 20 },
+    { name: "Jeunesse", value: 20 },
+  ]);
+  const COLORS = ["#3b82f6", "#60a5fa", "#93c5fd", "#bfdbfe"];
+
+  // Vérification auth
+  useEffect(() => {
+    if (!token || !admin) {
+      navigate("/login");
+    }
+  }, [token, admin, navigate]);
+
+  // Chargement des données (simulation - à connecter à vos API)
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Simuler appel API
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        // Données simulées
+        setStats({
+          totalBooks: 124,
+          totalUsers: 847,
+          totalOrders: 342,
+          revenue: 12580
+        });
+        
+        setBooks([
+          { id: 1, title: "React Moderne", author: "Jean Dupont", price: 29.99, status: "published", stock: 45, createdAt: "2024-01-15" },
+          { id: 2, title: "Node.js Avancé", author: "Marie Curie", price: 34.99, status: "draft", stock: 12, createdAt: "2024-02-20" },
+          { id: 3, title: "CSS Mastery", author: "John Doe", price: 24.99, status: "published", stock: 78, createdAt: "2024-03-10" },
+          { id: 4, title: "TypeScript pour les pros", author: "Sarah Smith", price: 39.99, status: "published", stock: 23, createdAt: "2024-04-05" },
+        ]);
+        
+        setUsers([
+          { id: 1, name: "Alice Martin", email: "alice@example.com", role: "admin", createdAt: "2024-01-10", orders: 5 },
+          { id: 2, name: "Bob Durand", email: "bob@example.com", role: "user", createdAt: "2024-02-15", orders: 2 },
+          { id: 3, name: "Charlie Ngoumou", email: "charlie@example.com", role: "user", createdAt: "2024-03-20", orders: 8 },
+        ]);
+        
+        // Notifications simulées
+        setNotifications([
+          { id: 1, message: "Nouvelle commande #1234", type: "info", read: false, time: "il y a 5 min" },
+          { id: 2, message: "Stock faible pour 'React Moderne'", type: "warning", read: false, time: "il y a 1 heure" },
+        ]);
+        
+      } catch (error) {
+        console.error("Erreur chargement données", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Ajout livre
+  const handleAddBook = async (e) => {
+    e.preventDefault();
+    const errors = {};
+    if (!newBook.title) errors.title = "Titre requis";
+    if (!newBook.author) errors.author = "Auteur requis";
+    if (!newBook.price || newBook.price <= 0) errors.price = "Prix invalide";
+    if (Object.keys(errors).length) {
+      setFormErrors(errors);
+      return;
+    }
+    
+    // Simuler ajout API
+    const newId = books.length + 1;
+    const bookToAdd = {
+      id: newId,
+      ...newBook,
+      price: parseFloat(newBook.price),
+      status: "draft",
+      stock: 0,
+      createdAt: new Date().toISOString().split('T')[0]
+    };
+    setBooks([...books, bookToAdd]);
+    setNewBook({ title: "", author: "", price: "", description: "" });
+    setShowBookModal(false);
+    setNotifications([{ id: Date.now(), message: `Livre "${newBook.title}" ajouté`, type: "success", read: false, time: "à l'instant" }, ...notifications]);
+  };
+  
+  const handleDeleteBook = async (id) => {
+    if (window.confirm("Supprimer définitivement ce livre ?")) {
+      setBooks(books.filter(b => b.id !== id));
+      setNotifications([{ id: Date.now(), message: `Livre supprimé`, type: "success", read: false, time: "à l'instant" }, ...notifications]);
+    }
+  };
+  
+  const handleDeleteUser = async (id) => {
+    if (window.confirm("Supprimer cet utilisateur ?")) {
+      setUsers(users.filter(u => u.id !== id));
+    }
+  };
+  
+  const markNotificationAsRead = (id) => {
+    setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement du tableau de bord...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 to-white">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-20 bg-white/80 backdrop-blur-md shadow-sm border-b border-blue-100">
+        <div className="flex items-center justify-between px-4 py-3 md:px-6">
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="p-2 rounded-lg hover:bg-gray-100 md:hidden"
+            >
+              <Menu size={24} />
+            </button>
+            <h2 className="text-lg font-semibold text-gray-800 capitalize">
+              {activeTab}
+            </h2>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            {/* Notifications */}
+            <div className="relative">
+              <button 
+                onClick={() => {
+                  // toggle notifications dropdown
+                  const dropdown = document.getElementById('notifDropdown');
+                  dropdown.classList.toggle('hidden');
+                }}
+                className="p-2 rounded-full hover:bg-gray-100 relative"
+              >
+                <Bell size={20} />
+                {notifications.filter(n => !n.read).length > 0 && (
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                )}
+              </button>
+              <div id="notifDropdown" className="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border z-50">
+                <div className="p-3 border-b font-semibold">Notifications</div>
+                <div className="max-h-96 overflow-y-auto">
+                  {notifications.length === 0 ? (
+                    <p className="p-4 text-gray-500 text-center">Aucune notification</p>
+                  ) : (
+                    notifications.map(notif => (
+                      <div key={notif.id} className={`p-3 border-b hover:bg-gray-50 cursor-pointer ${!notif.read ? 'bg-blue-50' : ''}`} onClick={() => markNotificationAsRead(notif.id)}>
+                        <p className="text-sm">{notif.message}</p>
+                        <p className="text-xs text-gray-400 mt-1">{notif.time}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            {/* Profil admin */}
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                {admin?.full_name?.charAt(0) || 'A'}
+              </div>
+              <span className="text-sm font-medium hidden sm:block">{admin?.full_name}</span>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      
+      {/* Main content */}
+      <main className="pt-20 md:ml-64 p-6">
+        {/* DASHBOARD */}
+        {activeTab === "dashboard" && (
+          <div className="animate-fadeIn">
+            <div className="mb-8">
+              <h1 className="text-2xl font-bold text-gray-800">Bonjour, {admin?.full_name} </h1>
+              <p className="text-gray-500">Voici les performances de votre plateforme</p>
+            </div>
+            
+            {/* Stats cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <StatCard title="Livres" value={stats.totalBooks} icon={BookOpen} color="bg-blue-500" change={12} />
+              <StatCard title="Utilisateurs" value={stats.totalUsers} icon={Users} color="bg-green-500" change={8} />
+              <StatCard title="Commandes" value={stats.totalOrders} icon={BookOpen} color="bg-purple-500" change={-3} />
+              <StatCard title="Chiffre d'affaires" value={`${stats.revenue} €`} icon={Settings} color="bg-orange-500" change={15} />
+            </div>
+            
+            {/* Graphiques */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <div className="bg-white p-5 rounded-2xl shadow-md">
+                <h3 className="font-semibold text-gray-700 mb-4">Ventes mensuelles</h3>
+                <ResponsiveContainer width="100%" height={250}>
+                  <LineChart data={salesData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="ventes" stroke="#3b82f6" strokeWidth={2} dot={{ fill: '#3b82f6' }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="bg-white p-5 rounded-2xl shadow-md">
+                <h3 className="font-semibold text-gray-700 mb-4">Répartition par catégorie</h3>
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie data={categoryData} cx="50%" cy="50%" labelLine={false} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} outerRadius={80} fill="#8884d8" dataKey="value">
+                      {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            
+            {/* Derniers livres ajoutés */}
+            <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100">
+                <h3 className="font-semibold text-gray-700">Derniers livres ajoutés</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Titre</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Auteur</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prix</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {books.slice(0, 3).map(book => (
+                      <tr key={book.id}>
+                        <td className="px-6 py-4">{book.title}</td>
+                        <td className="px-6 py-4">{book.author}</td>
+                        <td className="px-6 py-4">{book.price} €</td>
+                        <td className="px-6 py-4">
+                          <span className={`px-2 py-1 rounded-full text-xs ${book.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                            {book.status === 'published' ? 'Publié' : 'Brouillon'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* GESTION LIVRES */}
+        {activeTab === "books" && (
+          <div className="animate-fadeIn">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Gestion des livres</h2>
+              <button 
+                onClick={() => setShowBookModal(true)}
+                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors"
+              >
+                <Plus size={18} /> Ajouter un livre
+              </button>
+            </div>
+            
+            <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Titre</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Auteur</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prix</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {books.map(book => (
+                      <tr key={book.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 font-medium">{book.title}</td>
+                        <td className="px-6 py-4">{book.author}</td>
+                        <td className="px-6 py-4">{book.price} €</td>
+                        <td className="px-6 py-4">{book.stock}</td>
+                        <td className="px-6 py-4">
+                          <span className={`px-2 py-1 rounded-full text-xs ${book.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                            {book.status === 'published' ? 'Publié' : 'Brouillon'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex gap-3">
+                            <button className="text-blue-600 hover:text-blue-800">
+                              <Edit size={18} />
+                            </button>
+                            <button onClick={() => handleDeleteBook(book.id)} className="text-red-600 hover:text-red-800">
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            {/* Modal ajout livre */}
+            {showBookModal && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-2xl max-w-md w-full p-6 animate-fadeInUp">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-bold">Ajouter un livre</h3>
+                    <button onClick={() => setShowBookModal(false)} className="p-1 rounded-full hover:bg-gray-100">
+                      <X size={20} />
+                    </button>
+                  </div>
+                  <form onSubmit={handleAddBook}>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Titre *</label>
+                        <input 
+                          type="text" 
+                          value={newBook.title}
+                          onChange={(e) => setNewBook({...newBook, title: e.target.value})}
+                          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
+                        {formErrors.title && <p className="text-red-500 text-xs mt-1">{formErrors.title}</p>}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Auteur *</label>
+                        <input 
+                          type="text" 
+                          value={newBook.author}
+                          onChange={(e) => setNewBook({...newBook, author: e.target.value})}
+                          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
+                        {formErrors.author && <p className="text-red-500 text-xs mt-1">{formErrors.author}</p>}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Prix (€) *</label>
+                        <input 
+                          type="number" 
+                          step="0.01"
+                          value={newBook.price}
+                          onChange={(e) => setNewBook({...newBook, price: e.target.value})}
+                          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
+                        {formErrors.price && <p className="text-red-500 text-xs mt-1">{formErrors.price}</p>}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea 
+                          rows="3"
+                          value={newBook.description}
+                          onChange={(e) => setNewBook({...newBook, description: e.target.value})}
+                          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex gap-3 mt-6">
+                      <button type="submit" className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Ajouter</button>
+                      <button type="button" onClick={() => setShowBookModal(false)} className="flex-1 border border-gray-300 py-2 rounded-lg hover:bg-gray-50">Annuler</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        
+        {/* GESTION UTILISATEURS */}
+        {activeTab === "users" && (
+          <div className="animate-fadeIn">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Utilisateurs</h2>
+            <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rôle</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commandes</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Inscrit le</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {users.map(user => (
+                      <tr key={user.id}>
+                        <td className="px-6 py-4">{user.name}</td>
+                        <td className="px-6 py-4">{user.email}</td>
+                        <td className="px-6 py-4">
+                          <span className={`px-2 py-1 rounded-full text-xs ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}`}>
+                            {user.role}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">{user.orders}</td>
+                        <td className="px-6 py-4">{user.createdAt}</td>
+                        <td className="px-6 py-4">
+                          <button onClick={() => handleDeleteUser(user.id)} className="text-red-600 hover:text-red-800">
+                            <Trash2 size={18} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* PARAMÈTRES */}
+        {activeTab === "settings" && (
+          <div className="animate-fadeIn">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Paramètres généraux</h2>
+            <div className="bg-white rounded-2xl shadow-md p-6 max-w-2xl">
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                alert("Paramètres sauvegardés (simulation)");
+              }}>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Nom du site</label>
+                    <input 
+                      type="text" 
+                      value={settings.siteName}
+                      onChange={(e) => setSettings({...settings, siteName: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email de contact</label>
+                    <input 
+                      type="email" 
+                      value={settings.contactEmail}
+                      onChange={(e) => setSettings({...settings, contactEmail: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <input 
+                      type="checkbox" 
+                      id="allowReg" 
+                      checked={settings.allowRegistration}
+                      onChange={(e) => setSettings({...settings, allowRegistration: e.target.checked})}
+                      className="w-4 h-4 text-blue-600"
+                    />
+                    <label htmlFor="allowReg" className="text-gray-700">Autoriser les nouvelles inscriptions</label>
+                  </div>
+                  <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                    Sauvegarder
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </main>
+      
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeInUp {
+          animation: fadeInUp 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 };
