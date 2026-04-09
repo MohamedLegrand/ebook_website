@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CheckCircle, Home, BookOpen, Package, Printer, Mail } from "lucide-react";
-import LivreConnected from "../livreconnected/LivreConnected";
 
 function Paiementreussi() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state || {};
 
-  // Valeurs par défaut (au cas où la redirection n'aurait pas passé d'état)
-  const orderId = state.orderId || `MTHS-${Date.now()}`;
+  // Générer une valeur de secours stable (une seule fois)
+  const [fallbackOrderId] = useState(() => `MTHS-${Date.now()}`);
+  
+  // Utiliser l'ID passé dans l'état, sinon le fallback stable
+  const orderId = state.orderId || fallbackOrderId;
   const amount = state.amount || 0;
   const items = state.items || 0;
   const paymentMethod = state.paymentMethod || "momo";

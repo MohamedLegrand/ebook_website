@@ -30,32 +30,40 @@ function Login() {
       return;
     }
 
+    // Tentative de connexion : d'abord admin, puis client
     try {
-      // Appel à l'API Go
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      // 1) Essayer admin
+      const adminRes = await fetch("http://localhost:8080/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+      const adminData = await adminRes.json();
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        // L'API a retourné une erreur (mauvais identifiants, etc.)
-        setFormErrors({ general: data.error || "Erreur de connexion" });
+      if (adminRes.ok) {
+        // Connexion admin réussie
+        login(adminData.token, adminData.admin, "admin");
+        navigate("/admin");
         setIsLoading(false);
         return;
       }
 
-      // Connexion réussie — on stocke le token et les infos du client
-      // dans le contexte AuthContext et le localStorage
-      login(data.token, data.client);
+      // 2) Si échec admin, essayer client
+      const clientRes = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const clientData = await clientRes.json();
 
-      // Redirection vers la page des livres
-      navigate("/livreconnected");
-
+      if (clientRes.ok) {
+        login(clientData.token, clientData.client, "client");
+        navigate("/livreconnected");
+      } else {
+        // Les deux échouent -> identifiants invalides
+        setFormErrors({ general: "Email ou mot de passe incorrect" });
+      }
     } catch (err) {
-      // Erreur réseau (serveur éteint, pas de connexion, etc.)
       setFormErrors({ general: "Impossible de contacter le serveur" });
     } finally {
       setIsLoading(false);
@@ -73,7 +81,7 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50/90 via-white to-blue-50/90 p-3 overflow-hidden">
-      {/* Éléments décoratifs animés */}
+      {/* Éléments décoratifs identiques à votre version */}
       <div className="fixed inset-0 pointer-events-none">
         {[...Array(5)].map((_, i) => (
           <div
@@ -128,8 +136,7 @@ function Login() {
 
           {/* Formulaire */}
           <form className="space-y-3" onSubmit={handleSubmit}>
-
-            {/* Erreur générale (mauvais identifiants, serveur inaccessible) */}
+            {/* Erreur générale */}
             {formErrors.general && (
               <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-xs px-3 py-2 rounded-lg animate-fadeIn">
                 <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -201,7 +208,7 @@ function Login() {
               )}
             </div>
 
-            {/* Options */}
+            {/* Options (Se souvenir + Mot de passe oublié) */}
             <div className="flex items-center justify-between text-xs animate-fadeIn" style={{ animationDelay: "0.3s" }}>
               <label className="flex items-center gap-2 text-gray-600 cursor-pointer hover:text-blue-600 transition-all duration-300 hover:scale-105">
                 <div className="relative">
@@ -291,7 +298,9 @@ function Login() {
         </p>
       </div>
 
+      {/* Styles CSS inchangés */}
       <style jsx>{`
+        /* ... vos keyframes et classes ... */
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }

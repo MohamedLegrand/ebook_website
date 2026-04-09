@@ -1,48 +1,67 @@
+// context/AuthContext.js
 import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
 
-  // On initialise depuis localStorage pour que la session survive
-  // au rechargement de la page
-  const [client, setClient] = useState(() => {
-    const stored = localStorage.getItem("client");
-    return stored ? JSON.parse(stored) : null;
+  // Initialisation depuis localStorage
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
   });
 
   const [token, setToken] = useState(() => {
     return localStorage.getItem("token") || null;
   });
 
-  // Appelé après une connexion réussie
-  // Reçoit le token JWT et les infos du client depuis l'API
-  const login = (tokenValue, clientData) => {
+  const [role, setRole] = useState(() => {
+    return localStorage.getItem("role") || null;
+  });
+
+  // Connexion : stocke token, données utilisateur et rôle
+  const login = (tokenValue, userData, userRole) => {
     setToken(tokenValue);
-    setClient(clientData);
+    setUser(userData);
+    setRole(userRole);
     localStorage.setItem("token", tokenValue);
-    localStorage.setItem("client", JSON.stringify(clientData));
+    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("role", userRole);
   };
 
-  // Appelé à la déconnexion
+  // Déconnexion
   const logout = () => {
     setToken(null);
-    setClient(null);
+    setUser(null);
+    setRole(null);
     localStorage.removeItem("token");
-    localStorage.removeItem("client");
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
   };
 
-  // Vérifie si le client est connecté
-  const isAuthenticated = !!token && !!client;
+  const isAuthenticated = !!token && !!user;
+
+  // Compatibilité : si l'utilisateur est client, on expose `client`
+  // Sinon, `client` vaut null. De même pour `admin`.
+  const client = role === "client" ? user : null;
+  const admin = role === "admin" ? user : null;
 
   return (
-    <AuthContext.Provider value={{ client, token, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{
+      user,      // données génériques (client ou admin)
+      client,    // non null si rôle = client
+      admin,     // non null si rôle = admin
+      token,
+      role,
+      login,
+      logout,
+      isAuthenticated
+    }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-// Hook personnalisé pour utiliser le contexte facilement
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
