@@ -7,7 +7,7 @@ import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 
 /* ──────────────────────────────────────────
-   Devise
+   Devise (uniquement pour l'affichage)
 ────────────────────────────────────────── */
 const CURRENCIES = {
   FCFA: { label: "FCFA", rate: 1, symbol: "" },
@@ -60,7 +60,7 @@ function Paiement() {
   const navigate = useNavigate();
   const location = useLocation();
   const { cart, clearCart, getCartTotal } = useCart();
-  const { client } = useAuth();
+  const { client, token } = useAuth(); // 🔁 récupération du token JWT
 
   const { paymentMethod: initialMethod, paymentNumber: initialNumber } = location.state || {};
 
@@ -70,9 +70,9 @@ function Paiement() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const subtotal = getCartTotal();
+  const subtotal = getCartTotal(); // déjà en FCFA
   const paymentFee = paymentMethod === "card" ? Math.round(subtotal * 0.025) : 0;
-  const total = subtotal + paymentFee;
+  const total = subtotal + paymentFee; // toujours en FCFA
 
   const validatePaymentNumber = () => {
     const trimmed = paymentNumber.trim();
@@ -98,40 +98,66 @@ function Paiement() {
 
   const handlePayment = async () => {
     setErrorMsg("");
-    
+
     if (!validatePaymentNumber()) return;
-    
+    if (!token) {
+      setErrorMsg("Vous devez être connecté pour effectuer un paiement.");
+      return;
+    }
+
     setIsProcessing(true);
-    
+
     try {
-      // 🔹 Simulation de traitement (remplacer par votre appel API réel)
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      
-      // 🔹 Ici : appel à votre backend pour valider le paiement
-      // const response = await fetch('/api/process-payment', { ... })
-      
-      // ✅ Paiement validé → vider le panier et rediriger
-      clearCart();
-      
-      navigate("/paiementreussi", {
-        state: {
-          orderId: `MTHS-${Date.now()}`,
-          amount: total,
-          items: cart.length,
-          paymentMethod: paymentMethod,
-          paymentNumber: paymentMethod === "card" 
-            ? `****${paymentNumber.replace(/\s/g, "").slice(-4)}` 
-            : paymentNumber,
-          timestamp: new Date().toISOString(),
+      // Préparer les articles du panier
+      const items = cart.map((item) => ({
+        livre_id: item.id,
+        quantite: item.quantity || 1,
+      }));
+
+      const response = await fetch("http://localhost:8080/api/paiement/initier", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify({
+          moyen_paiement: paymentMethod,
+          numero_paiement: paymentNumber,
+          montant_total: total, // en FCFA
+          items,
+        }),
       });
-      
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erreur lors du paiement");
+      }
+
+      if (data.success) {
+        // Vider le panier local
+        clearCart();
+
+        // Redirection vers la page de succès
+        navigate("/paiementreussi", {
+          state: {
+            orderId: data.reference,
+            amount: total,
+            items: cart.length,
+            paymentMethod: paymentMethod,
+            paymentNumber:
+              paymentMethod === "card"
+                ? `****${paymentNumber.replace(/\s/g, "").slice(-4)}`
+                : paymentNumber,
+            timestamp: new Date().toISOString(),
+          },
+        });
+      } else {
+        throw new Error(data.message || "Paiement non validé");
+      }
     } catch (error) {
       console.error("Erreur de paiement:", error);
-      setErrorMsg("Une erreur est survenue. Veuillez réessayer.");
-    } finally {
-      // ⚠️ setIsProcessing ne s'exécutera pas si la navigation réussit
-      // (le composant est démonté), mais on le garde pour la gestion d'erreur
+      setErrorMsg(error.message || "Une erreur est survenue. Veuillez réessayer.");
       setIsProcessing(false);
     }
   };

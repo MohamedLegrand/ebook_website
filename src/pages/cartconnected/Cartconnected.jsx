@@ -825,13 +825,7 @@ function CartConnected() {
                     </div>
                   </div>
 
-                  {/* Payment method */}
-                  
-
-                  {/* Champ numéro de paiement */}
-                  
-
-                  {/* Promo code - AJOUTÉ */}
+                 
                   
 
                   <div className="summary-sep" />

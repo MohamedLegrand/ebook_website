@@ -76,7 +76,7 @@ function Paiementreussi() {
           <button className="btn-outline" onClick={() => navigate("/livreconnected")}>
             <Home size={18} /> Accueil
           </button>
-          <button className="btn-primary" onClick={() => navigate("/mes-telechargements")}>
+          <button className="btn-primary" onClick={() => navigate("/telechargements")}>
             <BookOpen size={18} /> Mes téléchargements
           </button>
         </div>

@@ -36,6 +36,8 @@ import ScrollToTop from "./components/scrolltotop/ScrollToTop";
 import Paiement from "./pages/paiement/Paiement";
 import Paiementreussi from "./pages/paiementreussi/Paiementreussi";
 
+import Telechargements from "./pages/telechargements/Telechargements";
+
 import Admin from "./pages/admin/Admin";
 
 // Layout component
@@ -83,6 +85,7 @@ function Layout() {
           <Route path="/paiement" element={<Paiement />} />
           <Route path="/paiementreussi" element={<Paiementreussi />} />
           <Route path="/admin/*" element={<Admin />} />
+          <Route path="/telechargements" element={<Telechargements />} />
         </Routes>
       </main>
 

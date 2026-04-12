@@ -499,7 +499,7 @@ function HeaderConnected() {
                       {lang.account.profile}
                     </Link>
                     <Link
-                      to="/commandes"
+                      to="/telechargements"
                       onClick={() => setIsAccountOpen(false)}
                       className="flex items-center gap-2 px-3 py-2 text-sm text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
                     >
@@ -694,7 +694,7 @@ function HeaderConnected() {
               <span className="flex-1 text-sm font-semibold">{lang.account.profile}</span>
             </Link>
             <Link
-              to="/commandes"
+              to="/telechargements"
               onClick={() => setIsMenuOpen(false)}
               className="flex items-center gap-3 px-3 py-3 rounded-xl text-blue-800 hover:bg-blue-50 transition-all"
             >
