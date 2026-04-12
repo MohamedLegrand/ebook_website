@@ -1531,6 +1531,44 @@ En plus d’aider à discerner le bon partenaire, cet ouvrage accompagne le lect
 À travers des enseignements bibliques profonds et accessibles, ce livre démonte les idées reçues et rétablit la vérité sur l’autorité spirituelle du croyant en Dieu. Il met en lumière les mécanismes de la peur, souvent alimentée par l’ignorance, et montre comment une foi solide permet de vivre au-dessus de toute influence occulte.
 
 L’ouvrage propose également des clés pratiques pour affermir sa foi, résister aux attaques spirituelles et marcher dans une pleine assurance. Plus qu’un simple enseignement, c’est un appel à sortir de la peur pour entrer dans une vie de victoire, de paix et de confiance totale en Dieu.`
+},
+{
+  id: 32,
+  titre: "L'envoûtement par la Bible et les objets liturgiques",
+  auteur: "Centre MTHS",
+  desc: "Un ouvrage révélateur qui met en lumière une réalité souvent ignorée : l’utilisation détournée de la Bible et des objets liturgiques dans certaines pratiques d’envoûtement. Ce livre apporte un éclairage biblique pour discerner, se protéger et rester ferme dans une foi authentique.",
+  prixFCFA: 6500,
+  images: [
+    "/images/livre32/livre32_1.png",
+    "/images/livre32/livre32_2.png",
+    "/images/livre32/livre32_4.png",
+    "/images/livre32/livre32_3.png"
+  ],
+  format: ["Papier", "PDF"],
+  pages: 310,
+  stock: 20,
+  type: "Livre",
+  isbn: "978-2-9541234-9-5",
+  datePublication: "2024",
+  langue: "Français",
+  pointsCles: [
+    "Comprendre les formes d’envoûtement liées à l’usage détourné d’objets sacrés",
+    "Discerner entre pratique authentique de la foi et manipulation spirituelle",
+    "Identifier les signes d’influences spirituelles négatives",
+    "Se protéger à travers des principes bibliques solides",
+    "Renforcer sa relation avec Dieu pour éviter toute forme de tromperie"
+  ],
+  publicCible: [
+    "Chrétiens désirant approfondir leur discernement spirituel",
+    "Personnes exposées à des pratiques religieuses douteuses",
+    "Jeunes en quête de vérité spirituelle",
+    "Responsables et encadreurs spirituels"
+  ],
+  resume: `L'ENVOÛTEMENT PAR LA BIBLE ET LES OBJETS LITURGIQUES met en lumière une réalité troublante : certaines pratiques utilisent des éléments sacrés à des fins contraires à la foi authentique.
+
+À travers une analyse claire et accessible, cet ouvrage aide le lecteur à comprendre comment des objets tels que la Bible ou des éléments liturgiques peuvent être détournés dans des pratiques d’influence spirituelle. Il apporte un éclairage biblique essentiel pour éviter les pièges et rester ancré dans la vérité.
+
+Le livre propose également des clés pratiques pour développer le discernement, se protéger et vivre une foi sincère et équilibrée. C’est un guide précieux pour toute personne souhaitant marcher dans la lumière, loin de toute confusion ou manipulation spirituelle.`
 }
 ];
 

@@ -38,18 +38,19 @@ import Paiementreussi from "./pages/paiementreussi/Paiementreussi";
 
 import Admin from "./pages/admin/Admin";
 
-
-//  Nouveau composant Layout
+// Layout component
 function Layout() {
   const location = useLocation();
 
+  // Chemins où le header et le footer doivent être masqués
+  const noHeaderFooterPaths = ["/login", "/register"];
   const isAdminPage = location.pathname.startsWith("/admin");
+  const hideHeaderFooter = isAdminPage || noHeaderFooterPaths.includes(location.pathname);
 
   return (
     <div className="flex flex-col min-h-screen">
-
-      {/* Header public */}
-      {!isAdminPage && <SmartHeader />}
+      {/* Header : masqué pour admin, login et register */}
+      {!hideHeaderFooter && <SmartHeader />}
 
       <main className="flex-grow">
         <Routes>
@@ -81,18 +82,15 @@ function Layout() {
           <Route path="/profil" element={<Profil />} />
           <Route path="/paiement" element={<Paiement />} />
           <Route path="/paiementreussi" element={<Paiementreussi />} />
-
-          {/* ADMIN */}
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/*" element={<Admin />} />
         </Routes>
       </main>
 
-      {/* Footer public */}
-      {!isAdminPage && <Footer />}
+      {/* Footer : masqué pour admin, login et register */}
+      {!hideHeaderFooter && <Footer />}
     </div>
   );
 }
-
 
 function App() {
   return (

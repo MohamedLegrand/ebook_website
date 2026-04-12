@@ -51,6 +51,7 @@ function Hero() {
     { id: 29, titre: "Conséquences spirituelles de la masturbation et de la pornographie", auteur: "Centre MTHS", desc: "Analyse des répercussions spirituelles des déviances sexuelles selon la tradition MTHS.", prixFCFA: 6500, image: "/images/livre29/livre29_1.png", type: "Morale", pages: 310, stock: 20 },
     { id: 30, titre: "Le bon choix de ton partenaire de mariage", auteur: "Centre MTHS", desc: "Guide spirituel pour discerner le bon conjoint selon les critères de la foi et de la tradition.", prixFCFA: 6500, image: "/images/livre30/livre30_1.png", type: "Mariage", pages: 310, stock: 20 },
     { id: 31, titre: "La Sorcellerie au-dessus de la foi", auteur: "Centre MTHS", desc: "Enquête sur les mécanismes par lesquels la sorcellerie peut affecter même les croyants.", prixFCFA: 6500, image: "/images/livre31/livre31_1.png", type: "Foi & Sorcellerie", pages: 310, stock: 20 },
+    { id: 32, titre: "L'envoutement par la Bible et les objets lithurgiques", auteur: "Centre MTHS", desc: "Exploration des différentes formes de prière et de leur efficacité spirituelle selon la tradition MTHS.", prixFCFA: 6500, image: "/images/livre32/livre32_1.png", type: "Prière", pages: 310, stock: 20 },
   ];
 
   const colorPalette = [

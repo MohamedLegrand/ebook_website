@@ -613,6 +613,26 @@ function Boutique() {
           isbn: "978-2-954-12363-0",
           datePublication: "2023",
           langue: "Français"
+        },
+        {
+          id: 32,
+          titre: "L'ENVOUTEMENT PAR LA BIBLE ET LES OBJETS LITURGIQUES",
+          auteur: "Centre MTHS",
+          desc: "Cet ouvrage explore une thématique souvent mal comprise : l'utilisation de la Bible et des objets liturgiques dans des pratiques d'envoûtement. À travers des enseignements éclairés, il met en lumière les dérives possibles, rétablit la vérité biblique et aide le lecteur à discerner entre foi authentique et manipulations spirituelles. Un livre essentiel pour renforcer sa compréhension, protéger sa foi et marcher dans la vérité.",
+          prixFCFA: 6500,
+          image: [
+            "/images/livre32/livre32_1.png",
+            "/images/livre32/livre32_2.png",
+            "/images/livre32/livre32_3.png",
+            "/images/livre32/livre32_4.png"
+          ],
+          format: ["Papier", "PDF"],
+          pages: 300,
+          stock: 30,
+          type: "Livre",
+          isbn: "978-2-954-12363-1",
+          datePublication: "2023",
+          langue: "Français"
         }
       ]
     },

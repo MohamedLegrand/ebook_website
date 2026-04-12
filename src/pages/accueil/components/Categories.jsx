@@ -341,6 +341,8 @@ const WhyChooseUs = () => {
     { id: 29, titre: "CONSEQUENCES SPIRITUELLES DE LA MASTURBATION ET DE LA PORNOGRAPHIE DANS TA VIE", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre29/livre29_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
     { id: 30, titre: "LE BON CHOIX DE TON PARTENAIRE DE MARIAGE ", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre30/livre30_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
     { id: 31, titre: "la Sorcellerie au Dessus de la foi", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre31/livre31_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    { id: 32, titre: "L'envoutement par la Bible et les objets lithurgiques", auteur: "Centre MTHS", desc: "Guide complet pour obtenir la délivrance et la victoire contre le Diable, les Démons et les Sorciers.", prixFCFA: 6500, image: "/images/livre32/livre32_1.png", format: ["Papier", "PDF"],        pages: 310, stock: 20, type: "Livre",  isbn: "978-2-954-12353-1", datePublication: "2023", langue: "Français" },
+    
   ];
 
   const filtered = livres.filter(l =>
