@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { BookOpen, Calendar, AlertCircle, Loader, Eye } from "lucide-react";
+import { Download, BookOpen, Calendar, AlertCircle, Loader } from "lucide-react";
 
 function Telechargements() {
   const { token } = useAuth();
@@ -9,7 +9,7 @@ function Telechargements() {
   const [achats, setAchats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [readingId, setReadingId] = useState(null);
+  const [downloadingId, setDownloadingId] = useState(null);
 
   useEffect(() => {
     if (!token) {
@@ -33,10 +33,25 @@ function Telechargements() {
     fetchAchats();
   }, [token, navigate]);
 
-  const handleRead = (livreId) => {
-    setReadingId(livreId);
-    window.open(`http://localhost:8080/api/achat/${livreId}/download`, "_blank");
-    setReadingId(null);
+  const handleDownload = async (livreId, titre) => {
+    setDownloadingId(livreId);
+    try {
+      const response = await fetch(`http://localhost:8080/api/achat/${livreId}/download`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Téléchargement impossible");
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      setTimeout(() => window.URL.revokeObjectURL(url), 100);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setDownloadingId(null);
+    }
   };
 
   if (loading) {
@@ -79,8 +94,8 @@ function Telechargements() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-5xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Mes livres</h1>
-        <p className="text-gray-600 mb-8">Cliquez sur "Lire en ligne" pour consulter votre livre.</p>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">Mes téléchargements</h1>
+        <p className="text-gray-600 mb-8">Retrouvez ici tous les livres que vous avez achetés.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {achats.map((achat) => (
@@ -106,16 +121,16 @@ function Telechargements() {
                 <div className="mt-4 flex justify-between items-center">
                   <span className="text-sm font-bold text-blue-600">{achat.montant.toLocaleString("fr-FR")} FCFA</span>
                   <button
-                    onClick={() => handleRead(achat.livre_id)}
-                    disabled={readingId === achat.livre_id}
+                    onClick={() => handleDownload(achat.livre_id, achat.livre_titre)}
+                    disabled={downloadingId === achat.livre_id}
                     className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
                   >
-                    {readingId === achat.livre_id ? (
+                    {downloadingId === achat.livre_id ? (
                       <Loader size={16} className="animate-spin" />
                     ) : (
-                      <Eye size={16} />
+                      <Download size={16} />
                     )}
-                    Lire en ligne
+                    Télécharger / Lire
                   </button>
                 </div>
               </div>
