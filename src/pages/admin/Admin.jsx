@@ -10,7 +10,7 @@ import {
   Plus, LogOut, Bell, Menu, X, CheckCircle, AlertCircle 
 } from "lucide-react";
 
-// Composant Sidebar amélioré
+// Sidebar
 const Sidebar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }) => {
   const menuItems = [
     { id: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
@@ -21,28 +21,23 @@ const Sidebar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }) => {
 
   return (
     <>
-      {/* Overlay mobile */}
       {sidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-20 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
-      
       <aside className={`
         fixed top-0 left-0 z-30 h-screen w-64 bg-white shadow-xl transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0
       `}>
         <div className="flex flex-col h-full">
-          {/* Logo / Brand */}
           <div className="p-5 border-b border-blue-100">
             <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
               Admin E-Book
             </h1>
             <p className="text-xs text-gray-400 mt-1">Panel de contrôle</p>
           </div>
-          
-          {/* Navigation */}
           <nav className="flex-1 p-4 space-y-1">
             {menuItems.map((item) => {
               const Icon = item.icon;
@@ -71,8 +66,6 @@ const Sidebar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }) => {
               );
             })}
           </nav>
-          
-          {/* Footer sidebar (déconnexion) */}
           <div className="p-4 border-t border-gray-100">
             <button
               onClick={() => {
@@ -111,7 +104,7 @@ const StatCard = ({ title, value, icon: Icon, color, change }) => (
   </div>
 );
 
-// Composant principal Admin
+// Composant principal
 const Admin = () => {
   const { token, admin, logout } = useAuth();
   const navigate = useNavigate();
@@ -119,8 +112,8 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
+  const [error, setError] = useState(null);
   
-  // États pour les données
   const [stats, setStats] = useState({
     totalBooks: 0,
     totalUsers: 0,
@@ -135,13 +128,10 @@ const Admin = () => {
     allowRegistration: true
   });
   
-  // États pour les formulaires
-  const [newBook, setNewBook] = useState({ title: "", author: "", price: "", description: "" });
-  const [editingBook, setEditingBook] = useState(null);
+  const [newBook, setNewBook] = useState({ titre: "", auteur: "", prix_fcfa: "", description: "", image: "", type: "", pages: "", stock: "" });
   const [showBookModal, setShowBookModal] = useState(false);
   const [formErrors, setFormErrors] = useState({});
 
-  // Données pour graphiques (simulées - à remplacer par API)
   const [salesData, setSalesData] = useState([
     { month: "Jan", ventes: 42 },
     { month: "Fév", ventes: 58 },
@@ -159,95 +149,112 @@ const Admin = () => {
   ]);
   const COLORS = ["#3b82f6", "#60a5fa", "#93c5fd", "#bfdbfe"];
 
-  // Vérification auth
   useEffect(() => {
     if (!token || !admin) {
       navigate("/login");
     }
   }, [token, admin, navigate]);
 
-  // Chargement des données (simulation - à connecter à vos API)
   useEffect(() => {
+    if (!token) return;
     const fetchData = async () => {
       setLoading(true);
+      setError(null);
       try {
-        // Simuler appel API
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        // Données simulées
-        setStats({
-          totalBooks: 124,
-          totalUsers: 847,
-          totalOrders: 342,
-          revenue: 12580
+        // Chargement des livres
+        const booksRes = await fetch("http://localhost:8080/api/admin/books", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        
-        setBooks([
-          { id: 1, title: "React Moderne", author: "Jean Dupont", price: 29.99, status: "published", stock: 45, createdAt: "2024-01-15" },
-          { id: 2, title: "Node.js Avancé", author: "Marie Curie", price: 34.99, status: "draft", stock: 12, createdAt: "2024-02-20" },
-          { id: 3, title: "CSS Mastery", author: "John Doe", price: 24.99, status: "published", stock: 78, createdAt: "2024-03-10" },
-          { id: 4, title: "TypeScript pour les pros", author: "Sarah Smith", price: 39.99, status: "published", stock: 23, createdAt: "2024-04-05" },
-        ]);
-        
-        setUsers([
-          { id: 1, name: "Alice Martin", email: "alice@example.com", role: "admin", createdAt: "2024-01-10", orders: 5 },
-          { id: 2, name: "Bob Durand", email: "bob@example.com", role: "user", createdAt: "2024-02-15", orders: 2 },
-          { id: 3, name: "Charlie Ngoumou", email: "charlie@example.com", role: "user", createdAt: "2024-03-20", orders: 8 },
-        ]);
-        
-        // Notifications simulées
-        setNotifications([
-          { id: 1, message: "Nouvelle commande #1234", type: "info", read: false, time: "il y a 5 min" },
-          { id: 2, message: "Stock faible pour 'React Moderne'", type: "warning", read: false, time: "il y a 1 heure" },
-        ]);
-        
-      } catch (error) {
-        console.error("Erreur chargement données", error);
+        if (!booksRes.ok) throw new Error("Erreur chargement livres");
+        const booksData = await booksRes.json();
+        setBooks(booksData);
+        setStats(prev => ({ ...prev, totalBooks: booksData.length }));
+
+        // Chargement des clients (utilisateurs) depuis l'API
+        const usersRes = await fetch("http://localhost:8080/api/admin/clients", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!usersRes.ok) throw new Error("Erreur chargement utilisateurs");
+        const usersData = await usersRes.json();
+        setUsers(usersData);
+        setStats(prev => ({ ...prev, totalUsers: usersData.length }));
+
+        // Autres données (simulées pour l'instant)
+        setStats(prev => ({ ...prev, totalOrders: 342, revenue: 12580 }));
+        setNotifications([{ id: 1, message: "Bienvenue sur l'admin", read: false, time: "à l'instant" }]);
+      } catch (err) {
+        console.error(err);
+        setError("Impossible de charger les données. Vérifiez votre connexion au backend.");
       } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, []);
+  }, [token]);
 
-  // Ajout livre
   const handleAddBook = async (e) => {
     e.preventDefault();
     const errors = {};
-    if (!newBook.title) errors.title = "Titre requis";
-    if (!newBook.author) errors.author = "Auteur requis";
-    if (!newBook.price || newBook.price <= 0) errors.price = "Prix invalide";
+    if (!newBook.titre) errors.titre = "Titre requis";
+    if (!newBook.auteur) errors.auteur = "Auteur requis";
+    if (!newBook.prix_fcfa || newBook.prix_fcfa <= 0) errors.prix_fcfa = "Prix invalide";
     if (Object.keys(errors).length) {
       setFormErrors(errors);
       return;
     }
-    
-    // Simuler ajout API
-    const newId = books.length + 1;
-    const bookToAdd = {
-      id: newId,
-      ...newBook,
-      price: parseFloat(newBook.price),
-      status: "draft",
-      stock: 0,
-      createdAt: new Date().toISOString().split('T')[0]
-    };
-    setBooks([...books, bookToAdd]);
-    setNewBook({ title: "", author: "", price: "", description: "" });
-    setShowBookModal(false);
-    setNotifications([{ id: Date.now(), message: `Livre "${newBook.title}" ajouté`, type: "success", read: false, time: "à l'instant" }, ...notifications]);
-  };
-  
-  const handleDeleteBook = async (id) => {
-    if (window.confirm("Supprimer définitivement ce livre ?")) {
-      setBooks(books.filter(b => b.id !== id));
-      setNotifications([{ id: Date.now(), message: `Livre supprimé`, type: "success", read: false, time: "à l'instant" }, ...notifications]);
+    try {
+      const response = await fetch("http://localhost:8080/api/admin/books", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          titre: newBook.titre,
+          auteur: newBook.auteur,
+          description: newBook.description,
+          prix_fcfa: parseInt(newBook.prix_fcfa),
+          image: newBook.image || "",
+          type: newBook.type || "",
+          pages: parseInt(newBook.pages) || 0,
+          stock: parseInt(newBook.stock) || 0,
+        }),
+      });
+      if (!response.ok) throw new Error("Erreur lors de l'ajout");
+      const addedBook = await response.json();
+      setBooks([addedBook, ...books]);
+      setStats(prev => ({ ...prev, totalBooks: prev.totalBooks + 1 }));
+      setShowBookModal(false);
+      setNewBook({ titre: "", auteur: "", prix_fcfa: "", description: "", image: "", type: "", pages: "", stock: "" });
+      setNotifications([{ id: Date.now(), message: `Livre "${addedBook.titre}" ajouté`, read: false, time: "à l'instant" }, ...notifications]);
+    } catch (err) {
+      alert("Erreur lors de l'ajout du livre");
     }
   };
   
+  const handleDeleteBook = async (id) => {
+    if (!window.confirm("Supprimer définitivement ce livre ?")) return;
+    try {
+      const response = await fetch(`http://localhost:8080/api/admin/books/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error("Erreur suppression");
+      setBooks(books.filter(b => b.id !== id));
+      setStats(prev => ({ ...prev, totalBooks: prev.totalBooks - 1 }));
+      setNotifications([{ id: Date.now(), message: "Livre supprimé", read: false, time: "à l'instant" }, ...notifications]);
+    } catch (err) {
+      alert("Erreur lors de la suppression");
+    }
+  };
+  
+  // Suppression locale (en attendant l'endpoint backend)
   const handleDeleteUser = async (id) => {
     if (window.confirm("Supprimer cet utilisateur ?")) {
+      // TODO: appeler DELETE /api/admin/clients/:id quand l'endpoint sera disponible
       setUsers(users.filter(u => u.id !== id));
+      setStats(prev => ({ ...prev, totalUsers: prev.totalUsers - 1 }));
+      setNotifications([{ id: Date.now(), message: "Utilisateur supprimé (localement)", read: false, time: "à l'instant" }, ...notifications]);
     }
   };
   
@@ -261,6 +268,17 @@ const Admin = () => {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
           <p className="mt-4 text-gray-600">Chargement du tableau de bord...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-600 text-center">
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Réessayer</button>
         </div>
       </div>
     );
@@ -288,7 +306,6 @@ const Admin = () => {
             <div className="relative">
               <button 
                 onClick={() => {
-                  // toggle notifications dropdown
                   const dropdown = document.getElementById('notifDropdown');
                   dropdown.classList.toggle('hidden');
                 }}
@@ -339,7 +356,6 @@ const Admin = () => {
               <p className="text-gray-500">Voici les performances de votre plateforme</p>
             </div>
             
-            {/* Stats cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <StatCard title="Livres" value={stats.totalBooks} icon={BookOpen} color="bg-blue-500" change={12} />
               <StatCard title="Utilisateurs" value={stats.totalUsers} icon={Users} color="bg-green-500" change={8} />
@@ -388,21 +404,15 @@ const Admin = () => {
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Titre</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Auteur</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prix</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prix (FCFA)</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
                     {books.slice(0, 3).map(book => (
                       <tr key={book.id}>
-                        <td className="px-6 py-4">{book.title}</td>
-                        <td className="px-6 py-4">{book.author}</td>
-                        <td className="px-6 py-4">{book.price} €</td>
-                        <td className="px-6 py-4">
-                          <span className={`px-2 py-1 rounded-full text-xs ${book.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                            {book.status === 'published' ? 'Publié' : 'Brouillon'}
-                          </span>
-                        </td>
+                        <td className="px-6 py-4">{book.titre}</td>
+                        <td className="px-6 py-4">{book.auteur}</td>
+                        <td className="px-6 py-4">{book.prix_fcfa} FCFA</td>
                       </tr>
                     ))}
                   </tbody>
@@ -432,24 +442,20 @@ const Admin = () => {
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Titre</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Auteur</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prix</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prix (FCFA)</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
                     {books.map(book => (
                       <tr key={book.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 font-medium">{book.title}</td>
-                        <td className="px-6 py-4">{book.author}</td>
-                        <td className="px-6 py-4">{book.price} €</td>
+                        <td className="px-6 py-4 font-medium">{book.titre}</td>
+                        <td className="px-6 py-4">{book.auteur}</td>
+                        <td className="px-6 py-4">{book.prix_fcfa} FCFA</td>
                         <td className="px-6 py-4">{book.stock}</td>
-                        <td className="px-6 py-4">
-                          <span className={`px-2 py-1 rounded-full text-xs ${book.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                            {book.status === 'published' ? 'Publié' : 'Brouillon'}
-                          </span>
-                        </td>
+                        <td className="px-6 py-4">{book.type || "-"}</td>
                         <td className="px-6 py-4">
                           <div className="flex gap-3">
                             <button className="text-blue-600 hover:text-blue-800">
@@ -483,32 +489,59 @@ const Admin = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Titre *</label>
                         <input 
                           type="text" 
-                          value={newBook.title}
-                          onChange={(e) => setNewBook({...newBook, title: e.target.value})}
+                          value={newBook.titre}
+                          onChange={(e) => setNewBook({...newBook, titre: e.target.value})}
                           className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                         />
-                        {formErrors.title && <p className="text-red-500 text-xs mt-1">{formErrors.title}</p>}
+                        {formErrors.titre && <p className="text-red-500 text-xs mt-1">{formErrors.titre}</p>}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Auteur *</label>
                         <input 
                           type="text" 
-                          value={newBook.author}
-                          onChange={(e) => setNewBook({...newBook, author: e.target.value})}
+                          value={newBook.auteur}
+                          onChange={(e) => setNewBook({...newBook, auteur: e.target.value})}
                           className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                         />
-                        {formErrors.author && <p className="text-red-500 text-xs mt-1">{formErrors.author}</p>}
+                        {formErrors.auteur && <p className="text-red-500 text-xs mt-1">{formErrors.auteur}</p>}
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Prix (€) *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Prix (FCFA) *</label>
                         <input 
                           type="number" 
-                          step="0.01"
-                          value={newBook.price}
-                          onChange={(e) => setNewBook({...newBook, price: e.target.value})}
+                          step="1"
+                          value={newBook.prix_fcfa}
+                          onChange={(e) => setNewBook({...newBook, prix_fcfa: e.target.value})}
                           className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                         />
-                        {formErrors.price && <p className="text-red-500 text-xs mt-1">{formErrors.price}</p>}
+                        {formErrors.prix_fcfa && <p className="text-red-500 text-xs mt-1">{formErrors.prix_fcfa}</p>}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                        <input 
+                          type="number" 
+                          value={newBook.stock}
+                          onChange={(e) => setNewBook({...newBook, stock: e.target.value})}
+                          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                        <input 
+                          type="text" 
+                          value={newBook.type}
+                          onChange={(e) => setNewBook({...newBook, type: e.target.value})}
+                          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Image (URL)</label>
+                        <input 
+                          type="text" 
+                          value={newBook.image}
+                          onChange={(e) => setNewBook({...newBook, image: e.target.value})}
+                          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
@@ -531,7 +564,7 @@ const Admin = () => {
           </div>
         )}
         
-        {/* GESTION UTILISATEURS */}
+        {/* GESTION UTILISATEURS - Version avec appel API réel */}
         {activeTab === "users" && (
           <div className="animate-fadeIn">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Utilisateurs</h2>
@@ -543,7 +576,6 @@ const Admin = () => {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rôle</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commandes</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Inscrit le</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                     </tr>
@@ -551,15 +583,14 @@ const Admin = () => {
                   <tbody className="divide-y divide-gray-200">
                     {users.map(user => (
                       <tr key={user.id}>
-                        <td className="px-6 py-4">{user.name}</td>
+                        <td className="px-6 py-4">{user.full_name}</td>
                         <td className="px-6 py-4">{user.email}</td>
                         <td className="px-6 py-4">
-                          <span className={`px-2 py-1 rounded-full text-xs ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}`}>
-                            {user.role}
+                          <span className="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-800">
+                            client
                           </span>
                         </td>
-                        <td className="px-6 py-4">{user.orders}</td>
-                        <td className="px-6 py-4">{user.createdAt}</td>
+                        <td className="px-6 py-4">{new Date(user.created_at).toLocaleDateString()}</td>
                         <td className="px-6 py-4">
                           <button onClick={() => handleDeleteUser(user.id)} className="text-red-600 hover:text-red-800">
                             <Trash2 size={18} />
@@ -622,7 +653,7 @@ const Admin = () => {
         )}
       </main>
       
-      <style jsx>{`
+      <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
