@@ -106,7 +106,7 @@ const StatCard = ({ title, value, icon: Icon, color, change }) => (
 
 // Composant principal
 const Admin = () => {
-  const { token, admin, logout } = useAuth();
+  const { token, admin } = useAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -170,7 +170,7 @@ const Admin = () => {
         setBooks(booksData);
         setStats(prev => ({ ...prev, totalBooks: booksData.length }));
 
-        // Chargement des clients (utilisateurs) depuis l'API
+        // Chargement des clients
         const usersRes = await fetch("http://localhost:8080/api/admin/clients", {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -179,8 +179,23 @@ const Admin = () => {
         setUsers(usersData);
         setStats(prev => ({ ...prev, totalUsers: usersData.length }));
 
-        // Autres données (simulées pour l'instant)
-        setStats(prev => ({ ...prev, totalOrders: 342, revenue: 12580 }));
+        // Chargement du chiffre d'affaires réel
+        const revenueRes = await fetch("http://localhost:8080/api/admin/revenue", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!revenueRes.ok) throw new Error("Erreur chargement CA");
+        const revenueData = await revenueRes.json();
+        const totalRevenue = revenueData.revenue || 0;
+
+        // Nombre total de commandes (à remplacer par un vrai endpoint)
+        const totalOrders = 342; // temporaire
+
+        setStats(prev => ({
+          ...prev,
+          totalOrders: totalOrders,
+          revenue: totalRevenue
+        }));
+
         setNotifications([{ id: 1, message: "Bienvenue sur l'admin", read: false, time: "à l'instant" }]);
       } catch (err) {
         console.error(err);
@@ -248,10 +263,9 @@ const Admin = () => {
     }
   };
   
-  // Suppression locale (en attendant l'endpoint backend)
   const handleDeleteUser = async (id) => {
     if (window.confirm("Supprimer cet utilisateur ?")) {
-      // TODO: appeler DELETE /api/admin/clients/:id quand l'endpoint sera disponible
+      // TODO: implémenter DELETE /api/admin/clients/:id
       setUsers(users.filter(u => u.id !== id));
       setStats(prev => ({ ...prev, totalUsers: prev.totalUsers - 1 }));
       setNotifications([{ id: Date.now(), message: "Utilisateur supprimé (localement)", read: false, time: "à l'instant" }, ...notifications]);
@@ -360,7 +374,7 @@ const Admin = () => {
               <StatCard title="Livres" value={stats.totalBooks} icon={BookOpen} color="bg-blue-500" change={12} />
               <StatCard title="Utilisateurs" value={stats.totalUsers} icon={Users} color="bg-green-500" change={8} />
               <StatCard title="Commandes" value={stats.totalOrders} icon={BookOpen} color="bg-purple-500" change={-3} />
-              <StatCard title="Chiffre d'affaires" value={`${stats.revenue} €`} icon={Settings} color="bg-orange-500" change={15} />
+              <StatCard title="Chiffre d'affaires" value={`${stats.revenue.toLocaleString()} FCFA`} icon={Settings} color="bg-orange-500" change={15} />
             </div>
             
             {/* Graphiques */}
@@ -564,7 +578,7 @@ const Admin = () => {
           </div>
         )}
         
-        {/* GESTION UTILISATEURS - Version avec appel API réel */}
+        {/* GESTION UTILISATEURS */}
         {activeTab === "users" && (
           <div className="animate-fadeIn">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Utilisateurs</h2>
